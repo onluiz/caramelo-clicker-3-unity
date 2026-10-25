@@ -1,0 +1,1937 @@
+fileFormatVersion: 2
+guid: 5d0650e2dffdc084ba859aa2830c8dc2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5165833118576004064
+    second: caramelo-sheet_0
+  - first:
+      213: -3264531162346755167
+    second: caramelo-sheet_1
+  - first:
+      213: 4314177640898186009
+    second: caramelo-sheet_2
+  - first:
+      213: 89837873111641016
+    second: caramelo-sheet_3
+  - first:
+      213: -3958415160240501114
+    second: caramelo-sheet_4
+  - first:
+      213: -6556276291718651943
+    second: caramelo-sheet_5
+  - first:
+      213: -5091384667416968473
+    second: caramelo-sheet_6
+  - first:
+      213: 7543007336857920091
+    second: caramelo-sheet_7
+  - first:
+      213: 1556563245716291530
+    second: caramelo-sheet_8
+  - first:
+      213: -7329738695808508011
+    second: caramelo-sheet_9
+  - first:
+      213: 3721427719766462178
+    second: caramelo-sheet_10
+  - first:
+      213: -2343932903077097207
+    second: caramelo-sheet_11
+  - first:
+      213: -3506453209175464859
+    second: caramelo-sheet_12
+  - first:
+      213: 4400612065353712781
+    second: caramelo-sheet_13
+  - first:
+      213: 1305002768095066957
+    second: caramelo-sheet_14
+  - first:
+      213: -127527486708214728
+    second: caramelo-sheet_15
+  - first:
+      213: 6521111180191391672
+    second: caramelo-sheet_16
+  - first:
+      213: -3741169031114215300
+    second: caramelo-sheet_17
+  - first:
+      213: 939075345607756885
+    second: caramelo-sheet_18
+  - first:
+      213: -4393206106175336723
+    second: caramelo-sheet_19
+  - first:
+      213: -4866490938279292785
+    second: caramelo-sheet_20
+  - first:
+      213: -1977502130367275294
+    second: caramelo-sheet_21
+  - first:
+      213: 4721581564587696047
+    second: caramelo-sheet_22
+  - first:
+      213: -6357444997682749214
+    second: caramelo-sheet_23
+  - first:
+      213: -782252093670050851
+    second: caramelo-sheet_24
+  - first:
+      213: 1281997275027228673
+    second: caramelo-sheet_25
+  - first:
+      213: -1297472123203846004
+    second: caramelo-sheet_26
+  - first:
+      213: 8088368138058191642
+    second: caramelo-sheet_27
+  - first:
+      213: -4980468891402142709
+    second: caramelo-sheet_28
+  - first:
+      213: -38566142924701436
+    second: caramelo-sheet_29
+  - first:
+      213: 8068732600656404583
+    second: caramelo-sheet_30
+  - first:
+      213: -5684171376655860858
+    second: caramelo-sheet_31
+  - first:
+      213: 1733116755735328512
+    second: caramelo-sheet_32
+  - first:
+      213: -5825548866776944983
+    second: caramelo-sheet_33
+  - first:
+      213: -7138889156600684938
+    second: caramelo-sheet_34
+  - first:
+      213: -8840737845578865668
+    second: caramelo-sheet_35
+  - first:
+      213: -5800620696458163455
+    second: caramelo-sheet_36
+  - first:
+      213: -4297452995535130360
+    second: caramelo-sheet_37
+  - first:
+      213: -795598453738357403
+    second: caramelo-sheet_38
+  - first:
+      213: 4978669404392277509
+    second: caramelo-sheet_39
+  - first:
+      213: 8990440339872137574
+    second: caramelo-sheet_40
+  - first:
+      213: 1023097504324112247
+    second: caramelo-sheet_41
+  - first:
+      213: 8532105848417896110
+    second: caramelo-sheet_42
+  - first:
+      213: -2073464507586373230
+    second: caramelo-sheet_43
+  - first:
+      213: -3958670560594771338
+    second: caramelo-sheet_44
+  - first:
+      213: -6346526385684456862
+    second: caramelo-sheet_45
+  - first:
+      213: 3062212042623927908
+    second: caramelo-sheet_46
+  - first:
+      213: 943876811882396145
+    second: caramelo-sheet_47
+  - first:
+      213: 4906601708989054810
+    second: caramelo-sheet_48
+  - first:
+      213: 903791844413605020
+    second: caramelo-sheet_49
+  - first:
+      213: -267702732607166304
+    second: caramelo-sheet_50
+  - first:
+      213: 4070185610954261071
+    second: caramelo-sheet_51
+  - first:
+      213: 3716028870426516471
+    second: caramelo-sheet_52
+  - first:
+      213: -8123030836483881429
+    second: caramelo-sheet_53
+  - first:
+      213: -8915156779931204038
+    second: caramelo-sheet_54
+  - first:
+      213: -2268457881778585906
+    second: caramelo-sheet_55
+  - first:
+      213: 521107450414634401
+    second: caramelo-sheet_56
+  - first:
+      213: -3342781198021729727
+    second: caramelo-sheet_57
+  - first:
+      213: -8403874014609418978
+    second: caramelo-sheet_58
+  - first:
+      213: -8918611050512380245
+    second: caramelo-sheet_59
+  - first:
+      213: -5818432323917731349
+    second: caramelo-sheet_60
+  - first:
+      213: -7330798302292143251
+    second: caramelo-sheet_61
+  - first:
+      213: -564539847103129267
+    second: caramelo-sheet_62
+  - first:
+      213: -3929523186180305479
+    second: caramelo-sheet_63
+  - first:
+      213: -708677278745046824
+    second: caramelo-sheet_64
+  - first:
+      213: -9029478893755007434
+    second: caramelo-sheet_65
+  - first:
+      213: 5644832509055531648
+    second: caramelo-sheet_66
+  - first:
+      213: 6525733805594796386
+    second: caramelo-sheet_67
+  - first:
+      213: 1203432193260929022
+    second: caramelo-sheet_68
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 0
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: caramelo-sheet_0
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 751
+        width: 58
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ebcba10ad9b0b740800000000000000
+      internalID: 5165833118576004064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_1
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 751
+        width: 59
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1abe02e343e02b2d0800000000000000
+      internalID: -3264531162346755167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_2
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 751
+        width: 60
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91b4ba7f4b90fdb30800000000000000
+      internalID: 4314177640898186009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_3
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 751
+        width: 64
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bb2232d11b2f3100800000000000000
+      internalID: 89837873111641016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_4
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 751
+        width: 65
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68e08546262e019c0800000000000000
+      internalID: -3958415160240501114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_5
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 751
+        width: 62
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9df5bc6037d6305a0800000000000000
+      internalID: -6556276291718651943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_6
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 751
+        width: 59
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e2cdbbce94c759b0800000000000000
+      internalID: -5091384667416968473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_7
+      rect:
+        serializedVersion: 2
+        x: 866
+        y: 751
+        width: 60
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b52e49355352ea860800000000000000
+      internalID: 7543007336857920091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_8
+      rect:
+        serializedVersion: 2
+        x: 986
+        y: 751
+        width: 60
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: acf395366060a9510800000000000000
+      internalID: 1556563245716291530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_9
+      rect:
+        serializedVersion: 2
+        x: 1108
+        y: 751
+        width: 58
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59f16e3ad79874a90800000000000000
+      internalID: -7329738695808508011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_10
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 631
+        width: 58
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2eec8fd4bca25a330800000000000000
+      internalID: 3721427719766462178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_11
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 631
+        width: 57
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9015dbe717da87fd0800000000000000
+      internalID: -2343932903077097207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_12
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 631
+        width: 57
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 564619d5263965fc0800000000000000
+      internalID: -3506453209175464859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_13
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 631
+        width: 56
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d84c4b5ab5d121d30800000000000000
+      internalID: 4400612065353712781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_14
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 631
+        width: 57
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4b35377a1d4c1210800000000000000
+      internalID: 1305002768095066957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_15
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 631
+        width: 59
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83498af2d6eea3ef0800000000000000
+      internalID: -127527486708214728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_16
+      rect:
+        serializedVersion: 2
+        x: 748
+        y: 631
+        width: 59
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bfd22c6114af7a50800000000000000
+      internalID: 6521111180191391672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_17
+      rect:
+        serializedVersion: 2
+        x: 867
+        y: 634
+        width: 64
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c70beb77692b41cc0800000000000000
+      internalID: -3741169031114215300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_18
+      rect:
+        serializedVersion: 2
+        x: 987
+        y: 633
+        width: 64
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55c07482d04480d00800000000000000
+      internalID: 939075345607756885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_19
+      rect:
+        serializedVersion: 2
+        x: 1107
+        y: 631
+        width: 64
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dee875892523803c0800000000000000
+      internalID: -4393206106175336723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_20
+      rect:
+        serializedVersion: 2
+        x: 29
+        y: 511
+        width: 62
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8094318640c67cb0800000000000000
+      internalID: -4866490938279292785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_21
+      rect:
+        serializedVersion: 2
+        x: 150
+        y: 511
+        width: 61
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ee51e82a408e84e0800000000000000
+      internalID: -1977502130367275294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_22
+      rect:
+        serializedVersion: 2
+        x: 268
+        y: 511
+        width: 63
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: faf584fba6d668140800000000000000
+      internalID: 4721581564587696047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_23
+      rect:
+        serializedVersion: 2
+        x: 386
+        y: 512
+        width: 65
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e029023571d5c7a0800000000000000
+      internalID: -6357444997682749214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_24
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 511
+        width: 66
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd3bdf78dd1e425f0800000000000000
+      internalID: -782252093670050851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_25
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 511
+        width: 66
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1084405bab19ac110800000000000000
+      internalID: 1281997275027228673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_26
+      rect:
+        serializedVersion: 2
+        x: 745
+        y: 512
+        width: 66
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c80867e6af37efde0800000000000000
+      internalID: -1297472123203846004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_27
+      rect:
+        serializedVersion: 2
+        x: 867
+        y: 514
+        width: 64
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a13db81b7f7af3070800000000000000
+      internalID: 8088368138058191642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_28
+      rect:
+        serializedVersion: 2
+        x: 993
+        y: 511
+        width: 58
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0c77115ee1d1eab0800000000000000
+      internalID: -4980468891402142709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_29
+      rect:
+        serializedVersion: 2
+        x: 1111
+        y: 512
+        width: 60
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 401cd9e1c4cf67ff0800000000000000
+      internalID: -38566142924701436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_30
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 395
+        width: 61
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7602db1ec85e9ff60800000000000000
+      internalID: 8068732600656404583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_31
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 394
+        width: 62
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68bfbfbbf34cd11b0800000000000000
+      internalID: -5684171376655860858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_32
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 391
+        width: 62
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 007b1e3c1844d0810800000000000000
+      internalID: 1733116755735328512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_33
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 391
+        width: 63
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9aea416bb2e772fa0800000000000000
+      internalID: -5825548866776944983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_34
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 391
+        width: 65
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67e9de1b2229dec90800000000000000
+      internalID: -7138889156600684938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_35
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 393
+        width: 65
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf36be905c36f4580800000000000000
+      internalID: -8840737845578865668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_36
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 395
+        width: 64
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10b05d6a53e008fa0800000000000000
+      internalID: -5800620696458163455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_37
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 392
+        width: 60
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 801b03af4416c54c0800000000000000
+      internalID: -4297452995535130360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_38
+      rect:
+        serializedVersion: 2
+        x: 993
+        y: 391
+        width: 58
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56d331deb6775f4f0800000000000000
+      internalID: -795598453738357403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_39
+      rect:
+        serializedVersion: 2
+        x: 1111
+        y: 391
+        width: 60
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50648e6f179c71540800000000000000
+      internalID: 4978669404392277509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_40
+      rect:
+        serializedVersion: 2
+        x: 29
+        y: 272
+        width: 62
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 661cb601bd574cc70800000000000000
+      internalID: 8990440339872137574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_41
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 275
+        width: 64
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77fc3d372c5c23e00800000000000000
+      internalID: 1023097504324112247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_42
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 274
+        width: 62
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea64bf86011286670800000000000000
+      internalID: 8532105848417896110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_43
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 272
+        width: 58
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2991fea14039933e0800000000000000
+      internalID: -2073464507586373230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_44
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 271
+        width: 58
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 672c3fc591aff09c0800000000000000
+      internalID: -3958670560594771338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_45
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 273
+        width: 61
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26a52a7a0eb9ce7a0800000000000000
+      internalID: -6346526385684456862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_46
+      rect:
+        serializedVersion: 2
+        x: 749
+        y: 276
+        width: 63
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 466c583e0a92f7a20800000000000000
+      internalID: 3062212042623927908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_47
+      rect:
+        serializedVersion: 2
+        x: 869
+        y: 273
+        width: 64
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f97af3a5f2591d00800000000000000
+      internalID: 943876811882396145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_48
+      rect:
+        serializedVersion: 2
+        x: 989
+        y: 272
+        width: 64
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5ffd9e0240c71440800000000000000
+      internalID: 4906601708989054810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_49
+      rect:
+        serializedVersion: 2
+        x: 1107
+        y: 271
+        width: 64
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c940b2dd4e9ea8c00800000000000000
+      internalID: 903791844413605020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_50
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 151
+        width: 65
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a86c8578cde84cf0800000000000000
+      internalID: -267702732607166304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_51
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 153
+        width: 66
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f42c5d69f343c7830800000000000000
+      internalID: 4070185610954261071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_52
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 156
+        width: 69
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fb5edcb19cf19330800000000000000
+      internalID: 3716028870426516471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_53
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 151
+        width: 69
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2685dbed72354f80800000000000000
+      internalID: -8123030836483881429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_54
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 151
+        width: 69
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a360947a420074480800000000000000
+      internalID: -8915156779931204038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_55
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 151
+        width: 65
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecef6a84391d480e0800000000000000
+      internalID: -2268457881778585906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_56
+      rect:
+        serializedVersion: 2
+        x: 744
+        y: 151
+        width: 67
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a516c717785b3700800000000000000
+      internalID: 521107450414634401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_57
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 155
+        width: 71
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1426f02163e0c91d0800000000000000
+      internalID: -3342781198021729727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_58
+      rect:
+        serializedVersion: 2
+        x: 985
+        y: 158
+        width: 70
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e15d11efb117f5b80800000000000000
+      internalID: -8403874014609418978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_59
+      rect:
+        serializedVersion: 2
+        x: 1106
+        y: 156
+        width: 69
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bae065c908aba3480800000000000000
+      internalID: -8918611050512380245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_60
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 31
+        width: 68
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be9ab37f0a6c04fa0800000000000000
+      internalID: -5818432323917731349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_61
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 31
+        width: 63
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6317d7c8c5c34a90800000000000000
+      internalID: -7330798302292143251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_62
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 33
+        width: 70
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d495dd7000a5a28f0800000000000000
+      internalID: -564539847103129267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_63
+      rect:
+        serializedVersion: 2
+        x: 383
+        y: 37
+        width: 72
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9bdcf0f4b778779c0800000000000000
+      internalID: -3929523186180305479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_64
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 39
+        width: 70
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d0d20c05c54a26f0800000000000000
+      internalID: -708677278745046824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_65
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 36
+        width: 69
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63e78de49c8d0b280800000000000000
+      internalID: -9029478893755007434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_66
+      rect:
+        serializedVersion: 2
+        x: 748
+        y: 31
+        width: 66
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08af4d66249765e40800000000000000
+      internalID: 5644832509055531648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_67
+      rect:
+        serializedVersion: 2
+        x: 867
+        y: 31
+        width: 65
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2616c354250109a50800000000000000
+      internalID: 6525733805594796386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: caramelo-sheet_68
+      rect:
+        serializedVersion: 2
+        x: 983
+        y: 33
+        width: 71
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eff3696243373b010800000000000000
+      internalID: 1203432193260929022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      caramelo-sheet_0: 5165833118576004064
+      caramelo-sheet_1: -3264531162346755167
+      caramelo-sheet_10: 3721427719766462178
+      caramelo-sheet_11: -2343932903077097207
+      caramelo-sheet_12: -3506453209175464859
+      caramelo-sheet_13: 4400612065353712781
+      caramelo-sheet_14: 1305002768095066957
+      caramelo-sheet_15: -127527486708214728
+      caramelo-sheet_16: 6521111180191391672
+      caramelo-sheet_17: -3741169031114215300
+      caramelo-sheet_18: 939075345607756885
+      caramelo-sheet_19: -4393206106175336723
+      caramelo-sheet_2: 4314177640898186009
+      caramelo-sheet_20: -4866490938279292785
+      caramelo-sheet_21: -1977502130367275294
+      caramelo-sheet_22: 4721581564587696047
+      caramelo-sheet_23: -6357444997682749214
+      caramelo-sheet_24: -782252093670050851
+      caramelo-sheet_25: 1281997275027228673
+      caramelo-sheet_26: -1297472123203846004
+      caramelo-sheet_27: 8088368138058191642
+      caramelo-sheet_28: -4980468891402142709
+      caramelo-sheet_29: -38566142924701436
+      caramelo-sheet_3: 89837873111641016
+      caramelo-sheet_30: 8068732600656404583
+      caramelo-sheet_31: -5684171376655860858
+      caramelo-sheet_32: 1733116755735328512
+      caramelo-sheet_33: -5825548866776944983
+      caramelo-sheet_34: -7138889156600684938
+      caramelo-sheet_35: -8840737845578865668
+      caramelo-sheet_36: -5800620696458163455
+      caramelo-sheet_37: -4297452995535130360
+      caramelo-sheet_38: -795598453738357403
+      caramelo-sheet_39: 4978669404392277509
+      caramelo-sheet_4: -3958415160240501114
+      caramelo-sheet_40: 8990440339872137574
+      caramelo-sheet_41: 1023097504324112247
+      caramelo-sheet_42: 8532105848417896110
+      caramelo-sheet_43: -2073464507586373230
+      caramelo-sheet_44: -3958670560594771338
+      caramelo-sheet_45: -6346526385684456862
+      caramelo-sheet_46: 3062212042623927908
+      caramelo-sheet_47: 943876811882396145
+      caramelo-sheet_48: 4906601708989054810
+      caramelo-sheet_49: 903791844413605020
+      caramelo-sheet_5: -6556276291718651943
+      caramelo-sheet_50: -267702732607166304
+      caramelo-sheet_51: 4070185610954261071
+      caramelo-sheet_52: 3716028870426516471
+      caramelo-sheet_53: -8123030836483881429
+      caramelo-sheet_54: -8915156779931204038
+      caramelo-sheet_55: -2268457881778585906
+      caramelo-sheet_56: 521107450414634401
+      caramelo-sheet_57: -3342781198021729727
+      caramelo-sheet_58: -8403874014609418978
+      caramelo-sheet_59: -8918611050512380245
+      caramelo-sheet_6: -5091384667416968473
+      caramelo-sheet_60: -5818432323917731349
+      caramelo-sheet_61: -7330798302292143251
+      caramelo-sheet_62: -564539847103129267
+      caramelo-sheet_63: -3929523186180305479
+      caramelo-sheet_64: -708677278745046824
+      caramelo-sheet_65: -9029478893755007434
+      caramelo-sheet_66: 5644832509055531648
+      caramelo-sheet_67: 6525733805594796386
+      caramelo-sheet_68: 1203432193260929022
+      caramelo-sheet_7: 7543007336857920091
+      caramelo-sheet_8: 1556563245716291530
+      caramelo-sheet_9: -7329738695808508011
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

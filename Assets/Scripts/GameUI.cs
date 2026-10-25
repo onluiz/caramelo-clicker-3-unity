@@ -1,0 +1,913 @@
+using System;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
+
+// Builds and drives the whole uGUI hierarchy. Layout is anchor-based against a 1920x1080 reference.
+public class GameUI
+{
+    const float LeftWidth = 0.62f;        // landscape: share of the width used by the game area
+    const float PortraitShopHeight = 0.45f; // portrait: share of the height used by the shop
+    const float RowHeight = 134f;
+    const int FloatPoolSize = 24;
+    const int FallingPoolSize = 28;
+    static readonly int[] BuyModes = { 1, 10, 100, -1 };
+    static readonly string[] BuyLabels = { "x1", "x10", "x100", "Máx" };
+
+    static readonly Color Ink = ProceduralArt.Hex("#4A2108");
+    static readonly Color PanelDark = ProceduralArt.Hex("#3B2314");
+    static readonly Color RowOn = ProceduralArt.Hex("#FFF1DA");
+    static readonly Color RowOff = ProceduralArt.Hex("#CDB99C");
+    static readonly Color Good = ProceduralArt.Hex("#2E7D32");
+    static readonly Color Bad = ProceduralArt.Hex("#B3261E");
+    static readonly Color TabOn = ProceduralArt.Hex("#F6A33B");
+    static readonly Color TabOff = ProceduralArt.Hex("#6B452B");
+
+    class RowView
+    {
+        public GameObject go;
+        public Button button;
+        public Image bg, icon;
+        public TextMeshProUGUI name, desc, cost, count;
+    }
+
+    class FloatingText
+    {
+        public RectTransform rt;
+        public TextMeshProUGUI text;
+        public float life, maxLife;
+        public bool active;
+    }
+
+    class FallingBone
+    {
+        public RectTransform rt;
+        public float speed, spin;
+        public bool active;
+    }
+
+    readonly GameState s;
+    readonly GameAudio sfx;
+
+    RectTransform canvasRect, bgLayer, floatLayer, overlayLayer;
+    RectTransform safeRoot, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, buyBarRt, scrollRt;
+    CanvasScaler scaler;
+    bool portrait;
+    Vector2Int lastScreen;
+    Rect lastSafe;
+    DogRig rig;
+    RectTransform groundBand;
+    readonly List<RectTransform> groundMarks = new List<RectTransform>();
+    float clock;
+
+    TextMeshProUGUI counterText, cpsText, buffText, toastText, statsText;
+    TextMeshProUGUI tabBuildingsText, tabUpgradesText, emptyText, muteText, resetText;
+    Image tabBuildingsBg, tabUpgradesBg, resetBg;
+    readonly List<Image> buyBg = new List<Image>();
+    readonly List<TextMeshProUGUI> buyText = new List<TextMeshProUGUI>();
+    GameObject buyBar;
+    ScrollRect scroll;
+    GameObject buildingsContent, upgradesContent;
+    readonly List<RowView> buildingRows = new List<RowView>();
+    readonly List<RowView> upgradeRows = new List<RowView>();
+    bool showUpgrades;
+    int buyModeIndex;
+
+    readonly FloatingText[] floats = new FloatingText[FloatPoolSize];
+    readonly FallingBone[] falling = new FallingBone[FallingPoolSize];
+    float fallingAcc;
+
+    RectTransform goldenRect;
+    Image goldenImage;
+    bool goldenActive;
+    float goldenTimer, goldenLife;
+
+    float toastTimer, resetConfirmTimer, uiTimer, counterTimer;
+
+    public GameUI(GameState state, GameAudio audio)
+    {
+        s = state;
+        sfx = audio;
+
+        BuildCanvas();
+        BuildBackground();
+        BuildLeftPanel();
+        BuildRightPanel();
+        BuildOverlay();
+        ApplyLayout();
+
+        goldenTimer = Random.Range(25f, 45f);
+        RefreshAll();
+        if (!string.IsNullOrEmpty(s.OfflineMessage)) ShowToast(s.OfflineMessage, 8f);
+    }
+
+    // ---------------------------------------------------------------- building blocks
+
+    static RectTransform NewRect(string name, Transform parent)
+    {
+        var go = new GameObject(name, typeof(RectTransform));
+        go.transform.SetParent(parent, false);
+        return (RectTransform)go.transform;
+    }
+
+    static void Stretch(RectTransform rt)
+    {
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.offsetMin = rt.offsetMax = Vector2.zero;
+    }
+
+    static void Anchors(RectTransform rt, float x0, float y0, float x1, float y1)
+    {
+        rt.anchorMin = new Vector2(x0, y0);
+        rt.anchorMax = new Vector2(x1, y1);
+        rt.offsetMin = rt.offsetMax = Vector2.zero;
+    }
+
+    static void Place(RectTransform rt, Vector2 anchor, Vector2 pivot, Vector2 pos, Vector2 size)
+    {
+        rt.anchorMin = rt.anchorMax = anchor;
+        rt.pivot = pivot;
+        rt.anchoredPosition = pos;
+        rt.sizeDelta = size;
+    }
+
+    static void Box(RectTransform rt, Vector2 aMin, Vector2 aMax, Vector2 offMin, Vector2 offMax)
+    {
+        rt.anchorMin = aMin;
+        rt.anchorMax = aMax;
+        rt.offsetMin = offMin;
+        rt.offsetMax = offMax;
+    }
+
+    static Image NewImage(Transform parent, string name, Sprite sprite, Color color, bool sliced = false, bool raycast = false)
+    {
+        var rt = NewRect(name, parent);
+        var img = rt.gameObject.AddComponent<Image>();
+        img.sprite = sprite;
+        img.color = color;
+        img.raycastTarget = raycast;
+        if (sliced) img.type = Image.Type.Sliced;
+        return img;
+    }
+
+    static TextMeshProUGUI NewText(Transform parent, string name, string text, float size, Color color,
+        TextAlignmentOptions align, FontStyles style = FontStyles.Normal)
+    {
+        var rt = NewRect(name, parent);
+        var t = rt.gameObject.AddComponent<TextMeshProUGUI>();
+        t.text = text;
+        t.fontSize = size;
+        t.color = color;
+        t.alignment = align;
+        t.fontStyle = style;
+        t.raycastTarget = false;
+        t.textWrappingMode = TextWrappingModes.NoWrap;
+        // The default font has no ellipsis glyph, so truncate instead of letting TMP warn every rebuild.
+        t.overflowMode = TextOverflowModes.Truncate;
+        return t;
+    }
+
+    static Button NewButton(Transform parent, string name, string label, float fontSize, Color bgColor, Color textColor,
+        out Image bg, out TextMeshProUGUI text)
+    {
+        bg = NewImage(parent, name, ProceduralArt.RoundedRect(), bgColor, true, true);
+        var btn = bg.gameObject.AddComponent<Button>();
+        btn.targetGraphic = bg;
+        StyleButton(btn);
+        text = NewText(bg.transform, "Label", label, fontSize, textColor, TextAlignmentOptions.Center, FontStyles.Bold);
+        Stretch(text.rectTransform);
+        return btn;
+    }
+
+    static void StyleButton(Button btn)
+    {
+        var colors = btn.colors;
+        colors.normalColor = Color.white;
+        colors.highlightedColor = new Color(1.06f, 1.06f, 1.06f, 1f);
+        colors.pressedColor = new Color(0.82f, 0.82f, 0.82f, 1f);
+        colors.selectedColor = Color.white;
+        colors.fadeDuration = 0.05f;
+        btn.colors = colors;
+        btn.navigation = new Navigation { mode = Navigation.Mode.None };
+    }
+
+    // ---------------------------------------------------------------- construction
+
+    void BuildCanvas()
+    {
+        var go = new GameObject("Canvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+        var canvas = go.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+
+        scaler = go.GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920, 1080);
+        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+        scaler.matchWidthOrHeight = 0.5f;
+
+        canvasRect = (RectTransform)go.transform;
+    }
+
+    void BuildBackground()
+    {
+        var bg = NewImage(canvasRect, "Background",
+            ProceduralArt.Gradient(ProceduralArt.Hex("#FFE2B0"), ProceduralArt.Hex("#F59E4B")), Color.white);
+        Stretch(bg.rectTransform);
+
+        bgLayer = NewRect("FallingBones", canvasRect);
+        Stretch(bgLayer);
+        for (int i = 0; i < falling.Length; i++)
+        {
+            var img = NewImage(bgLayer, "Bone", ProceduralArt.Bone(), new Color(1f, 1f, 1f, 0.55f));
+            img.gameObject.SetActive(false);
+            falling[i] = new FallingBone { rt = img.rectTransform };
+        }
+
+        // Game and shop panels live inside the device's safe area (notches, rounded corners).
+        safeRoot = NewRect("SafeArea", canvasRect);
+        Stretch(safeRoot);
+    }
+
+    void BuildLeftPanel()
+    {
+        var left = NewRect("LeftPanel", safeRoot);
+        leftPanel = left;
+
+        var title = NewText(left, "Title", "Caramelo Clicker", 76, ProceduralArt.Hex("#8A3F0A"),
+            TextAlignmentOptions.Center, FontStyles.Bold);
+        Anchors(title.rectTransform, 0f, 0.89f, 1f, 0.99f);
+
+        counterText = NewText(left, "Counter", "0 petiscos", 84, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
+        Anchors(counterText.rectTransform, 0f, 0.77f, 1f, 0.89f);
+
+        cpsText = NewText(left, "Cps", "por segundo: 0", 40, Ink, TextAlignmentOptions.Center);
+        Anchors(cpsText.rectTransform, 0f, 0.715f, 1f, 0.77f);
+
+        buffText = NewText(left, "Buff", "", 36, ProceduralArt.Hex("#B3261E"), TextAlignmentOptions.Center, FontStyles.Bold);
+        Anchors(buffText.rectTransform, 0f, 0.665f, 1f, 0.715f);
+
+        BuildGround(left);
+
+        rig = new DogRig(left, new Vector2(0.5f, 0.4f));
+        var trigger = rig.Root.AddComponent<EventTrigger>();
+        var entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
+        entry.callback.AddListener(data => OnDogDown((PointerEventData)data));
+        trigger.triggers.Add(entry);
+
+        toastText = NewText(left, "Toast", "", 32, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
+        Anchors(toastText.rectTransform, 0.02f, 0.075f, 0.98f, 0.155f);
+        toastText.textWrappingMode = TextWrappingModes.Normal;
+
+        statsText = NewText(left, "Stats", "", 26, ProceduralArt.Hex("#7A4A1E"), TextAlignmentOptions.Center);
+        Place(statsText.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 30f), new Vector2(560f, 40f));
+
+        var muteBtn = NewButton(left, "MuteButton", "", 28, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out muteText);
+        Place((RectTransform)muteBtn.transform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(24f, 20f), new Vector2(230f, 60f));
+        muteBtn.onClick.AddListener(() =>
+        {
+            sfx.SetMuted(!sfx.Muted);
+            RefreshButtons();
+        });
+
+        var resetBtn = NewButton(left, "ResetButton", "", 28, ProceduralArt.Hex("#8A5A2B"), Color.white, out resetBg, out resetText);
+        Place((RectTransform)resetBtn.transform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-24f, 20f), new Vector2(300f, 60f));
+        resetBtn.onClick.AddListener(OnResetClicked);
+    }
+
+    void BuildRightPanel()
+    {
+        var right = NewImage(safeRoot, "RightPanel", null, PanelDark, false, true);
+        var rt = right.rectTransform;
+        rightPanel = rt;
+
+        // Tabs
+        var tabB = NewButton(rt, "TabBuildings", "Construções", 34, TabOn, Ink, out tabBuildingsBg, out tabBuildingsText);
+        tabBuildingsRt = (RectTransform)tabB.transform;
+        tabB.onClick.AddListener(() => ShowTab(false));
+
+        var tabU = NewButton(rt, "TabUpgrades", "Melhorias", 34, TabOff, Color.white, out tabUpgradesBg, out tabUpgradesText);
+        tabUpgradesRt = (RectTransform)tabU.transform;
+        tabU.onClick.AddListener(() => ShowTab(true));
+
+        // Buy-amount selector (buildings tab only)
+        buyBar = NewRect("BuyBar", rt).gameObject;
+        buyBarRt = (RectTransform)buyBar.transform;
+        var buyLabel = NewText(buyBar.transform, "BuyLabel", "Comprar:", 30, Color.white, TextAlignmentOptions.MidlineLeft, FontStyles.Bold);
+        Anchors(buyLabel.rectTransform, 0f, 0f, 0.28f, 1f);
+        for (int i = 0; i < BuyModes.Length; i++)
+        {
+            int index = i;
+            var btn = NewButton(buyBar.transform, "Buy" + BuyLabels[i], BuyLabels[i], 28, TabOff, Color.white, out var bg, out var txt);
+            float x0 = 0.3f + i * 0.175f;
+            Box((RectTransform)btn.transform, new Vector2(x0, 0.08f), new Vector2(x0 + 0.165f, 0.92f), Vector2.zero, Vector2.zero);
+            btn.onClick.AddListener(() =>
+            {
+                buyModeIndex = index;
+                RefreshBuyBar();
+                RefreshShop();
+            });
+            buyBg.Add(bg);
+            buyText.Add(txt);
+        }
+
+        // Scrolling list
+        scrollRt = NewRect("Scroll", rt);
+        scroll = scrollRt.gameObject.AddComponent<ScrollRect>();
+
+        var viewport = NewRect("Viewport", scrollRt);
+        Stretch(viewport);
+        viewport.gameObject.AddComponent<RectMask2D>();
+        var catcher = viewport.gameObject.AddComponent<Image>();
+        catcher.color = new Color(0f, 0f, 0f, 0f);
+
+        buildingsContent = NewContent("BuildingsContent", viewport);
+        upgradesContent = NewContent("UpgradesContent", viewport);
+
+        scroll.viewport = viewport;
+        scroll.horizontal = false;
+        scroll.vertical = true;
+        scroll.movementType = ScrollRect.MovementType.Clamped;
+        scroll.scrollSensitivity = 40f;
+
+        for (int i = 0; i < GameDefs.Buildings.Length; i++)
+        {
+            int index = i;
+            var row = MakeRow(buildingsContent.transform, "Building" + i, ProceduralArt.Icon(GameDefs.Buildings[i].Icon));
+            row.button.onClick.AddListener(() => BuyBuilding(index));
+            buildingRows.Add(row);
+        }
+
+        foreach (var def in GameDefs.Upgrades)
+        {
+            var captured = def;
+            var row = MakeRow(upgradesContent.transform, "Upgrade_" + def.Id, ProceduralArt.Icon(def.Icon));
+            row.name.text = def.Name;
+            row.desc.text = def.Description;
+            row.count.gameObject.SetActive(false);
+            row.button.onClick.AddListener(() => BuyUpgrade(captured));
+            upgradeRows.Add(row);
+        }
+
+        emptyText = NewText(rt, "EmptyUpgrades", "Nenhuma melhoria por enquanto.\nContinue juntando petiscos!", 30,
+            Color.white, TextAlignmentOptions.Center);
+        emptyText.textWrappingMode = TextWrappingModes.Normal;
+        Box(emptyText.rectTransform, new Vector2(0.05f, 0.4f), new Vector2(0.95f, 0.7f), Vector2.zero, Vector2.zero);
+
+        ShowTab(false);
+        RefreshBuyBar();
+    }
+
+    GameObject NewContent(string name, RectTransform viewport)
+    {
+        var rt = NewRect(name, viewport);
+        rt.anchorMin = new Vector2(0f, 1f);
+        rt.anchorMax = new Vector2(1f, 1f);
+        rt.pivot = new Vector2(0.5f, 1f);
+        rt.offsetMin = rt.offsetMax = Vector2.zero;
+
+        var layout = rt.gameObject.AddComponent<VerticalLayoutGroup>();
+        layout.padding = new RectOffset(4, 4, 4, 14);
+        layout.spacing = 10f;
+        layout.childControlWidth = true;
+        layout.childControlHeight = true;
+        layout.childForceExpandWidth = true;
+        layout.childForceExpandHeight = false;
+
+        var fitter = rt.gameObject.AddComponent<ContentSizeFitter>();
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        return rt.gameObject;
+    }
+
+    RowView MakeRow(Transform parent, string name, Sprite iconSprite)
+    {
+        var row = new RowView();
+        var bg = NewImage(parent, name, ProceduralArt.RoundedRect(), RowOn, true, true);
+        row.go = bg.gameObject;
+        row.bg = bg;
+
+        var layout = row.go.AddComponent<LayoutElement>();
+        layout.minHeight = RowHeight;
+        layout.preferredHeight = RowHeight;
+
+        row.button = row.go.AddComponent<Button>();
+        row.button.targetGraphic = bg;
+        StyleButton(row.button);
+
+        row.icon = NewImage(row.go.transform, "Icon", iconSprite, Color.white);
+        row.icon.preserveAspect = true;
+        Place(row.icon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(18f, 0f), new Vector2(88f, 88f));
+
+        // Text boxes must be at least one line tall: Truncate overflow drops lines that don't fit.
+        row.name = NewText(row.go.transform, "Name", "", 32, Ink, TextAlignmentOptions.MidlineLeft, FontStyles.Bold);
+        Box(row.name.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(120f, -46f), new Vector2(-112f, -6f));
+        row.name.enableAutoSizing = true;
+        row.name.fontSizeMin = 18f;
+        row.name.fontSizeMax = 32f;
+
+        row.desc = NewText(row.go.transform, "Desc", "", 20, ProceduralArt.Hex("#6B4A2B"), TextAlignmentOptions.TopLeft);
+        row.desc.textWrappingMode = TextWrappingModes.Normal;
+        Box(row.desc.rectTransform, Vector2.zero, Vector2.one, new Vector2(120f, 40f), new Vector2(-112f, -46f));
+
+        row.cost = NewText(row.go.transform, "Cost", "", 28, Good, TextAlignmentOptions.MidlineLeft, FontStyles.Bold);
+        Box(row.cost.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(120f, 4f), new Vector2(-112f, 40f));
+
+        row.count = NewText(row.go.transform, "Count", "", 62, new Color(Ink.r, Ink.g, Ink.b, 0.4f),
+            TextAlignmentOptions.MidlineRight, FontStyles.Bold);
+        Place(row.count.rectTransform, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-18f, 0f), new Vector2(120f, 80f));
+        return row;
+    }
+
+    void BuildOverlay()
+    {
+        floatLayer = NewRect("FloatingTexts", canvasRect);
+        Stretch(floatLayer);
+        for (int i = 0; i < floats.Length; i++)
+        {
+            var t = NewText(floatLayer, "Float", "", 52, Color.white, TextAlignmentOptions.Center, FontStyles.Bold);
+            t.rectTransform.sizeDelta = new Vector2(400f, 80f);
+            t.gameObject.SetActive(false);
+            floats[i] = new FloatingText { rt = t.rectTransform, text = t };
+        }
+
+        overlayLayer = NewRect("Overlay", canvasRect);
+        Stretch(overlayLayer);
+
+        goldenImage = NewImage(overlayLayer, "GoldenBone", ProceduralArt.GoldenBone(), Color.white, false, true);
+        goldenRect = goldenImage.rectTransform;
+        goldenRect.sizeDelta = new Vector2(170f, 170f);
+        var btn = goldenImage.gameObject.AddComponent<Button>();
+        btn.targetGraphic = goldenImage;
+        btn.transition = Selectable.Transition.None;
+        btn.navigation = new Navigation { mode = Navigation.Mode.None };
+        btn.onClick.AddListener(OnGoldenClicked);
+        goldenImage.gameObject.SetActive(false);
+    }
+
+    // ---------------------------------------------------------------- interaction
+
+    void OnDogDown(PointerEventData e)
+    {
+        double value = s.Click();
+        sfx.PlayClick();
+        rig.Poke();
+        SpawnFloat(e.position, "+" + NumberFormat.Format(value, true), Color.white);
+    }
+
+    void BuyBuilding(int index)
+    {
+        int mode = BuyModes[buyModeIndex];
+        int n = mode > 0 ? mode : Mathf.Max(1, s.MaxAffordable(index));
+        if (s.TryBuy(index, n)) sfx.PlayBuy();
+        else sfx.PlayError();
+        RefreshShop();
+    }
+
+    void BuyUpgrade(UpgradeDef def)
+    {
+        if (s.TryBuyUpgrade(def)) sfx.PlayBuy();
+        else sfx.PlayError();
+        RefreshShop();
+    }
+
+    void OnGoldenClicked()
+    {
+        HideGolden();
+        sfx.PlayGolden();
+        ShowToast(s.ApplyGoldenBone(), 6f);
+        RefreshAll();
+    }
+
+    void OnResetClicked()
+    {
+        if (resetConfirmTimer <= 0f)
+        {
+            resetConfirmTimer = 6f;
+            RefreshButtons();
+            ShowToast("Isso apaga todo o progresso! Clique em \"Confirmar reinício\" para continuar.", 6f);
+            return;
+        }
+
+        resetConfirmTimer = 0f;
+        s.ResetAll();
+        s.Save();
+        RefreshButtons();
+        HideGolden();
+        ShowToast("Jogo reiniciado. Boa sorte, Caramelo!", 4f);
+        RefreshAll();
+    }
+
+    void ShowTab(bool upgrades)
+    {
+        showUpgrades = upgrades;
+        buildingsContent.SetActive(!upgrades);
+        upgradesContent.SetActive(upgrades);
+        buyBar.SetActive(!upgrades);
+        scroll.content = (RectTransform)(upgrades ? upgradesContent : buildingsContent).transform;
+        scroll.verticalNormalizedPosition = 1f;
+
+        tabBuildingsBg.color = upgrades ? TabOff : TabOn;
+        tabBuildingsText.color = upgrades ? Color.white : Ink;
+        tabUpgradesBg.color = upgrades ? TabOn : TabOff;
+        tabUpgradesText.color = upgrades ? Ink : Color.white;
+        RefreshShop();
+    }
+
+    void ShowToast(string message, float seconds)
+    {
+        toastText.text = message;
+        toastTimer = seconds;
+    }
+
+    // ---------------------------------------------------------------- refresh
+
+    public void RefreshAll()
+    {
+        RefreshBuyBar();
+        RefreshButtons();
+        RefreshShop();
+        RefreshCounters();
+    }
+
+    void RefreshBuyBar()
+    {
+        for (int i = 0; i < buyBg.Count; i++)
+        {
+            bool on = i == buyModeIndex;
+            buyBg[i].color = on ? TabOn : TabOff;
+            buyText[i].color = on ? Ink : Color.white;
+        }
+    }
+
+    void RefreshButtons()
+    {
+        muteText.text = sfx.Muted ? "Som: Mudo" : "Som: Ligado";
+        bool confirming = resetConfirmTimer > 0f;
+        resetText.text = confirming ? "Confirmar reinício!" : "Reiniciar jogo";
+        resetBg.color = confirming ? Bad : ProceduralArt.Hex("#8A5A2B");
+    }
+
+    void RefreshCounters()
+    {
+        double petiscos = Math.Floor(s.Petiscos);
+        counterText.text = NumberFormat.Format(petiscos) + (petiscos == 1 ? " petisco" : " petiscos");
+        cpsText.text = "por segundo: " + NumberFormat.Format(s.Cps, true);
+        statsText.text = "Cliques: " + NumberFormat.Format(s.Clicks) + "   |   Total: " + NumberFormat.Format(s.TotalEarned);
+
+        if (s.ClickFrenzyActive)
+            buffText.text = "Pata Furiosa! Cliques x" + GameState.ClickFrenzyMultiplier + " (" + Mathf.CeilToInt((float)(s.ClickFrenzyUntil - s.Time)) + "s)";
+        else if (s.FrenzyActive)
+            buffText.text = "Frenesi! Produção x" + GameState.FrenzyMultiplier + " (" + Mathf.CeilToInt((float)(s.FrenzyUntil - s.Time)) + "s)";
+        else
+            buffText.text = "";
+    }
+
+    void RefreshShop()
+    {
+        if (showUpgrades) RefreshUpgrades();
+        else RefreshBuildings();
+
+        int available = 0;
+        foreach (var def in GameDefs.Upgrades)
+            if (s.IsUpgradeAvailable(def)) available++;
+        tabUpgradesText.text = available > 0 ? "Melhorias (" + available + ")" : "Melhorias";
+    }
+
+    void RefreshBuildings()
+    {
+        emptyText.gameObject.SetActive(false);
+        int mode = BuyModes[buyModeIndex];
+        bool mysteryShown = false;
+        for (int i = 0; i < buildingRows.Count; i++)
+        {
+            var row = buildingRows[i];
+            var def = GameDefs.Buildings[i];
+
+            if (!s.IsBuildingKnown(i))
+            {
+                bool show = !mysteryShown;
+                mysteryShown = true;
+                row.go.SetActive(show);
+                if (!show) continue;
+
+                row.name.text = "???";
+                row.desc.text = "Junte mais petiscos para desbloquear.";
+                row.cost.text = "";
+                row.count.text = "";
+                row.icon.color = new Color(0.2f, 0.1f, 0.05f, 0.75f);
+                row.bg.color = RowOff;
+                continue;
+            }
+
+            row.go.SetActive(true);
+            int n = mode > 0 ? mode : Mathf.Max(1, s.MaxAffordable(i));
+            double cost = s.BuyCost(i, n);
+            bool affordable = s.Petiscos >= cost;
+
+            row.icon.color = Color.white;
+            row.bg.color = affordable ? RowOn : RowOff;
+            row.name.text = def.Name;
+            row.desc.text = def.Description;
+            row.cost.color = affordable ? Good : Bad;
+            row.cost.text = NumberFormat.Format(cost) + (n > 1 ? " (x" + n + ")" : "") +
+                "  <size=70%><color=#6B4A2B>+" + NumberFormat.Format(s.CpsEach(i), true) + "/s cada</color></size>";
+            row.count.text = s.Owned[i] > 0 ? s.Owned[i].ToString() : "";
+        }
+    }
+
+    void RefreshUpgrades()
+    {
+        int visible = 0;
+        for (int i = 0; i < upgradeRows.Count; i++)
+        {
+            var def = GameDefs.Upgrades[i];
+            var row = upgradeRows[i];
+            bool available = s.IsUpgradeAvailable(def);
+            row.go.SetActive(available);
+            if (!available) continue;
+
+            visible++;
+            bool affordable = s.Petiscos >= def.Cost;
+            row.bg.color = affordable ? RowOn : RowOff;
+            row.cost.color = affordable ? Good : Bad;
+            row.cost.text = NumberFormat.Format(def.Cost) + " petiscos";
+        }
+
+        emptyText.gameObject.SetActive(visible == 0);
+    }
+
+    // ---------------------------------------------------------------- layout
+
+    // Landscape: game on the left, shop on the right. Portrait: game on top, shop below.
+    void ApplyLayout()
+    {
+        if (Screen.width <= 0 || Screen.height <= 0) return;
+
+        lastScreen = new Vector2Int(Screen.width, Screen.height);
+        lastSafe = Screen.safeArea;
+        portrait = Screen.height > Screen.width;
+
+        scaler.referenceResolution = portrait ? new Vector2(1080f, 1920f) : new Vector2(1920f, 1080f);
+
+        var safe = Screen.safeArea;
+        safeRoot.anchorMin = new Vector2(safe.xMin / Screen.width, safe.yMin / Screen.height);
+        safeRoot.anchorMax = new Vector2(safe.xMax / Screen.width, safe.yMax / Screen.height);
+        safeRoot.offsetMin = safeRoot.offsetMax = Vector2.zero;
+
+        if (portrait)
+        {
+            Anchors(leftPanel, 0f, PortraitShopHeight, 1f, 1f);
+            Anchors(rightPanel, 0f, 0f, 1f, PortraitShopHeight);
+            Box(tabBuildingsRt, new Vector2(0f, 0.895f), new Vector2(0.5f, 0.985f), new Vector2(14f, 0f), new Vector2(-5f, 0f));
+            Box(tabUpgradesRt, new Vector2(0.5f, 0.895f), new Vector2(1f, 0.985f), new Vector2(5f, 0f), new Vector2(-14f, 0f));
+            Box(buyBarRt, new Vector2(0f, 0.81f), new Vector2(1f, 0.885f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
+            Box(scrollRt, Vector2.zero, new Vector2(1f, 0.8f), new Vector2(10f, 10f), new Vector2(-10f, 0f));
+        }
+        else
+        {
+            Anchors(leftPanel, 0f, 0f, LeftWidth, 1f);
+            Anchors(rightPanel, LeftWidth, 0f, 1f, 1f);
+            Box(tabBuildingsRt, new Vector2(0f, 0.915f), new Vector2(0.5f, 0.985f), new Vector2(14f, 0f), new Vector2(-5f, 0f));
+            Box(tabUpgradesRt, new Vector2(0.5f, 0.915f), new Vector2(1f, 0.985f), new Vector2(5f, 0f), new Vector2(-14f, 0f));
+            Box(buyBarRt, new Vector2(0f, 0.845f), new Vector2(1f, 0.905f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
+            Box(scrollRt, Vector2.zero, new Vector2(1f, 0.835f), new Vector2(10f, 10f), new Vector2(-10f, 0f));
+        }
+
+        // The totals line has no room next to the buttons on a narrow screen.
+        statsText.gameObject.SetActive(!portrait);
+    }
+
+    // The game area's rectangle in canvas coordinates (origin at the canvas centre).
+    Rect LeftPanelInCanvas()
+    {
+        var corners = new Vector3[4];
+        leftPanel.GetWorldCorners(corners);
+        var min = canvasRect.InverseTransformPoint(corners[0]);
+        var max = canvasRect.InverseTransformPoint(corners[2]);
+        return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+    }
+
+    // ---------------------------------------------------------------- per-frame
+
+    public void Update(float dt)
+    {
+        clock += dt;
+
+        if (Screen.width != lastScreen.x || Screen.height != lastScreen.y || Screen.safeArea != lastSafe)
+            ApplyLayout();
+
+        counterTimer += dt;
+        if (counterTimer >= 0.05f)
+        {
+            counterTimer = 0f;
+            RefreshCounters();
+        }
+
+        uiTimer += dt;
+        if (uiTimer >= 0.15f)
+        {
+            uiTimer = 0f;
+            RefreshShop();
+        }
+
+        UpdateDog(dt);
+        UpdateToast(dt);
+        UpdateFloats(dt);
+        UpdateFalling(dt);
+        UpdateGolden(dt);
+
+        if (resetConfirmTimer > 0f)
+        {
+            resetConfirmTimer -= dt;
+            if (resetConfirmTimer <= 0f) RefreshButtons();
+        }
+    }
+
+    void UpdateDog(float dt)
+    {
+        rig.Tick(dt, s.Cps);
+        UpdateGround(dt);
+    }
+
+    // A strip of ground under the dog's paws; its marks scroll left to match the stride.
+    void BuildGround(Transform parent)
+    {
+        const float height = 90f;
+        var band = NewImage(parent, "Ground", ProceduralArt.RoundedRect(), new Color(0.88f, 0.54f, 0.24f, 0.55f), true);
+        groundBand = band.rectTransform;
+        groundBand.anchorMin = new Vector2(0f, 0.4f);
+        groundBand.anchorMax = new Vector2(1f, 0.4f);
+        groundBand.pivot = new Vector2(0.5f, 1f);
+        groundBand.anchoredPosition = new Vector2(0f, -215f);
+        groundBand.sizeDelta = new Vector2(0f, height);
+
+        var edge = NewImage(groundBand, "Edge", null, new Color(0.72f, 0.4f, 0.16f, 0.6f));
+        edge.rectTransform.anchorMin = new Vector2(0f, 1f);
+        edge.rectTransform.anchorMax = new Vector2(1f, 1f);
+        edge.rectTransform.pivot = new Vector2(0.5f, 1f);
+        edge.rectTransform.sizeDelta = new Vector2(0f, 5f);
+
+        for (int i = 0; i < 18; i++)
+        {
+            var mark = NewImage(groundBand, "Mark", ProceduralArt.RoundedRect(), new Color(0.72f, 0.4f, 0.16f, 0.45f), true);
+            var rt = mark.rectTransform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 0.5f);
+            rt.sizeDelta = new Vector2(Random.Range(40f, 110f), Random.Range(7f, 12f));
+            rt.anchoredPosition = new Vector2(i * 70f, Random.Range(-height * 0.3f, height * 0.25f));
+            groundMarks.Add(rt);
+        }
+    }
+
+    void UpdateGround(float dt)
+    {
+        float width = groundBand.rect.width;
+        if (width <= 1f) return;
+
+        float move = rig.StrideSpeed * dt;
+        foreach (var mark in groundMarks)
+        {
+            var p = mark.anchoredPosition;
+            p.x -= move;
+            if (p.x < -60f)
+            {
+                p.x += width + 120f;
+                p.y = Random.Range(-27f, 22f);
+            }
+            mark.anchoredPosition = p;
+        }
+    }
+
+    void UpdateToast(float dt)
+    {
+        if (toastTimer <= 0f) return;
+        toastTimer -= dt;
+        if (toastTimer <= 0f)
+        {
+            toastText.text = "";
+            return;
+        }
+        toastText.alpha = Mathf.Clamp01(toastTimer);
+    }
+
+    void SpawnFloat(Vector2 screenPos, string text, Color color)
+    {
+        foreach (var f in floats)
+        {
+            if (f.active) continue;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(floatLayer, screenPos, null, out var local);
+            f.active = true;
+            f.maxLife = f.life = 1f;
+            f.text.text = text;
+            f.text.color = color;
+            f.rt.anchoredPosition = local + new Vector2(Random.Range(-30f, 30f), 20f);
+            f.rt.gameObject.SetActive(true);
+            return;
+        }
+    }
+
+    void UpdateFloats(float dt)
+    {
+        foreach (var f in floats)
+        {
+            if (!f.active) continue;
+            f.life -= dt;
+            if (f.life <= 0f)
+            {
+                f.active = false;
+                f.rt.gameObject.SetActive(false);
+                continue;
+            }
+            f.rt.anchoredPosition += new Vector2(0f, 140f * dt);
+            var c = f.text.color;
+            c.a = Mathf.Clamp01(f.life / f.maxLife * 1.6f);
+            f.text.color = c;
+        }
+    }
+
+    void UpdateFalling(float dt)
+    {
+        double cps = s.Cps;
+        float h = canvasRect.rect.height;
+        float w = canvasRect.rect.width;
+
+        if (cps > 0)
+        {
+            float rate = Mathf.Min(10f, 0.6f + Mathf.Log(1f + (float)cps, 2f) * 0.7f);
+            fallingAcc += rate * dt;
+        }
+
+        foreach (var b in falling)
+        {
+            if (!b.active)
+            {
+                if (fallingAcc < 1f) continue;
+                fallingAcc -= 1f;
+                b.active = true;
+                b.speed = Random.Range(220f, 380f);
+                b.spin = Random.Range(-60f, 60f);
+                float size = Random.Range(40f, 80f);
+                b.rt.sizeDelta = new Vector2(size, size);
+                b.rt.anchorMin = b.rt.anchorMax = new Vector2(0f, 1f);
+                var area = LeftPanelInCanvas();
+                b.rt.anchoredPosition = new Vector2(Random.Range(area.xMin, area.xMax) + w * 0.5f, 60f);
+                b.rt.gameObject.SetActive(true);
+                continue;
+            }
+
+            b.rt.anchoredPosition += new Vector2(0f, -b.speed * dt);
+            b.rt.Rotate(0f, 0f, b.spin * dt);
+            if (b.rt.anchoredPosition.y < -h - 60f)
+            {
+                b.active = false;
+                b.rt.gameObject.SetActive(false);
+            }
+        }
+
+        if (fallingAcc > 3f) fallingAcc = 3f;
+    }
+
+    void UpdateGolden(float dt)
+    {
+        if (!goldenActive)
+        {
+            goldenTimer -= dt;
+            if (goldenTimer <= 0f) SpawnGolden();
+            return;
+        }
+
+        goldenLife -= dt;
+        if (goldenLife <= 0f)
+        {
+            HideGolden();
+            return;
+        }
+
+        float pulse = 1f + 0.1f * Mathf.Sin(clock * 6f);
+        goldenRect.localScale = new Vector3(pulse, pulse, 1f);
+        goldenRect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(clock * 3f) * 12f);
+        goldenImage.color = new Color(1f, 1f, 1f, Mathf.Clamp01(goldenLife / 1.5f));
+    }
+
+    void SpawnGolden()
+    {
+        var area = LeftPanelInCanvas();
+        float x = area.width > 280f ? Random.Range(area.xMin + 140f, area.xMax - 140f) : area.center.x;
+        float y = area.height > 320f ? Random.Range(area.yMin + 160f, area.yMax - 160f) : area.center.y;
+        goldenRect.anchorMin = goldenRect.anchorMax = new Vector2(0.5f, 0.5f);
+        goldenRect.anchoredPosition = new Vector2(x, y);
+        goldenImage.color = Color.white;
+        goldenImage.gameObject.SetActive(true);
+        goldenActive = true;
+        goldenLife = 13f;
+    }
+
+    void HideGolden()
+    {
+        goldenActive = false;
+        goldenImage.gameObject.SetActive(false);
+        goldenTimer = Random.Range(60f, 150f);
+    }
+}
