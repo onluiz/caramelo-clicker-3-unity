@@ -185,6 +185,7 @@ public static class Loc
         { "pudim-lunar", ("Homemade Moon Pudding", "Made with the moon plant. Every dog lines up for a spoonful.") },
         { "fabrica-de-pudim-lunar", ("Moon Pudding Factory", "The dogs liked Caramelo's nutritious pudding so much that he built his own factory on the Moon.") },
         { "cometa-caramelo", ("Caramelo Comet", "Grazes past and leaves a shower of bones and coins.") },
+        { "sol-caramelo", ("Caramelo Sun", "For unknown reasons, the Sun took the shape of a caramelo dog. Every dog touched by its light reports having energy to spare.") },
     };
 
     static readonly Dictionary<string, (string name, string desc)> Tiers = new Dictionary<string, (string, string)>
@@ -269,5 +270,9 @@ public static class Loc
         { "cometa-caramelo:1", ("Orbital Route", "Passes twice a year. Caramelo marks it on the calendar.") },
         { "cometa-caramelo:2", ("Caramelo Core", "There's a huge bone inside. Nobody knows whose it was.") },
         { "cometa-caramelo:3", ("Meteor Shower", "It rains bones, it rains coins. Bring an umbrella.") },
+        { "sol-caramelo:0", ("Sunbeam", "A ray crosses the window and Caramelo lies right in the middle. Couldn't be more motivated.") },
+        { "sol-caramelo:1", ("Solar Nap", "A nap in the sun, battery full. Wakes up ready for three more deliveries.") },
+        { "sol-caramelo:2", ("Caramelo Corona", "The fiery crown sways like a happy tail. You can feel it from far away.") },
+        { "sol-caramelo:3", ("Biscuit Eclipse", "The Moon passes in front and, for a moment, the Sun becomes one giant biscuit.") },
     };
 }

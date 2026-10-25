@@ -58,11 +58,11 @@ public static class GameDefs
         new BuildingDef { Key = "cachorro-entregador", Name = "Caramelo Entregador", Description = "Cachorros entregadores contratados pela Caramelo Corps.", BaseCost = 3500, BaseCps = 18.0, IconFile = "cachorro-entregador" },
         new BuildingDef { Key = "racao-caramelo", Name = "Ração Caramelo", Description = "Ração caseira misteriosa fabricada pelo Caramelo.", BaseCost = 7000, BaseCps = 32.7, IconFile = "racao-caramelo" },
         new BuildingDef { Key = "petshop", Name = "Pet Shop", Description = "Vende petiscos para toda a vizinhança.", BaseCost = 12000, BaseCps = 47, Icon = 3 },
+        new BuildingDef { Key = "iluminacao-caramelo", Name = "Iluminação Caramelo", Description = "O Caramelo investe na iluminação da cidade para garantir a segurança de seus entregadores e drones durante a noite.", BaseCost = 22000, BaseCps = 85.0, IconFile = "iluminacao-caramelo" },
         new BuildingDef { Key = "drone-entregas", Name = "Drone de Entregas", Description = "Faz a entrega dos petiscos e rações fabricados pelo Caramelo.", BaseCost = 40000, BaseCps = 154.0, IconFile = "drone-entregas" },
         new BuildingDef { Key = "padaria", Name = "Padaria para Pets", Description = "Biscoitos e petiscos feitos na hora!", BaseCost = 130000, BaseCps = 260, Icon = 4 },
         new BuildingDef { Key = "faro-minerador", Name = "Mina de Petiscos", Description = "Foi encontrada uma mina de petiscos caninos super raros! A Caramelo Corp vai cuidar e “preservar” ela com todo o carinho do mundo. Fechada para visitantes.", BaseCost = 450000, BaseCps = 1200, IconFile = "faro-minerador" },
-        new BuildingDef { Key = "fabrica-racao", Name = "Fábrica de Ração Pequena", Description = "Produção industrial de petiscos.", BaseCost = 1400000, BaseCps = 1400, Icon = 5 },
-        new BuildingDef { Key = "iluminacao-caramelo", Name = "Iluminação Caramelo", Description = "O Caramelo investe na iluminação da cidade para garantir a segurança de seus entregadores e drones durante a noite.", BaseCost = 5000000, BaseCps = 13200.0, IconFile = "iluminacao-caramelo" },
+        new BuildingDef { Key = "fabrica-racao", Name = "Fábrica de Ração Pequena", Description = "Produção industrial de petiscos.", BaseCost = 1400000, BaseCps = 3700, Icon = 5 },
         new BuildingDef { Key = "fabrica-de-petiscos", Name = "Fábrica de Petiscos", Description = "Os investimentos do Caramelo seguem com tudo e a primeira fábrica de petiscos foi criada.", BaseCost = 16000000, BaseCps = 38300.0, IconFile = "fabrica-de-petiscos" },
         new BuildingDef { Key = "fabrica-de-racao", Name = "Fábrica de Ração", Description = "A Ração Caramelo foi um sucesso e por isso abriram a primeira fábrica de ração.", BaseCost = 50000000, BaseCps = 109000.0, IconFile = "fabrica-de-racao" },
         new BuildingDef { Key = "estatua-caramelo", Name = "Estátua do Caramelo", Description = "Todo mundo venera o Caramelo.", BaseCost = 160000000, BaseCps = 317000.0, IconFile = "estatua-caramelo" },
@@ -76,6 +76,7 @@ public static class GameDefs
         new BuildingDef { Key = "pudim-lunar", Name = "Pudim Lunar Caseiro", Description = "Feito com a planta lunar. Todo cachorro entra na fila por uma colherada.", BaseCost = 40000000000000.0, BaseCps = 36900000000.0, IconFile = "pudim-lunar" },
         new BuildingDef { Key = "fabrica-de-pudim-lunar", Name = "Fábrica de Pudim Lunar", Description = "Os cachorros gostaram tanto do nutritivo pudim do Caramelo que ele montou a própria fábrica na Lua.", BaseCost = 250000000000000.0, BaseCps = 210000000000.0, IconFile = "fabrica-de-pudim-lunar" },
         new BuildingDef { Key = "cometa-caramelo", Name = "Cometa Caramelo", Description = "Passa raspando e deixa uma chuva de ossos e moedas.", BaseCost = 1600000000000000.0, BaseCps = 1220000000000.0, IconFile = "cometa-caramelo" },
+        new BuildingDef { Key = "sol-caramelo", Name = "Sol Caramelo", Description = "Por motivos desconhecidos, o Sol tomou a forma de um cachorro caramelo. Todos os cachorros que recebem a luz dele relatam ter energia de sobra.", BaseCost = 1000000000000000000.0, BaseCps = 720000000000000.0, IconFile = "sol-caramelo" },
     };
 
     public const int PawIcon = 9;
@@ -164,6 +165,10 @@ public static class GameDefs
         new TierText { Building = "cometa-caramelo", Tier = 1, Name = "Rota Orbital", Description = "Passa duas vezes por ano. O Caramelo marca no calendário.", IconFile = "cometa-caramelo" },
         new TierText { Building = "cometa-caramelo", Tier = 2, Name = "Núcleo Caramelo", Description = "Dentro tem um osso enorme. Ninguém sabe de quem era.", IconFile = "cometa-caramelo" },
         new TierText { Building = "cometa-caramelo", Tier = 3, Name = "Chuva de Meteoros", Description = "Chove osso, chove moeda. Leve o guarda-chuva.", IconFile = "cometa-caramelo" },
+        new TierText { Building = "sol-caramelo", Tier = 0, Name = "Raio de Sol", Description = "Um raio atravessa a janela e o Caramelo deita bem no meio. Mais motivado, impossível.", IconFile = "sol-caramelo" },
+        new TierText { Building = "sol-caramelo", Tier = 1, Name = "Sesta Solar", Description = "Soneca ao sol, bateria cheia. Acorda pronto para mais três entregas.", IconFile = "sol-caramelo" },
+        new TierText { Building = "sol-caramelo", Tier = 2, Name = "Corona Caramelo", Description = "A coroa de fogo balança como um rabo feliz. Dá para sentir de longe.", IconFile = "sol-caramelo" },
+        new TierText { Building = "sol-caramelo", Tier = 3, Name = "Eclipse de Biscoito", Description = "A Lua passa na frente e, por um instante, o Sol vira um enorme biscoito.", IconFile = "sol-caramelo" },
     };
 
     // Display texts in the current language.
