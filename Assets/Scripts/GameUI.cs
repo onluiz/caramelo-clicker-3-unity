@@ -11,7 +11,7 @@ public class GameUI
 {
     const float LeftWidth = 0.62f;        // landscape: share of the width used by the game area
     const float PortraitShopHeight = 0.45f; // portrait: share of the height used by the shop
-    const float RowHeight = 134f;
+    const float RowHeight = 146f;
     const int FloatPoolSize = 24;
     const int FallingPoolSize = 28;
     static readonly int[] BuyModes = { 1, 10, 100, -1 };
@@ -53,7 +53,7 @@ public class GameUI
     readonly GameAudio sfx;
 
     RectTransform canvasRect, bgLayer, floatLayer, overlayLayer;
-    RectTransform safeRoot, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, buyBarRt, scrollRt;
+    RectTransform safeRoot, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabDevRt, buyBarRt, scrollRt;
     CanvasScaler scaler;
     bool portrait;
     Vector2Int lastScreen;
@@ -64,8 +64,10 @@ public class GameUI
     float clock;
 
     TextMeshProUGUI counterText, cpsText, buffText, toastText, statsText;
-    TextMeshProUGUI tabBuildingsText, tabUpgradesText, emptyText, muteText, resetText;
-    Image tabBuildingsBg, tabUpgradesBg, resetBg;
+    TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabDevText, emptyText, muteText, resetText;
+    Image tabBuildingsBg, tabUpgradesBg, tabDevBg, resetBg;
+    GameObject devContent;
+    bool showDev;
     readonly List<Image> buyBg = new List<Image>();
     readonly List<TextMeshProUGUI> buyText = new List<TextMeshProUGUI>();
     GameObject buyBar;
@@ -285,13 +287,17 @@ public class GameUI
         rightPanel = rt;
 
         // Tabs
-        var tabB = NewButton(rt, "TabBuildings", "Construções", 34, TabOn, Ink, out tabBuildingsBg, out tabBuildingsText);
+        var tabB = NewButton(rt, "TabBuildings", "Construções", 28, TabOn, Ink, out tabBuildingsBg, out tabBuildingsText);
         tabBuildingsRt = (RectTransform)tabB.transform;
-        tabB.onClick.AddListener(() => ShowTab(false));
+        tabB.onClick.AddListener(() => ShowTab(0));
 
-        var tabU = NewButton(rt, "TabUpgrades", "Melhorias", 34, TabOff, Color.white, out tabUpgradesBg, out tabUpgradesText);
+        var tabU = NewButton(rt, "TabUpgrades", "Melhorias", 28, TabOff, Color.white, out tabUpgradesBg, out tabUpgradesText);
         tabUpgradesRt = (RectTransform)tabU.transform;
-        tabU.onClick.AddListener(() => ShowTab(true));
+        tabU.onClick.AddListener(() => ShowTab(1));
+
+        var tabD = NewButton(rt, "TabDev", "Dev", 28, TabOff, Color.white, out tabDevBg, out tabDevText);
+        tabDevRt = (RectTransform)tabD.transform;
+        tabD.onClick.AddListener(() => ShowTab(2));
 
         // Buy-amount selector (buildings tab only)
         buyBar = NewRect("BuyBar", rt).gameObject;
@@ -326,6 +332,7 @@ public class GameUI
 
         buildingsContent = NewContent("BuildingsContent", viewport);
         upgradesContent = NewContent("UpgradesContent", viewport);
+        devContent = NewContent("DevContent", viewport);
 
         scroll.viewport = viewport;
         scroll.horizontal = false;
@@ -336,7 +343,7 @@ public class GameUI
         for (int i = 0; i < GameDefs.Buildings.Length; i++)
         {
             int index = i;
-            var row = MakeRow(buildingsContent.transform, "Building" + i, ProceduralArt.Icon(GameDefs.Buildings[i].Icon));
+            var row = MakeRow(buildingsContent.transform, "Building" + i, IconLoader.For(GameDefs.Buildings[i].IconFile, GameDefs.Buildings[i].Icon));
             row.button.onClick.AddListener(() => BuyBuilding(index));
             buildingRows.Add(row);
         }
@@ -344,7 +351,7 @@ public class GameUI
         foreach (var def in GameDefs.Upgrades)
         {
             var captured = def;
-            var row = MakeRow(upgradesContent.transform, "Upgrade_" + def.Id, ProceduralArt.Icon(def.Icon));
+            var row = MakeRow(upgradesContent.transform, "Upgrade_" + def.Id, IconLoader.For(def.IconFile, def.Icon));
             row.name.text = def.Name;
             row.desc.text = def.Description;
             row.count.gameObject.SetActive(false);
@@ -352,13 +359,51 @@ public class GameUI
             upgradeRows.Add(row);
         }
 
+        BuildDevRows();
+
         emptyText = NewText(rt, "EmptyUpgrades", "Nenhuma melhoria por enquanto.\nContinue juntando petiscos!", 30,
             Color.white, TextAlignmentOptions.Center);
         emptyText.textWrappingMode = TextWrappingModes.Normal;
         Box(emptyText.rectTransform, new Vector2(0.05f, 0.4f), new Vector2(0.95f, 0.7f), Vector2.zero, Vector2.zero);
 
-        ShowTab(false);
+        ShowTab(0);
         RefreshBuyBar();
+    }
+
+    // Developer tab: cheats for testing the late game quickly.
+    void BuildDevRows()
+    {
+        AddDevRow("+1 mil petiscos", "Adiciona 1.000 petiscos.", () => DevAdd(1e3));
+        AddDevRow("+1 milhão de petiscos", "Adiciona 1.000.000 petiscos.", () => DevAdd(1e6));
+        AddDevRow("+1 bilhão de petiscos", "Adiciona 1.000.000.000 petiscos.", () => DevAdd(1e9));
+        AddDevRow("+1 trilhão de petiscos", "Adiciona 1e12 petiscos.", () => DevAdd(1e12));
+        AddDevRow("+1 quatrilhão de petiscos", "Adiciona 1e15 petiscos.", () => DevAdd(1e15));
+        AddDevRow("+1 quintilhão de petiscos", "Adiciona 1e18 petiscos.", () => DevAdd(1e18));
+        AddDevRow("+1 sextilhão de petiscos", "Adiciona 1e21 petiscos.", () => DevAdd(1e21));
+        AddDevRow("Multiplicar por 10", "Multiplica seus petiscos atuais por 10.", () => DevAdd(Math.Max(1.0, s.Petiscos * 9.0)));
+        AddDevRow("Zerar petiscos", "Remove todos os petiscos (mantém construções).", () =>
+        {
+            s.Petiscos = 0;
+            RefreshAll();
+        });
+    }
+
+    void AddDevRow(string title, string desc, UnityEngine.Events.UnityAction action)
+    {
+        var row = MakeRow(devContent.transform, "Dev_" + title, ProceduralArt.Icon(GameDefs.PawIcon));
+        row.name.text = title;
+        row.desc.text = desc;
+        row.cost.text = "";
+        row.count.gameObject.SetActive(false);
+        row.button.onClick.AddListener(action);
+    }
+
+    void DevAdd(double amount)
+    {
+        s.Petiscos += amount;
+        s.TotalEarned += amount;
+        sfx.PlayBuy();
+        RefreshAll();
     }
 
     GameObject NewContent(string name, RectTransform viewport)
@@ -410,6 +455,10 @@ public class GameUI
 
         row.desc = NewText(row.go.transform, "Desc", "", 20, ProceduralArt.Hex("#6B4A2B"), TextAlignmentOptions.TopLeft);
         row.desc.textWrappingMode = TextWrappingModes.Normal;
+        // Flavor texts vary a lot in length: shrink to fit the box instead of cutting them off.
+        row.desc.enableAutoSizing = true;
+        row.desc.fontSizeMin = 13f;
+        row.desc.fontSizeMax = 20f;
         Box(row.desc.rectTransform, Vector2.zero, Vector2.one, new Vector2(120f, 40f), new Vector2(-112f, -46f));
 
         row.cost = NewText(row.go.transform, "Cost", "", 28, Good, TextAlignmentOptions.MidlineLeft, FontStyles.Bold);
@@ -500,19 +549,25 @@ public class GameUI
         RefreshAll();
     }
 
-    void ShowTab(bool upgrades)
+    // 0 = buildings, 1 = upgrades, 2 = dev.
+    void ShowTab(int tab)
     {
-        showUpgrades = upgrades;
-        buildingsContent.SetActive(!upgrades);
-        upgradesContent.SetActive(upgrades);
-        buyBar.SetActive(!upgrades);
-        scroll.content = (RectTransform)(upgrades ? upgradesContent : buildingsContent).transform;
+        showUpgrades = tab == 1;
+        showDev = tab == 2;
+        buildingsContent.SetActive(tab == 0);
+        upgradesContent.SetActive(tab == 1);
+        devContent.SetActive(tab == 2);
+        buyBar.SetActive(tab == 0);
+        var content = tab == 0 ? buildingsContent : tab == 1 ? upgradesContent : devContent;
+        scroll.content = (RectTransform)content.transform;
         scroll.verticalNormalizedPosition = 1f;
 
-        tabBuildingsBg.color = upgrades ? TabOff : TabOn;
-        tabBuildingsText.color = upgrades ? Color.white : Ink;
-        tabUpgradesBg.color = upgrades ? TabOn : TabOff;
-        tabUpgradesText.color = upgrades ? Ink : Color.white;
+        tabBuildingsBg.color = tab == 0 ? TabOn : TabOff;
+        tabBuildingsText.color = tab == 0 ? Ink : Color.white;
+        tabUpgradesBg.color = tab == 1 ? TabOn : TabOff;
+        tabUpgradesText.color = tab == 1 ? Ink : Color.white;
+        tabDevBg.color = tab == 2 ? TabOn : TabOff;
+        tabDevText.color = tab == 2 ? Ink : Color.white;
         RefreshShop();
     }
 
@@ -567,7 +622,8 @@ public class GameUI
 
     void RefreshShop()
     {
-        if (showUpgrades) RefreshUpgrades();
+        if (showDev) emptyText.gameObject.SetActive(false);
+        else if (showUpgrades) RefreshUpgrades();
         else RefreshBuildings();
 
         int available = 0;
@@ -633,7 +689,8 @@ public class GameUI
             bool affordable = s.Petiscos >= def.Cost;
             row.bg.color = affordable ? RowOn : RowOff;
             row.cost.color = affordable ? Good : Bad;
-            row.cost.text = NumberFormat.Format(def.Cost) + " petiscos";
+            row.cost.text = NumberFormat.Format(def.Cost) + " petiscos" +
+                (def.Effect != null ? "  <size=70%><color=#6B4A2B>" + def.Effect + "</color></size>" : "");
         }
 
         emptyText.gameObject.SetActive(visible == 0);
@@ -661,8 +718,9 @@ public class GameUI
         {
             Anchors(leftPanel, 0f, PortraitShopHeight, 1f, 1f);
             Anchors(rightPanel, 0f, 0f, 1f, PortraitShopHeight);
-            Box(tabBuildingsRt, new Vector2(0f, 0.895f), new Vector2(0.5f, 0.985f), new Vector2(14f, 0f), new Vector2(-5f, 0f));
-            Box(tabUpgradesRt, new Vector2(0.5f, 0.895f), new Vector2(1f, 0.985f), new Vector2(5f, 0f), new Vector2(-14f, 0f));
+            Box(tabBuildingsRt, new Vector2(0f, 0.895f), new Vector2(0.38f, 0.985f), new Vector2(14f, 0f), new Vector2(-4f, 0f));
+            Box(tabUpgradesRt, new Vector2(0.38f, 0.895f), new Vector2(0.78f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
+            Box(tabDevRt, new Vector2(0.78f, 0.895f), new Vector2(1f, 0.985f), new Vector2(4f, 0f), new Vector2(-14f, 0f));
             Box(buyBarRt, new Vector2(0f, 0.81f), new Vector2(1f, 0.885f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
             Box(scrollRt, Vector2.zero, new Vector2(1f, 0.8f), new Vector2(10f, 10f), new Vector2(-10f, 0f));
         }
@@ -670,8 +728,9 @@ public class GameUI
         {
             Anchors(leftPanel, 0f, 0f, LeftWidth, 1f);
             Anchors(rightPanel, LeftWidth, 0f, 1f, 1f);
-            Box(tabBuildingsRt, new Vector2(0f, 0.915f), new Vector2(0.5f, 0.985f), new Vector2(14f, 0f), new Vector2(-5f, 0f));
-            Box(tabUpgradesRt, new Vector2(0.5f, 0.915f), new Vector2(1f, 0.985f), new Vector2(5f, 0f), new Vector2(-14f, 0f));
+            Box(tabBuildingsRt, new Vector2(0f, 0.915f), new Vector2(0.38f, 0.985f), new Vector2(14f, 0f), new Vector2(-4f, 0f));
+            Box(tabUpgradesRt, new Vector2(0.38f, 0.915f), new Vector2(0.78f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
+            Box(tabDevRt, new Vector2(0.78f, 0.915f), new Vector2(1f, 0.985f), new Vector2(4f, 0f), new Vector2(-14f, 0f));
             Box(buyBarRt, new Vector2(0f, 0.845f), new Vector2(1f, 0.905f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
             Box(scrollRt, Vector2.zero, new Vector2(1f, 0.835f), new Vector2(10f, 10f), new Vector2(-10f, 0f));
         }

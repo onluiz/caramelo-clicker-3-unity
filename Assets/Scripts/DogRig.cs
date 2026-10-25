@@ -45,6 +45,7 @@ public class DogRig
     const float SeatedFps = 8f;
     const float SitFps = 14f;
     const float ClickDecay = 1.2f;
+    const float GaitHysteresis = 0.35f;
     const float StridePixelsPerFrame = 36f;
 
     readonly RectTransform rootRt, spriteRt;
@@ -60,6 +61,9 @@ public class DogRig
     float fps = SeatedFps;
     float clickEnergy, punch;
     float movingBlend;
+    float effortSmooth;
+    int gait;
+    bool walkHappy;
     int shownFrame = -1;
 
     public GameObject Root => rootRt.gameObject;
@@ -160,8 +164,19 @@ public class DogRig
         if (!standing && (cps > 0.0 || boost > 0.25f)) standing = true;
         else if (standing && cps <= 0.0 && boost < 0.1f) standing = false;
 
-        float effort = Mathf.Log10(1f + (float)cps) + boost;
-        int gait = effort < EffortMin[1] ? 0 : effort < EffortMin[2] ? 1 : 2;
+        // Smooth the effort so single clicks speed the stride up gradually instead of flipping clips.
+        float baseEffort = Mathf.Log10(1f + (float)cps);
+        float rawEffort = baseEffort + boost;
+        float follow = rawEffort > effortSmooth ? 2.5f : 1.2f;
+        effortSmooth = Mathf.Lerp(effortSmooth, rawEffort, 1f - Mathf.Exp(-dt * follow));
+        float effort = effortSmooth;
+
+        // Hysteresis: move up at the threshold, only come back down after dropping below it by a margin.
+        while (gait < 2 && effort >= EffortMin[gait + 1]) gait++;
+        while (gait > 0 && effort < EffortMin[gait] - GaitHysteresis) gait--;
+        if (baseEffort > 0.7f) walkHappy = true;
+        else if (baseEffort < 0.5f) walkHappy = false;
+
         float t = Mathf.InverseLerp(EffortMin[gait], EffortMax[gait], effort);
         float clickSpeed = 1f + 0.06f * Mathf.Min(clickRate, 12f);
 
@@ -169,7 +184,8 @@ public class DogRig
         float targetFps;
         if (standing)
         {
-            desired = gait == 0 && t > 0.5f ? WalkHappy : GaitClips[gait];
+            // The walk variant depends on income only, so clicking never swaps the walk cycle.
+            desired = gait == 0 && walkHappy ? WalkHappy : GaitClips[gait];
             targetFps = Mathf.Lerp(FpsMin[gait], FpsMax[gait], t) * clickSpeed;
         }
         else if (IsMoving(clip))

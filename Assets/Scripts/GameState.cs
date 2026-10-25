@@ -15,7 +15,7 @@ public class SaveData
 
 public class GameState
 {
-    const string SaveKey = "caramelo_clicker_save_v1";
+    const string SaveKey = "caramelo_clicker_save_v2";
     const double OfflineEfficiency = 0.5;
     const double MaxOfflineSeconds = 8 * 3600;
     public const double FrenzyMultiplier = 7;
