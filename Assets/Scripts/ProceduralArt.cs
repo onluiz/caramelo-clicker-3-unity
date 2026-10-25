@@ -4,7 +4,7 @@ using UnityEngine;
 // All sprites are drawn at startup from signed distance functions, so the game ships with no image files.
 public static class ProceduralArt
 {
-    static Sprite bone, goldenBone, blob, rounded, gradient;
+    static Sprite bone, goldenBone, blob, rounded, gradient, celestial;
     static readonly Sprite[] icons = new Sprite[11];
 
     public static Color Hex(string html)
@@ -145,6 +145,16 @@ public static class ProceduralArt
         P.Shape(BoneSdf, Hex("#FFD23F"), Hex("#B8860B"), 0.05f);
         P.Fill(p => Sdf.Ellipse(p, new Vector2(-0.12f, 0.1f), 0.22f, 0.05f), new Color(1f, 1f, 1f, 0.6f));
         return goldenBone = P.ToSprite();
+    }
+
+    // Placeholder icon for the Céu tab (a crescent moon), deliberately unlike the golden bone.
+    public static Sprite CelestialPlaceholder()
+    {
+        if (celestial != null) return celestial;
+        var P = new Painter(96);
+        P.Shape(p => Mathf.Max(Sdf.Circle(p, Vector2.zero, 0.8f), -Sdf.Circle(p, new Vector2(0.38f, 0.2f), 0.68f)),
+            Hex("#B9A7FF"), Hex("#2E2466"), 0.05f);
+        return celestial = P.ToSprite();
     }
 
     public static Sprite Blob()

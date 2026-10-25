@@ -23,7 +23,10 @@ public class GameUI
     static readonly Color RowOff = ProceduralArt.Hex("#CDB99C");
     static readonly Color Good = ProceduralArt.Hex("#2E7D32");
     static readonly Color Bad = ProceduralArt.Hex("#B3261E");
-    static readonly Color TabOn = ProceduralArt.Hex("#F6A33B");
+    static readonly Color InfoBg = ProceduralArt.Hex("#3A2F5C");
+    static readonly Color InfoText = ProceduralArt.Hex("#F3ECFF");
+    static readonly Color AscendReady = ProceduralArt.Hex("#FFB627");
+    static readonly Color TabOn =ProceduralArt.Hex("#F6A33B");
     static readonly Color TabOff = ProceduralArt.Hex("#6B452B");
 
     class RowView
@@ -389,14 +392,25 @@ public class GameUI
     // "Céu" tab: ascend for Ossos Celestiais, then spend them on permanent blessings.
     void BuildCeuRows()
     {
-        var bone = ProceduralArt.GoldenBone();
+        var bone = ProceduralArt.CelestialPlaceholder(); // placeholder until real Ossos Celestiais art exists
 
+        // Info card: not a button, so it gets a dark panel, light text and no press feedback.
         ossosRow = MakeRow(ceuContent.transform, "Ossos", bone);
         ossosRow.count.gameObject.SetActive(false);
+        UnityEngine.Object.Destroy(ossosRow.button);
+        ossosRow.bg.color = InfoBg;
+        ossosRow.bg.raycastTarget = false;
+        ossosRow.name.color = InfoText;
+        ossosRow.desc.color = InfoText;
+        ossosRow.cost.color = InfoText;
+        ossosRow.go.GetComponent<LayoutElement>().preferredHeight = 120f;
+        ossosRow.go.GetComponent<LayoutElement>().minHeight = 120f;
 
-        ascendRow = MakeRow(ceuContent.transform, "Ascend", bone);
+        // The ascend action is the important one: own icon, bigger title, pulses when ready.
+        ascendRow = MakeRow(ceuContent.transform, "Ascend", IconLoader.For("ceu-ascender", GameDefs.PawIcon));
         ascendRow.count.gameObject.SetActive(false);
         ascendRow.button.onClick.AddListener(OnAscendClicked);
+        ascendRow.name.fontSizeMax = 40f;
 
         foreach (var def in PrestigeDefs.Blessings)
         {
@@ -639,6 +653,7 @@ public class GameUI
         ceuContent.SetActive(tab == 2);
         devContent.SetActive(tab == 3);
         buyBar.SetActive(tab == 0);
+        ApplyScrollBox();
         var content = tab == 0 ? buildingsContent : tab == 1 ? upgradesContent : tab == 2 ? ceuContent : devContent;
         scroll.content = (RectTransform)content.transform;
         scroll.verticalNormalizedPosition = 1f;
@@ -736,24 +751,22 @@ public class GameUI
 
     void RefreshCeu()
     {
-        ossosRow.bg.color = RowOn;
         ossosRow.name.text = "Ossos Celestiais: " + NumberFormat.Format(s.Ossos);
         ossosRow.desc.text = "Cada osso já ganho dá +" + (PrestigeDefs.BonusPerOsso * 100).ToString("0.#") + "% de produção (hoje: +" +
             NumberFormat.Format(s.PrestigeBonus * 100, true) + "%). Gaste os ossos em bênçãos permanentes.";
         ossosRow.cost.text = s.Ascensions > 0 ? "Ascensões: " + s.Ascensions : "";
-        ossosRow.cost.color = Ink;
 
         double pending = s.PendingOssos;
         bool ready = pending >= 1;
         bool confirming = ascendConfirmTimer > 0f;
-        ascendRow.bg.color = confirming ? Bad : ready ? RowOn : RowOff;
+        ascendRow.bg.color = confirming ? Bad : ready ? AscendReady : RowOff;
         ascendRow.name.text = confirming ? "Toque de novo para confirmar!" : "Ascender ao Céu dos Cachorros";
         ascendRow.name.color = confirming ? Color.white : Ink;
         ascendRow.desc.color = confirming ? Color.white : ProceduralArt.Hex("#35200D");
         ascendRow.desc.text = "Reinicia petiscos, construções e melhorias comuns. Você mantém ossos, bênçãos e cliques.";
         if (ready)
         {
-            ascendRow.cost.color = confirming ? Color.white : Good;
+            ascendRow.cost.color = confirming ? Color.white : Ink;
             ascendRow.cost.text = "+" + NumberFormat.Format(pending) + (pending == 1 ? " Osso Celestial" : " Ossos Celestiais");
         }
         else
@@ -867,7 +880,6 @@ public class GameUI
             Box(tabCeuRt, new Vector2(0.62f, 0.895f), new Vector2(0.82f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
             Box(tabDevRt, new Vector2(0.82f, 0.895f), new Vector2(1f, 0.985f), new Vector2(4f, 0f), new Vector2(-14f, 0f));
             Box(buyBarRt, new Vector2(0f, 0.81f), new Vector2(1f, 0.885f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
-            Box(scrollRt, Vector2.zero, new Vector2(1f, 0.8f), new Vector2(10f, 10f), new Vector2(-10f, 0f));
         }
         else
         {
@@ -878,11 +890,20 @@ public class GameUI
             Box(tabCeuRt, new Vector2(0.62f, 0.915f), new Vector2(0.82f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
             Box(tabDevRt, new Vector2(0.82f, 0.915f), new Vector2(1f, 0.985f), new Vector2(4f, 0f), new Vector2(-14f, 0f));
             Box(buyBarRt, new Vector2(0f, 0.845f), new Vector2(1f, 0.905f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
-            Box(scrollRt, Vector2.zero, new Vector2(1f, 0.835f), new Vector2(10f, 10f), new Vector2(-10f, 0f));
         }
+
+        ApplyScrollBox();
 
         // The totals line has no room next to the buttons on a narrow screen.
         statsText.gameObject.SetActive(!portrait);
+    }
+
+    // The list sits under the buy-mode bar on the buildings tab; other tabs have no bar, so it moves up to the tabs.
+    void ApplyScrollBox()
+    {
+        bool bar = buyBar.activeSelf;
+        float top = portrait ? (bar ? 0.8f : 0.885f) : (bar ? 0.835f : 0.905f);
+        Box(scrollRt, Vector2.zero, new Vector2(1f, top), new Vector2(10f, 10f), new Vector2(-10f, 0f));
     }
 
     // The game area's rectangle in canvas coordinates (origin at the canvas centre).
@@ -935,6 +956,11 @@ public class GameUI
             ascendConfirmTimer -= dt;
             if (ascendConfirmTimer <= 0f) RefreshCeu();
         }
+
+        // Gentle pulse on the ascend button while it is available.
+        bool pulse = showCeu && s.PendingOssos >= 1;
+        float k = pulse ? 1f + 0.025f * Mathf.Sin(clock * 4f) : 1f;
+        ascendRow.go.transform.localScale = new Vector3(k, k, 1f);
     }
 
     void UpdateDog(float dt)
