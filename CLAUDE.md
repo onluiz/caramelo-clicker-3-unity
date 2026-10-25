@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-"Caramelo Clicker": a cookie-clicker in Unity 6 (6000.3.27f1, 2D URP template) that ships **only as a WebGL build**. The player clicks a caramelo dog for "petiscos" (treats). UI text is Portuguese (pt-BR). Sibling project `../caramelo-clicker-3` is the original web (Phaser/TypeScript) game; only bring assets from it when the user asks.
+"Caramel Dog Clicker" (project folder and repo still say caramelo-clicker): a cookie-clicker in Unity 6 (6000.3.27f1, 2D URP template) that ships **only as a WebGL build**. The player clicks a caramelo dog for "petiscos" (treats). UI text is Portuguese (pt-BR). Sibling project `../caramelo-clicker-3` is the original web (Phaser/TypeScript) game; only bring assets from it when the user asks.
 
 ## Working with the Editor (Unity CLI)
 
