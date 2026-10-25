@@ -204,17 +204,17 @@ public class GameState
         if (roll < 0.10)
         {
             ClickFrenzyUntil = Math.Max(ClickFrenzyUntil, Time) + 13;
-            return "Pata Furiosa! Seus cliques valem x" + ClickFrenzyMultiplier + " por 13s!";
+            return Loc.F("Pata Furiosa! Seus cliques valem x{0} por 13s!", ClickFrenzyMultiplier);
         }
         if (roll < 0.45)
         {
             double gain = Math.Min(Petiscos * 0.15, BaseCps * 900) + 13;
             Petiscos += gain;
             TotalEarned += gain;
-            return "Sorte! +" + NumberFormat.Format(gain) + " petiscos!";
+            return Loc.F("Sorte! +{0} petiscos!", NumberFormat.Format(gain));
         }
         FrenzyUntil = Math.Max(FrenzyUntil, Time) + 30;
-        return "Frenesi! Produção x" + FrenzyMultiplier + " por 30s!";
+        return Loc.F("Frenesi! Produção x{0} por 30s!", FrenzyMultiplier);
     }
 
     public bool IsBlessed(BlessingDef b) { return Blessings.Contains(b.Id); }
@@ -340,7 +340,7 @@ public class GameState
             {
                 Petiscos += gain;
                 TotalEarned += gain;
-                OfflineMessage = "Bem-vindo de volta! Enquanto você estava fora, o Caramelo juntou " + NumberFormat.Format(gain) + " petiscos.";
+                OfflineMessage = Loc.F("Bem-vindo de volta! Enquanto você estava fora, o Caramelo juntou {0} petiscos.", NumberFormat.Format(gain));
             }
         }
     }

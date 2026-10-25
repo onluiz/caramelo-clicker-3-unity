@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
     {
         Application.runInBackground = true;
         EnsureEventSystem();
+        Loc.Init();
 
         state = new GameState();
         state.Load();

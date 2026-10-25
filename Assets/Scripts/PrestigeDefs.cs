@@ -25,6 +25,9 @@ public static class PrestigeDefs
     public const double BaseOfflineSeconds = 8 * 3600;
     public const double BlessedOfflineSeconds = 12 * 3600;
 
+    public static string NameOf(BlessingDef b) { return Loc.BlessingName(b.Id, b.Name); }
+    public static string DescOf(BlessingDef b) { return Loc.BlessingDesc(b.Id, b.Description); }
+
     public static readonly BlessingDef[] Blessings =
     {
         new BlessingDef { Id = "mochila", Name = "Mochila de Petiscos", Description = "Cada vida começa com 10.000 petiscos.", Cost = 1, Effect = BlessingEffect.StartPetiscos, Value = 1e4 },

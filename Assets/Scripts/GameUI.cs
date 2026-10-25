@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-// Builds and drives the whole uGUI hierarchy. Layout is anchor-based against a 1920x1080 reference.
+// Builds and drives the whole uGUI hierarchy. Layout is anchor-based against a 1600x900 (landscape) or 1080x1920 (portrait) reference.
 public class GameUI
 {
     const float LeftWidth = 0.62f;        // landscape: share of the width used by the game area
@@ -78,6 +78,7 @@ public class GameUI
     RowView ascendRow, ossosRow;
     Image buffChip;
     RectTransform settingsRoot;
+    TextMeshProUGUI buyLabelText, settingsTitleText, closeText, langText;
     TextMeshProUGUI ossosText, cpsShadow;
     readonly List<RowView> blessingRows = new List<RowView>();
     float ascendConfirmTimer;
@@ -114,6 +115,7 @@ public class GameUI
         BuildOverlay();
         BuildSettings();
         ApplyLayout();
+        ApplyLanguage();
 
         goldenTimer = Random.Range(25f, 45f) * (float)s.GoldenInterval;
         RefreshAll();
@@ -221,7 +223,7 @@ public class GameUI
 
         scaler = go.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920, 1080);
+        scaler.referenceResolution = new Vector2(1600, 900);
         scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
         scaler.matchWidthOrHeight = 0.5f;
 
@@ -337,26 +339,60 @@ public class GameUI
         var panel = NewImage(border.transform, "Inner", ProceduralArt.RoundedRect(), CardBg, true);
         Box(panel.rectTransform, Vector2.zero, Vector2.one, new Vector2(6f, 6f), new Vector2(-6f, -6f));
 
-        var title = NewText(panel.transform, "Title", "Configurações", 54, CardText, TextAlignmentOptions.Center, FontStyles.Bold);
+        var title = settingsTitleText = NewText(panel.transform, "Title", "Configurações", 54, CardText, TextAlignmentOptions.Center, FontStyles.Bold);
         Place(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -30f), new Vector2(700f, 80f));
 
         var muteBtn = NewButton(panel.transform, "MuteButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out muteText);
-        Place((RectTransform)muteBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -150f), new Vector2(640f, 100f));
+        Place((RectTransform)muteBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -128f), new Vector2(640f, 96f));
         muteBtn.onClick.AddListener(() =>
         {
             sfx.SetMuted(!sfx.Muted);
             RefreshButtons();
         });
 
+        var langBtn = NewButton(panel.transform, "LanguageButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out langText);
+        Place((RectTransform)langBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -236f), new Vector2(640f, 96f));
+        langBtn.onClick.AddListener(() =>
+        {
+            Loc.Set(Loc.IsEnglish ? Lang.Pt : Lang.En);
+            ApplyLanguage();
+        });
+
         var resetBtn = NewButton(panel.transform, "ResetButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out resetBg, out resetText);
-        Place((RectTransform)resetBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -280f), new Vector2(640f, 100f));
+        Place((RectTransform)resetBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -344f), new Vector2(640f, 96f));
         resetBtn.onClick.AddListener(OnResetClicked);
 
-        var closeBtn = NewButton(panel.transform, "CloseButton", "Fechar", 38, TabOn, Ink, out _, out _);
-        Place((RectTransform)closeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -430f), new Vector2(640f, 100f));
+        var closeBtn = NewButton(panel.transform, "CloseButton", "Fechar", 38, TabOn, Ink, out _, out closeText);
+        Place((RectTransform)closeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -476f), new Vector2(640f, 96f));
         closeBtn.onClick.AddListener(() => SetSettingsOpen(false));
 
         settingsRoot.gameObject.SetActive(false);
+    }
+
+    // Re-applies every text that is not refreshed continuously (labels and row names/descriptions).
+    void ApplyLanguage()
+    {
+        tabBuildingsText.text = Loc.T("Construções");
+        buyLabelText.text = Loc.T("Comprar:");
+        for (int i = 0; i < BuyLabels.Length; i++) buyText[i].text = Loc.T(BuyLabels[i]);
+        emptyText.text = Loc.T("Nenhuma melhoria por enquanto.\nContinue juntando petiscos!");
+        settingsTitleText.text = Loc.T("Configurações");
+        closeText.text = Loc.T("Fechar");
+        langText.text = Loc.T("Idioma: Português");
+
+        for (int i = 0; i < upgradeRows.Count; i++)
+        {
+            upgradeRows[i].name.text = GameDefs.NameOf(GameDefs.Upgrades[i]);
+            upgradeRows[i].desc.text = GameDefs.DescOf(GameDefs.Upgrades[i]);
+        }
+        for (int i = 0; i < blessingRows.Count; i++)
+        {
+            blessingRows[i].name.text = PrestigeDefs.NameOf(PrestigeDefs.Blessings[i]);
+            blessingRows[i].desc.text = PrestigeDefs.DescOf(PrestigeDefs.Blessings[i]);
+        }
+
+        RefreshButtons();
+        RefreshAll();
     }
 
     void SetSettingsOpen(bool open)
@@ -399,7 +435,7 @@ public class GameUI
         // Buy-amount selector (buildings tab only)
         buyBar = NewRect("BuyBar", rt).gameObject;
         buyBarRt = (RectTransform)buyBar.transform;
-        var buyLabel = NewText(buyBar.transform, "BuyLabel", "Comprar:", 30, Color.white, TextAlignmentOptions.MidlineLeft, FontStyles.Bold);
+        var buyLabel = buyLabelText = NewText(buyBar.transform, "BuyLabel", "Comprar:", 30, Color.white, TextAlignmentOptions.MidlineLeft, FontStyles.Bold);
         Anchors(buyLabel.rectTransform, 0f, 0f, 0.28f, 1f);
         for (int i = 0; i < BuyModes.Length; i++)
         {
@@ -510,14 +546,14 @@ public class GameUI
         if (s.PendingOssos < 1)
         {
             sfx.PlayError();
-            ShowToast("Ainda falta produzir mais petiscos para ganhar um Osso Celestial.", 4f);
+            ShowToast(Loc.T("Ainda falta produzir mais petiscos para ganhar um Osso Celestial."), 4f);
             return;
         }
 
         if (ascendConfirmTimer <= 0f)
         {
             ascendConfirmTimer = 6f;
-            ShowToast("Ascender reinicia petiscos, construções e melhorias. Toque de novo para confirmar!", 6f);
+            ShowToast(Loc.T("Ascender reinicia petiscos, construções e melhorias. Toque de novo para confirmar!"), 6f);
             RefreshCeu();
             return;
         }
@@ -527,7 +563,7 @@ public class GameUI
         s.Save();
         HideGolden();
         sfx.PlayGolden();
-        ShowToast("Você ascendeu! +" + NumberFormat.Format(gained) + (gained == 1 ? " Osso Celestial" : " Ossos Celestiais"), 6f);
+        ShowToast(Loc.F(gained == 1 ? "Você ascendeu! +{0} Osso Celestial" : "Você ascendeu! +{0} Ossos Celestiais", NumberFormat.Format(gained)), 6f);
         RefreshAll();
     }
 
@@ -631,8 +667,8 @@ public class GameUI
         row.desc.textWrappingMode = TextWrappingModes.Normal;
         // Flavor texts vary a lot in length: shrink to fit the box instead of cutting them off.
         row.desc.enableAutoSizing = true;
-        row.desc.fontSizeMin = 13f;
-        row.desc.fontSizeMax = 20f;
+        row.desc.fontSizeMin = 15f;
+        row.desc.fontSizeMax = 22f;
         Box(row.desc.rectTransform, Vector2.zero, Vector2.one, new Vector2(120f, 40f), new Vector2(-112f, -46f));
 
         row.cost = NewText(row.go.transform, "Cost", "", 28, Good, TextAlignmentOptions.MidlineLeft, FontStyles.Bold);
@@ -710,7 +746,7 @@ public class GameUI
         {
             resetConfirmTimer = 6f;
             RefreshButtons();
-            ShowToast("Isso apaga todo o progresso! Clique em \"Confirmar reinício\" para continuar.", 6f);
+            ShowToast(Loc.T("Isso apaga todo o progresso! Clique em \"Confirmar reinício\" para continuar."), 6f);
             return;
         }
 
@@ -719,7 +755,7 @@ public class GameUI
         s.Save();
         RefreshButtons();
         HideGolden();
-        ShowToast("Jogo reiniciado. Boa sorte, Caramelo!", 4f);
+        ShowToast(Loc.T("Jogo reiniciado. Boa sorte, Caramelo!"), 4f);
         SetSettingsOpen(false);
         RefreshAll();
     }
@@ -779,9 +815,9 @@ public class GameUI
 
     void RefreshButtons()
     {
-        muteText.text = sfx.Muted ? "Som: Mudo" : "Som: Ligado";
+        muteText.text = Loc.T(sfx.Muted ? "Som: Mudo" : "Som: Ligado");
         bool confirming = resetConfirmTimer > 0f;
-        resetText.text = confirming ? "Confirmar reinício!" : "Reiniciar jogo";
+        resetText.text = Loc.T(confirming ? "Confirmar reinício!" : "Reiniciar jogo");
         resetBg.color = confirming ? Bad : ProceduralArt.Hex("#8A5A2B");
     }
 
@@ -791,12 +827,12 @@ public class GameUI
         counterText.text = NumberFormat.Format(petiscos);
         ossosText.text = NumberFormat.Format(s.Ossos);
         cpsText.text = cpsShadow.text = NumberFormat.Format(s.Cps, true) + "/s";
-        statsText.text = "Cliques: " + NumberFormat.Format(s.Clicks) + "   |   Total: " + NumberFormat.Format(s.LifetimeEarned);
+        statsText.text = Loc.F("Cliques: {0}   |   Total: {1}", NumberFormat.Format(s.Clicks), NumberFormat.Format(s.LifetimeEarned));
 
         if (s.ClickFrenzyActive)
-            buffText.text = "Pata Furiosa! Cliques x" + GameState.ClickFrenzyMultiplier + " (" + Mathf.CeilToInt((float)(s.ClickFrenzyUntil - s.Time)) + "s)";
+            buffText.text = Loc.F("Pata Furiosa! Cliques x{0} ({1}s)", GameState.ClickFrenzyMultiplier, Mathf.CeilToInt((float)(s.ClickFrenzyUntil - s.Time)));
         else if (s.FrenzyActive)
-            buffText.text = "Frenesi! Produção x" + GameState.FrenzyMultiplier + " (" + Mathf.CeilToInt((float)(s.FrenzyUntil - s.Time)) + "s)";
+            buffText.text = Loc.F("Frenesi! Produção x{0} ({1}s)", GameState.FrenzyMultiplier, Mathf.CeilToInt((float)(s.FrenzyUntil - s.Time)));
         else
             buffText.text = "";
 
@@ -816,39 +852,39 @@ public class GameUI
         else RefreshBuildings();
 
         double pending = s.PendingOssos;
-        tabCeuText.text = pending >= 1 ? "Céu (+" + NumberFormat.Format(pending) + ")" : "Céu";
+        tabCeuText.text = pending >= 1 ? Loc.F("Céu (+{0})", NumberFormat.Format(pending)) : Loc.T("Céu");
 
         int available = 0;
         foreach (var def in GameDefs.Upgrades)
             if (s.IsUpgradeAvailable(def)) available++;
-        tabUpgradesText.text = available > 0 ? "Melhorias (" + available + ")" : "Melhorias";
+        tabUpgradesText.text = available > 0 ? Loc.F("Melhorias ({0})", available) : Loc.T("Melhorias");
     }
 
     void RefreshCeu()
     {
-        ossosRow.name.text = "Ossos Celestiais: " + NumberFormat.Format(s.Ossos);
-        ossosRow.desc.text = "Cada osso já ganho dá +" + (PrestigeDefs.BonusPerOsso * 100).ToString("0.#") + "% de produção (hoje: +" +
-            NumberFormat.Format(s.PrestigeBonus * 100, true) + "%). Gaste os ossos em bênçãos permanentes.";
-        ossosRow.cost.text = s.Ascensions > 0 ? "Ascensões: " + s.Ascensions : "";
+        ossosRow.name.text = Loc.F("Ossos Celestiais: {0}", NumberFormat.Format(s.Ossos));
+        ossosRow.desc.text = Loc.F("Cada osso já ganho dá +{0}% de produção (hoje: +{1}%). Gaste os ossos em bênçãos permanentes.",
+            (PrestigeDefs.BonusPerOsso * 100).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture), NumberFormat.Format(s.PrestigeBonus * 100, true));
+        ossosRow.cost.text = s.Ascensions > 0 ? Loc.F("Ascensões: {0}", s.Ascensions) : "";
 
         double pending = s.PendingOssos;
         bool ready = pending >= 1;
         bool confirming = ascendConfirmTimer > 0f;
         ascendRow.bg.color = confirming ? Bad : ready ? AscendReady : RowOff;
-        ascendRow.name.text = confirming ? "Toque de novo para confirmar!" : "Ascender ao Céu dos Cachorros";
+        ascendRow.name.text = Loc.T(confirming ? "Toque de novo para confirmar!" : "Ascender ao Céu dos Cachorros");
         ascendRow.name.color = confirming ? Color.white : Ink;
         ascendRow.desc.color = confirming ? Color.white : ProceduralArt.Hex("#35200D");
-        ascendRow.desc.text = "Reinicia petiscos, construções e melhorias comuns. Você mantém ossos, bênçãos e cliques.";
+        ascendRow.desc.text = Loc.T("Reinicia petiscos, construções e melhorias comuns. Você mantém ossos, bênçãos e cliques.");
         if (ready)
         {
             ascendRow.cost.color = confirming ? Color.white : Ink;
-            ascendRow.cost.text = "+" + NumberFormat.Format(pending) + (pending == 1 ? " Osso Celestial" : " Ossos Celestiais");
+            ascendRow.cost.text = Loc.F(pending == 1 ? "+{0} Osso Celestial" : "+{0} Ossos Celestiais", NumberFormat.Format(pending));
         }
         else
         {
             double needed = PrestigeDefs.Threshold * Math.Pow(s.OssosEver + 1, 3) - s.LifetimeEarned;
             ascendRow.cost.color = Bad;
-            ascendRow.cost.text = "Faltam " + NumberFormat.Format(Math.Max(1, needed)) + " petiscos para o próximo osso";
+            ascendRow.cost.text = Loc.F("Faltam {0} petiscos para o próximo osso", NumberFormat.Format(Math.Max(1, needed)));
         }
 
         for (int i = 0; i < blessingRows.Count; i++)
@@ -859,7 +895,7 @@ public class GameUI
             bool affordable = s.Ossos >= def.Cost;
             row.bg.color = owned ? RowOff : affordable ? RowOn : RowOff;
             row.cost.color = owned ? Ink : affordable ? Good : Bad;
-            row.cost.text = owned ? "Adquirida" : NumberFormat.Format(def.Cost) + (def.Cost == 1 ? " osso" : " ossos");
+            row.cost.text = owned ? Loc.T("Adquirida") : Loc.F(def.Cost == 1 ? "{0} osso" : "{0} ossos", NumberFormat.Format(def.Cost));
             row.icon.color = owned ? new Color(1f, 1f, 1f, 0.45f) : Color.white;
         }
     }
@@ -882,7 +918,7 @@ public class GameUI
                 if (!show) continue;
 
                 row.name.text = "???";
-                row.desc.text = "Junte mais petiscos para desbloquear.";
+                row.desc.text = Loc.T("Junte mais petiscos para desbloquear.");
                 row.cost.text = "";
                 row.count.text = "";
                 row.icon.color = new Color(0.2f, 0.1f, 0.05f, 0.75f);
@@ -897,11 +933,11 @@ public class GameUI
 
             row.icon.color = Color.white;
             row.bg.color = affordable ? RowOn : RowOff;
-            row.name.text = def.Name;
-            row.desc.text = def.Description;
+            row.name.text = GameDefs.NameOf(def);
+            row.desc.text = GameDefs.DescOf(def);
             row.cost.color = affordable ? Good : Bad;
             row.cost.text = NumberFormat.Format(cost) + (n > 1 ? " (x" + n + ")" : "") +
-                "  <size=70%><color=#35200D>+" + NumberFormat.Format(s.CpsEach(i), true) + "/s cada</color></size>";
+                "  <size=70%><color=#35200D>" + Loc.F("+{0}/s cada", NumberFormat.Format(s.CpsEach(i), true)) + "</color></size>";
             row.count.text = s.Owned[i] > 0 ? s.Owned[i].ToString() : "";
         }
     }
@@ -921,8 +957,8 @@ public class GameUI
             bool affordable = s.Petiscos >= def.Cost;
             row.bg.color = affordable ? RowOn : RowOff;
             row.cost.color = affordable ? Good : Bad;
-            row.cost.text = NumberFormat.Format(def.Cost) + " petiscos" +
-                (def.Effect != null ? "  <size=70%><color=#35200D>" + def.Effect + "</color></size>" : "");
+            row.cost.text = Loc.F("{0} petiscos", NumberFormat.Format(def.Cost)) +
+                (def.Effect != null ? "  <size=70%><color=#35200D>" + GameDefs.EffectOf(def) + "</color></size>" : "");
         }
 
         emptyText.gameObject.SetActive(visible == 0);
@@ -939,7 +975,7 @@ public class GameUI
         lastSafe = Screen.safeArea;
         portrait = Screen.height > Screen.width;
 
-        scaler.referenceResolution = portrait ? new Vector2(1080f, 1920f) : new Vector2(1920f, 1080f);
+        scaler.referenceResolution = portrait ? new Vector2(1080f, 1920f) : new Vector2(1600f, 900f);
 
         var safe = Screen.safeArea;
         safeRoot.anchorMin = new Vector2(safe.xMin / Screen.width, safe.yMin / Screen.height);

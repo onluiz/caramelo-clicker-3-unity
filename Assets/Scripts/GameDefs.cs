@@ -26,6 +26,9 @@ public class UpgradeDef
     public int RequiredOwned;
     public int Icon;
     public string IconFile;
+    // Building tiers without their own texts get a composed name/description from the building.
+    public int Tier;
+    public bool Generic;
     // Short line shown next to the price when the description is only flavor text.
     public string Effect;
 }
@@ -163,6 +166,30 @@ public static class GameDefs
         new TierText { Building = "cometa-caramelo", Tier = 3, Name = "Chuva de Meteoros", Description = "Chove osso, chove moeda. Leve o guarda-chuva.", IconFile = "cometa-caramelo" },
     };
 
+    // Display texts in the current language.
+    public static string NameOf(BuildingDef b) { return Loc.BuildingName(b.Key, b.Name); }
+    public static string DescOf(BuildingDef b) { return Loc.BuildingDesc(b.Key, b.Description); }
+
+    public static string NameOf(UpgradeDef u)
+    {
+        if (u.Kind != UpgradeKind.Building) return Loc.UpgradeName(u.Id, u.Name);
+        var b = Buildings[u.Building];
+        return u.Generic ? NameOf(b) + " " + Loc.T(TierNames[u.Tier]) : Loc.TierName(b.Key, u.Tier, u.Name);
+    }
+
+    public static string DescOf(UpgradeDef u)
+    {
+        if (u.Kind != UpgradeKind.Building) return Loc.T(u.Description);
+        var b = Buildings[u.Building];
+        return u.Generic ? Loc.F("{0} produz o dobro.", NameOf(b)) : Loc.TierDesc(b.Key, u.Tier, u.Description);
+    }
+
+    // The short effect line shown next to the price (only for upgrades with flavor-text descriptions).
+    public static string EffectOf(UpgradeDef u)
+    {
+        return u.Effect == null ? null : Loc.F("Produção de {0} x2", NameOf(Buildings[u.Building]));
+    }
+
     // Static initializers run in textual order: the tier tables must precede Upgrades.
     static readonly string[] TierNames = { "Turbinado", "Deluxe", "Supremo", "Lendário" };
     static readonly int[] TierOwned = { 1, 10, 25, 50 };
@@ -217,8 +244,10 @@ public static class GameDefs
                 list.Add(new UpgradeDef
                 {
                     Id = "b_" + building.Key + "_" + t,
+                    Tier = t,
+                    Generic = text == null,
                     Name = text != null ? text.Name : building.Name + " " + TierNames[t],
-                    Description = text != null ? text.Description : building.Name + " produz o dobro.",
+                    Description = text != null ? text.Description : building.Name + " produz o dobro.", // composed again by DescOf
                     Effect = text != null ? "Produção de " + building.Name + " x2" : null,
                     Cost = building.BaseCost * TierCostMult[t],
                     Kind = UpgradeKind.Building,
