@@ -56,7 +56,7 @@ public static class GameDefs
         new BuildingDef { Key = "racao-caramelo", Name = "Ração Caramelo", Description = "Ração caseira misteriosa fabricada pelo Caramelo.", BaseCost = 7000, BaseCps = 32.7, IconFile = "racao-caramelo" },
         new BuildingDef { Key = "petshop", Name = "Pet Shop", Description = "Vende petiscos para toda a vizinhança.", BaseCost = 12000, BaseCps = 47, Icon = 3 },
         new BuildingDef { Key = "drone-entregas", Name = "Drone de Entregas", Description = "Faz a entrega dos petiscos e rações fabricados pelo Caramelo.", BaseCost = 40000, BaseCps = 154.0, IconFile = "drone-entregas" },
-        new BuildingDef { Key = "padaria", Name = "Padaria de Biscoitos", Description = "Biscoitinhos quentinhos o dia inteiro.", BaseCost = 130000, BaseCps = 260, Icon = 4 },
+        new BuildingDef { Key = "padaria", Name = "Padaria para Pets", Description = "Biscoitos e petiscos feitos na hora!", BaseCost = 130000, BaseCps = 260, Icon = 4 },
         new BuildingDef { Key = "faro-minerador", Name = "Mina de Petiscos", Description = "Foi encontrada uma mina de petiscos caninos super raros! A Caramelo Corp vai cuidar e “preservar” ela com todo o carinho do mundo. Fechada para visitantes.", BaseCost = 450000, BaseCps = 1200, IconFile = "faro-minerador" },
         new BuildingDef { Key = "fabrica-racao", Name = "Fábrica de Ração Pequena", Description = "Produção industrial de petiscos.", BaseCost = 1400000, BaseCps = 1400, Icon = 5 },
         new BuildingDef { Key = "iluminacao-caramelo", Name = "Iluminação Caramelo", Description = "O Caramelo investe na iluminação da cidade para garantir a segurança de seus entregadores e drones durante a noite.", BaseCost = 5000000, BaseCps = 13200.0, IconFile = "iluminacao-caramelo" },

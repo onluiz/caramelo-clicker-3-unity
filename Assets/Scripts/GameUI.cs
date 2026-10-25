@@ -453,7 +453,7 @@ public class GameUI
         row.name.fontSizeMin = 18f;
         row.name.fontSizeMax = 32f;
 
-        row.desc = NewText(row.go.transform, "Desc", "", 20, ProceduralArt.Hex("#6B4A2B"), TextAlignmentOptions.TopLeft);
+        row.desc = NewText(row.go.transform, "Desc", "", 20, ProceduralArt.Hex("#35200D"), TextAlignmentOptions.TopLeft);
         row.desc.textWrappingMode = TextWrappingModes.Normal;
         // Flavor texts vary a lot in length: shrink to fit the box instead of cutting them off.
         row.desc.enableAutoSizing = true;
@@ -669,7 +669,7 @@ public class GameUI
             row.desc.text = def.Description;
             row.cost.color = affordable ? Good : Bad;
             row.cost.text = NumberFormat.Format(cost) + (n > 1 ? " (x" + n + ")" : "") +
-                "  <size=70%><color=#6B4A2B>+" + NumberFormat.Format(s.CpsEach(i), true) + "/s cada</color></size>";
+                "  <size=70%><color=#35200D>+" + NumberFormat.Format(s.CpsEach(i), true) + "/s cada</color></size>";
             row.count.text = s.Owned[i] > 0 ? s.Owned[i].ToString() : "";
         }
     }
@@ -690,7 +690,7 @@ public class GameUI
             row.bg.color = affordable ? RowOn : RowOff;
             row.cost.color = affordable ? Good : Bad;
             row.cost.text = NumberFormat.Format(def.Cost) + " petiscos" +
-                (def.Effect != null ? "  <size=70%><color=#6B4A2B>" + def.Effect + "</color></size>" : "");
+                (def.Effect != null ? "  <size=70%><color=#35200D>" + def.Effect + "</color></size>" : "");
         }
 
         emptyText.gameObject.SetActive(visible == 0);
