@@ -1,12 +1,13 @@
 using System;
 using UnityEngine;
 
-// Short synthesized sound effects, so the game needs no audio files.
+// Short synthesized sound effects, plus the looping background music from Resources/Music.
 public class GameAudio
 {
     const int SampleRate = 44100;
+    const float MusicVolume = 0.35f;
 
-    readonly AudioSource source;
+    readonly AudioSource source, music;
     readonly AudioClip click, buy, golden, error;
 
     public bool Muted;
@@ -17,6 +18,15 @@ public class GameAudio
         source.playOnAwake = false;
         Muted = PlayerPrefs.GetInt("caramelo_muted", 0) == 1;
 
+        music = host.AddComponent<AudioSource>();
+        music.playOnAwake = false;
+        music.loop = true;
+        music.volume = MusicVolume;
+        music.mute = Muted;
+        music.clip = Resources.Load<AudioClip>("Music/tail_wags_at_twilight");
+        if (music.clip == null) Debug.LogWarning("Music not found at Resources/Music/tail_wags_at_twilight");
+        StartMusic();
+
         click = Tone("click", 0.09f, t => Mathf.Lerp(620f, 260f, t / 0.09f), 0.5f);
         buy = Tone("buy", 0.24f, t => t < 0.11f ? 660f : 990f, 0.35f);
         golden = Tone("golden", 0.56f, t => t < 0.14f ? 523f : t < 0.28f ? 659f : t < 0.42f ? 784f : 1047f, 0.35f);
@@ -26,11 +36,19 @@ public class GameAudio
     public void SetMuted(bool muted)
     {
         Muted = muted;
+        music.mute = muted; // keeps playing silently, so unmuting resumes mid-song
         PlayerPrefs.SetInt("caramelo_muted", muted ? 1 : 0);
+    }
+
+    // Safe to call repeatedly. Browsers hold audio back until the first tap, so it is retried on clicks.
+    public void StartMusic()
+    {
+        if (music.clip != null && !music.isPlaying) music.Play();
     }
 
     public void PlayClick()
     {
+        StartMusic();
         Play(click, UnityEngine.Random.Range(0.9f, 1.2f));
     }
 

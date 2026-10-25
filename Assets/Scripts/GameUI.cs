@@ -53,7 +53,7 @@ public class GameUI
     readonly GameAudio sfx;
 
     RectTransform canvasRect, bgLayer, floatLayer, overlayLayer;
-    RectTransform safeRoot, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabDevRt, buyBarRt, scrollRt;
+    RectTransform safeRoot, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
     CanvasScaler scaler;
     bool portrait;
     Vector2Int lastScreen;
@@ -64,10 +64,13 @@ public class GameUI
     float clock;
 
     TextMeshProUGUI counterText, cpsText, buffText, toastText, statsText;
-    TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabDevText, emptyText, muteText, resetText;
-    Image tabBuildingsBg, tabUpgradesBg, tabDevBg, resetBg;
-    GameObject devContent;
-    bool showDev;
+    TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, resetText;
+    Image tabBuildingsBg, tabUpgradesBg, tabCeuBg, tabDevBg, resetBg;
+    GameObject devContent, ceuContent;
+    bool showDev, showCeu;
+    RowView ascendRow, ossosRow;
+    readonly List<RowView> blessingRows = new List<RowView>();
+    float ascendConfirmTimer;
     readonly List<Image> buyBg = new List<Image>();
     readonly List<TextMeshProUGUI> buyText = new List<TextMeshProUGUI>();
     GameObject buyBar;
@@ -101,7 +104,7 @@ public class GameUI
         BuildOverlay();
         ApplyLayout();
 
-        goldenTimer = Random.Range(25f, 45f);
+        goldenTimer = Random.Range(25f, 45f) * (float)s.GoldenInterval;
         RefreshAll();
         if (!string.IsNullOrEmpty(s.OfflineMessage)) ShowToast(s.OfflineMessage, 8f);
     }
@@ -295,9 +298,20 @@ public class GameUI
         tabUpgradesRt = (RectTransform)tabU.transform;
         tabU.onClick.AddListener(() => ShowTab(1));
 
+        var tabC = NewButton(rt, "TabCeu", "Céu", 28, TabOff, Color.white, out tabCeuBg, out tabCeuText);
+        tabCeuRt = (RectTransform)tabC.transform;
+        tabC.onClick.AddListener(() => ShowTab(2));
+
         var tabD = NewButton(rt, "TabDev", "Dev", 28, TabOff, Color.white, out tabDevBg, out tabDevText);
         tabDevRt = (RectTransform)tabD.transform;
-        tabD.onClick.AddListener(() => ShowTab(2));
+        tabD.onClick.AddListener(() => ShowTab(3));
+
+        foreach (var t in new[] { tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText })
+        {
+            t.enableAutoSizing = true;
+            t.fontSizeMin = 16f;
+            t.fontSizeMax = 28f;
+        }
 
         // Buy-amount selector (buildings tab only)
         buyBar = NewRect("BuyBar", rt).gameObject;
@@ -332,6 +346,7 @@ public class GameUI
 
         buildingsContent = NewContent("BuildingsContent", viewport);
         upgradesContent = NewContent("UpgradesContent", viewport);
+        ceuContent = NewContent("CeuContent", viewport);
         devContent = NewContent("DevContent", viewport);
 
         scroll.viewport = viewport;
@@ -359,6 +374,7 @@ public class GameUI
             upgradeRows.Add(row);
         }
 
+        BuildCeuRows();
         BuildDevRows();
 
         emptyText = NewText(rt, "EmptyUpgrades", "Nenhuma melhoria por enquanto.\nContinue juntando petiscos!", 30,
@@ -368,6 +384,63 @@ public class GameUI
 
         ShowTab(0);
         RefreshBuyBar();
+    }
+
+    // "Céu" tab: ascend for Ossos Celestiais, then spend them on permanent blessings.
+    void BuildCeuRows()
+    {
+        var bone = ProceduralArt.GoldenBone();
+
+        ossosRow = MakeRow(ceuContent.transform, "Ossos", bone);
+        ossosRow.count.gameObject.SetActive(false);
+
+        ascendRow = MakeRow(ceuContent.transform, "Ascend", bone);
+        ascendRow.count.gameObject.SetActive(false);
+        ascendRow.button.onClick.AddListener(OnAscendClicked);
+
+        foreach (var def in PrestigeDefs.Blessings)
+        {
+            var captured = def;
+            var row = MakeRow(ceuContent.transform, "Blessing_" + def.Id, bone);
+            row.name.text = def.Name;
+            row.desc.text = def.Description;
+            row.count.gameObject.SetActive(false);
+            row.button.onClick.AddListener(() => BuyBlessing(captured));
+            blessingRows.Add(row);
+        }
+    }
+
+    void OnAscendClicked()
+    {
+        if (s.PendingOssos < 1)
+        {
+            sfx.PlayError();
+            ShowToast("Ainda falta produzir mais petiscos para ganhar um Osso Celestial.", 4f);
+            return;
+        }
+
+        if (ascendConfirmTimer <= 0f)
+        {
+            ascendConfirmTimer = 6f;
+            ShowToast("Ascender reinicia petiscos, construções e melhorias. Toque de novo para confirmar!", 6f);
+            RefreshCeu();
+            return;
+        }
+
+        ascendConfirmTimer = 0f;
+        double gained = s.Ascend();
+        s.Save();
+        HideGolden();
+        sfx.PlayGolden();
+        ShowToast("Você ascendeu! +" + NumberFormat.Format(gained) + (gained == 1 ? " Osso Celestial" : " Ossos Celestiais"), 6f);
+        RefreshAll();
+    }
+
+    void BuyBlessing(BlessingDef def)
+    {
+        if (s.TryBuyBlessing(def)) sfx.PlayBuy();
+        else sfx.PlayError();
+        RefreshAll();
     }
 
     // Developer tab: cheats for testing the late game quickly.
@@ -380,6 +453,12 @@ public class GameUI
         AddDevRow("+1 quatrilhão de petiscos", "Adiciona 1e15 petiscos.", () => DevAdd(1e15));
         AddDevRow("+1 quintilhão de petiscos", "Adiciona 1e18 petiscos.", () => DevAdd(1e18));
         AddDevRow("+1 sextilhão de petiscos", "Adiciona 1e21 petiscos.", () => DevAdd(1e21));
+        AddDevRow("+10 Ossos Celestiais", "Adiciona 10 ossos ao saldo (e ao bônus).", () =>
+        {
+            s.DevAddOssos(10);
+            sfx.PlayBuy();
+            RefreshAll();
+        });
         AddDevRow("Multiplicar por 10", "Multiplica seus petiscos atuais por 10.", () => DevAdd(Math.Max(1.0, s.Petiscos * 9.0)));
         AddDevRow("Zerar petiscos", "Remove todos os petiscos (mantém construções).", () =>
         {
@@ -549,16 +628,18 @@ public class GameUI
         RefreshAll();
     }
 
-    // 0 = buildings, 1 = upgrades, 2 = dev.
+    // 0 = buildings, 1 = upgrades, 2 = ceu (prestige), 3 = dev.
     void ShowTab(int tab)
     {
         showUpgrades = tab == 1;
-        showDev = tab == 2;
+        showCeu = tab == 2;
+        showDev = tab == 3;
         buildingsContent.SetActive(tab == 0);
         upgradesContent.SetActive(tab == 1);
-        devContent.SetActive(tab == 2);
+        ceuContent.SetActive(tab == 2);
+        devContent.SetActive(tab == 3);
         buyBar.SetActive(tab == 0);
-        var content = tab == 0 ? buildingsContent : tab == 1 ? upgradesContent : devContent;
+        var content = tab == 0 ? buildingsContent : tab == 1 ? upgradesContent : tab == 2 ? ceuContent : devContent;
         scroll.content = (RectTransform)content.transform;
         scroll.verticalNormalizedPosition = 1f;
 
@@ -566,8 +647,10 @@ public class GameUI
         tabBuildingsText.color = tab == 0 ? Ink : Color.white;
         tabUpgradesBg.color = tab == 1 ? TabOn : TabOff;
         tabUpgradesText.color = tab == 1 ? Ink : Color.white;
-        tabDevBg.color = tab == 2 ? TabOn : TabOff;
-        tabDevText.color = tab == 2 ? Ink : Color.white;
+        tabCeuBg.color = tab == 2 ? TabOn : TabOff;
+        tabCeuText.color = tab == 2 ? Ink : Color.white;
+        tabDevBg.color = tab == 3 ? TabOn : TabOff;
+        tabDevText.color = tab == 3 ? Ink : Color.white;
         RefreshShop();
     }
 
@@ -610,7 +693,7 @@ public class GameUI
         double petiscos = Math.Floor(s.Petiscos);
         counterText.text = NumberFormat.Format(petiscos) + (petiscos == 1 ? " petisco" : " petiscos");
         cpsText.text = "por segundo: " + NumberFormat.Format(s.Cps, true);
-        statsText.text = "Cliques: " + NumberFormat.Format(s.Clicks) + "   |   Total: " + NumberFormat.Format(s.TotalEarned);
+        statsText.text = "Cliques: " + NumberFormat.Format(s.Clicks) + "   |   Total: " + NumberFormat.Format(s.LifetimeEarned);
 
         if (s.ClickFrenzyActive)
             buffText.text = "Pata Furiosa! Cliques x" + GameState.ClickFrenzyMultiplier + " (" + Mathf.CeilToInt((float)(s.ClickFrenzyUntil - s.Time)) + "s)";
@@ -618,18 +701,79 @@ public class GameUI
             buffText.text = "Frenesi! Produção x" + GameState.FrenzyMultiplier + " (" + Mathf.CeilToInt((float)(s.FrenzyUntil - s.Time)) + "s)";
         else
             buffText.text = "";
+
+        // Prestige line: shown in the buff slot while no buff is running.
+        if (!s.ClickFrenzyActive && !s.FrenzyActive && s.OssosEver > 0)
+        {
+            buffText.color = ProceduralArt.Hex("#7A4A1E");
+            buffText.text = "Ossos Celestiais: " + NumberFormat.Format(s.Ossos) + "  (+" + NumberFormat.Format(s.PrestigeBonus * 100, true) + "% produção)";
+        }
+        else
+        {
+            buffText.color = Bad;
+        }
     }
 
     void RefreshShop()
     {
         if (showDev) emptyText.gameObject.SetActive(false);
+        else if (showCeu)
+        {
+            emptyText.gameObject.SetActive(false);
+            RefreshCeu();
+        }
         else if (showUpgrades) RefreshUpgrades();
         else RefreshBuildings();
+
+        double pending = s.PendingOssos;
+        tabCeuText.text = pending >= 1 ? "Céu (+" + NumberFormat.Format(pending) + ")" : "Céu";
 
         int available = 0;
         foreach (var def in GameDefs.Upgrades)
             if (s.IsUpgradeAvailable(def)) available++;
         tabUpgradesText.text = available > 0 ? "Melhorias (" + available + ")" : "Melhorias";
+    }
+
+    void RefreshCeu()
+    {
+        ossosRow.bg.color = RowOn;
+        ossosRow.name.text = "Ossos Celestiais: " + NumberFormat.Format(s.Ossos);
+        ossosRow.desc.text = "Cada osso já ganho dá +" + (PrestigeDefs.BonusPerOsso * 100).ToString("0.#") + "% de produção (hoje: +" +
+            NumberFormat.Format(s.PrestigeBonus * 100, true) + "%). Gaste os ossos em bênçãos permanentes.";
+        ossosRow.cost.text = s.Ascensions > 0 ? "Ascensões: " + s.Ascensions : "";
+        ossosRow.cost.color = Ink;
+
+        double pending = s.PendingOssos;
+        bool ready = pending >= 1;
+        bool confirming = ascendConfirmTimer > 0f;
+        ascendRow.bg.color = confirming ? Bad : ready ? RowOn : RowOff;
+        ascendRow.name.text = confirming ? "Toque de novo para confirmar!" : "Ascender ao Céu dos Cachorros";
+        ascendRow.name.color = confirming ? Color.white : Ink;
+        ascendRow.desc.color = confirming ? Color.white : ProceduralArt.Hex("#35200D");
+        ascendRow.desc.text = "Reinicia petiscos, construções e melhorias comuns. Você mantém ossos, bênçãos e cliques.";
+        if (ready)
+        {
+            ascendRow.cost.color = confirming ? Color.white : Good;
+            ascendRow.cost.text = "+" + NumberFormat.Format(pending) + (pending == 1 ? " Osso Celestial" : " Ossos Celestiais");
+        }
+        else
+        {
+            double needed = PrestigeDefs.Threshold * Math.Pow(s.OssosEver + 1, 3) - s.LifetimeEarned;
+            ascendRow.cost.color = Bad;
+            ascendRow.cost.text = "Faltam " + NumberFormat.Format(Math.Max(1, needed)) + " petiscos para o próximo osso";
+        }
+
+        for (int i = 0; i < blessingRows.Count; i++)
+        {
+            var def = PrestigeDefs.Blessings[i];
+            var row = blessingRows[i];
+            bool owned = s.IsBlessed(def);
+            bool affordable = s.Ossos >= def.Cost;
+            row.bg.color = owned ? RowOff : affordable ? RowOn : RowOff;
+            row.cost.color = owned ? Ink : affordable ? Good : Bad;
+            row.cost.text = owned ? "Adquirida" : NumberFormat.Format(def.Cost) + (def.Cost == 1 ? " osso" : " ossos");
+            row.icon.color = owned ? new Color(1f, 1f, 1f, 0.45f) : Color.white;
+        }
     }
 
     void RefreshBuildings()
@@ -718,9 +862,10 @@ public class GameUI
         {
             Anchors(leftPanel, 0f, PortraitShopHeight, 1f, 1f);
             Anchors(rightPanel, 0f, 0f, 1f, PortraitShopHeight);
-            Box(tabBuildingsRt, new Vector2(0f, 0.895f), new Vector2(0.38f, 0.985f), new Vector2(14f, 0f), new Vector2(-4f, 0f));
-            Box(tabUpgradesRt, new Vector2(0.38f, 0.895f), new Vector2(0.78f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
-            Box(tabDevRt, new Vector2(0.78f, 0.895f), new Vector2(1f, 0.985f), new Vector2(4f, 0f), new Vector2(-14f, 0f));
+            Box(tabBuildingsRt, new Vector2(0f, 0.895f), new Vector2(0.31f, 0.985f), new Vector2(14f, 0f), new Vector2(-4f, 0f));
+            Box(tabUpgradesRt, new Vector2(0.31f, 0.895f), new Vector2(0.62f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
+            Box(tabCeuRt, new Vector2(0.62f, 0.895f), new Vector2(0.82f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
+            Box(tabDevRt, new Vector2(0.82f, 0.895f), new Vector2(1f, 0.985f), new Vector2(4f, 0f), new Vector2(-14f, 0f));
             Box(buyBarRt, new Vector2(0f, 0.81f), new Vector2(1f, 0.885f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
             Box(scrollRt, Vector2.zero, new Vector2(1f, 0.8f), new Vector2(10f, 10f), new Vector2(-10f, 0f));
         }
@@ -728,9 +873,10 @@ public class GameUI
         {
             Anchors(leftPanel, 0f, 0f, LeftWidth, 1f);
             Anchors(rightPanel, LeftWidth, 0f, 1f, 1f);
-            Box(tabBuildingsRt, new Vector2(0f, 0.915f), new Vector2(0.38f, 0.985f), new Vector2(14f, 0f), new Vector2(-4f, 0f));
-            Box(tabUpgradesRt, new Vector2(0.38f, 0.915f), new Vector2(0.78f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
-            Box(tabDevRt, new Vector2(0.78f, 0.915f), new Vector2(1f, 0.985f), new Vector2(4f, 0f), new Vector2(-14f, 0f));
+            Box(tabBuildingsRt, new Vector2(0f, 0.915f), new Vector2(0.31f, 0.985f), new Vector2(14f, 0f), new Vector2(-4f, 0f));
+            Box(tabUpgradesRt, new Vector2(0.31f, 0.915f), new Vector2(0.62f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
+            Box(tabCeuRt, new Vector2(0.62f, 0.915f), new Vector2(0.82f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
+            Box(tabDevRt, new Vector2(0.82f, 0.915f), new Vector2(1f, 0.985f), new Vector2(4f, 0f), new Vector2(-14f, 0f));
             Box(buyBarRt, new Vector2(0f, 0.845f), new Vector2(1f, 0.905f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
             Box(scrollRt, Vector2.zero, new Vector2(1f, 0.835f), new Vector2(10f, 10f), new Vector2(-10f, 0f));
         }
@@ -782,6 +928,12 @@ public class GameUI
         {
             resetConfirmTimer -= dt;
             if (resetConfirmTimer <= 0f) RefreshButtons();
+        }
+
+        if (ascendConfirmTimer > 0f)
+        {
+            ascendConfirmTimer -= dt;
+            if (ascendConfirmTimer <= 0f) RefreshCeu();
         }
     }
 
@@ -967,6 +1119,6 @@ public class GameUI
     {
         goldenActive = false;
         goldenImage.gameObject.SetActive(false);
-        goldenTimer = Random.Range(60f, 150f);
+        goldenTimer = Random.Range(60f, 150f) * (float)s.GoldenInterval;
     }
 }
