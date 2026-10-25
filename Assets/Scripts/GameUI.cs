@@ -969,17 +969,16 @@ public class GameUI
         UpdateGround(dt);
     }
 
-    // A strip of ground under the dog's paws; its marks scroll left to match the stride.
+    // Ground under the dog's paws, filling the panel down to its bottom edge (behind the buttons);
+    // its marks scroll left to match the stride.
     void BuildGround(Transform parent)
     {
-        const float height = 90f;
-        var band = NewImage(parent, "Ground", ProceduralArt.RoundedRect(), new Color(0.88f, 0.54f, 0.24f, 0.55f), true);
+        var band = NewImage(parent, "Ground", null, new Color(0.88f, 0.54f, 0.24f, 0.55f));
         groundBand = band.rectTransform;
-        groundBand.anchorMin = new Vector2(0f, 0.4f);
+        groundBand.anchorMin = Vector2.zero;
         groundBand.anchorMax = new Vector2(1f, 0.4f);
-        groundBand.pivot = new Vector2(0.5f, 1f);
-        groundBand.anchoredPosition = new Vector2(0f, -215f);
-        groundBand.sizeDelta = new Vector2(0f, height);
+        groundBand.offsetMin = Vector2.zero;
+        groundBand.offsetMax = new Vector2(0f, -215f);
 
         var edge = NewImage(groundBand, "Edge", null, new Color(0.72f, 0.4f, 0.16f, 0.6f));
         edge.rectTransform.anchorMin = new Vector2(0f, 1f);
@@ -987,21 +986,32 @@ public class GameUI
         edge.rectTransform.pivot = new Vector2(0.5f, 1f);
         edge.rectTransform.sizeDelta = new Vector2(0f, 5f);
 
-        for (int i = 0; i < 18; i++)
+        for (int i = 0; i < 40; i++)
         {
             var mark = NewImage(groundBand, "Mark", ProceduralArt.RoundedRect(), new Color(0.72f, 0.4f, 0.16f, 0.45f), true);
             var rt = mark.rectTransform;
-            rt.anchorMin = rt.anchorMax = new Vector2(0f, 0.5f);
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f); // x from the left edge, y down from the top
             rt.sizeDelta = new Vector2(Random.Range(40f, 110f), Random.Range(7f, 12f));
-            rt.anchoredPosition = new Vector2(i * 70f, Random.Range(-height * 0.3f, height * 0.25f));
             groundMarks.Add(rt);
         }
+    }
+
+    bool groundScattered;
+
+    // The band's size depends on the screen, so the marks are spread over it on first use.
+    void ScatterGroundMarks(float width, float height)
+    {
+        foreach (var mark in groundMarks)
+            mark.anchoredPosition = new Vector2(Random.Range(-60f, width), -Random.Range(22f, Mathf.Max(30f, height - 12f)));
+        groundScattered = true;
     }
 
     void UpdateGround(float dt)
     {
         float width = groundBand.rect.width;
-        if (width <= 1f) return;
+        float height = groundBand.rect.height;
+        if (width <= 1f || height <= 1f) return;
+        if (!groundScattered) ScatterGroundMarks(width, height);
 
         float move = rig.StrideSpeed * dt;
         foreach (var mark in groundMarks)
@@ -1011,7 +1021,7 @@ public class GameUI
             if (p.x < -60f)
             {
                 p.x += width + 120f;
-                p.y = Random.Range(-27f, 22f);
+                p.y = -Random.Range(22f, Mathf.Max(30f, height - 12f));
             }
             mark.anchoredPosition = p;
         }

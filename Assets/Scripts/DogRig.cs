@@ -17,7 +17,7 @@ public class DogRig
     const float Scale = 7f;
     // The feet sit on row 88 (from the top) of each 120px cell, i.e. 28 rows below the cell centre.
     const float FeetBelowCentre = 28f * Scale;
-    const float GroundY = -215f;
+    public const float GroundY = -280f; // paws offset from the anchor (the ground strip top is at -215)
 
     struct Clip
     {
