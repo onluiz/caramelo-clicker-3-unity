@@ -240,7 +240,7 @@ public class GameUI
         Stretch(bgLayer);
         for (int i = 0; i < falling.Length; i++)
         {
-            var img = NewImage(bgLayer, "Bone", ProceduralArt.Bone(), new Color(1f, 1f, 1f, 0.55f));
+            var img = NewImage(bgLayer, "Bone", IconLoader.Load("petisco"), new Color(1f, 1f, 1f, 0.55f));
             img.gameObject.SetActive(false);
             falling[i] = new FallingBone { rt = img.rectTransform };
         }
@@ -258,11 +258,11 @@ public class GameUI
         // HUD (top row): petiscos pill, ossos pill and the settings button; petiscos per second below.
         var coinPill = NewImage(left, "CoinPill", ProceduralArt.RoundedRect(), CardBg, true);
         Box(coinPill.rectTransform, new Vector2(0.05f, 1f), new Vector2(0.46f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
-        counterText = PillContent(coinPill, ProceduralArt.Bone());
+        counterText = PillContent(coinPill, IconLoader.Load("petisco"));
 
         var gemPill = NewImage(left, "OssosPill", ProceduralArt.RoundedRect(), CardBg, true);
         Box(gemPill.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.84f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
-        ossosText = PillContent(gemPill, ProceduralArt.CelestialPlaceholder());
+        ossosText = PillContent(gemPill, IconLoader.Load("osso-celestial"));
 
         var gear = NewButton(left, "SettingsButton", "", 28, CardBg, Color.white, out _, out _);
         Place((RectTransform)gear.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -28f), new Vector2(92f, 92f));
@@ -509,7 +509,7 @@ public class GameUI
     // "Céu" tab: ascend for Ossos Celestiais, then spend them on permanent blessings.
     void BuildCeuRows()
     {
-        var bone = ProceduralArt.CelestialPlaceholder(); // placeholder until real Ossos Celestiais art exists
+        var bone = IconLoader.Load("osso-celestial");
 
         // Info card: not a button, so it gets a dark panel, light text and no press feedback.
         ossosRow = MakeRow(ceuContent.transform, "Ossos", bone);
