@@ -72,6 +72,7 @@ public class GameUI
     float clock;
 
     TextMeshProUGUI counterText, cpsText, buffText, toastText, statsText;
+    Image statsPill;
     TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, resetText;
     Image tabBuildingsBg, tabUpgradesBg, tabCeuBg, tabDevBg, resetBg;
     GameObject devContent, ceuContent;
@@ -324,8 +325,10 @@ public class GameUI
         Anchors(toastText.rectTransform, 0.02f, 0.075f, 0.98f, 0.155f);
         toastText.textWrappingMode = TextWrappingModes.Normal;
 
-        statsText = NewText(left, "Stats", "", 26, ProceduralArt.Hex("#7A4A1E"), TextAlignmentOptions.Center);
-        Place(statsText.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 30f), new Vector2(560f, 40f));
+        statsPill = NewImage(left, "StatsPill", ProceduralArt.RoundedRect(), new Color(CardBg.r, CardBg.g, CardBg.b, 0.9f), true);
+        Place(statsPill.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 30f), new Vector2(620f, 56f));
+        statsText = NewText(statsPill.transform, "Stats", "", 30, CardText, TextAlignmentOptions.Center, FontStyles.Bold);
+        Box(statsText.rectTransform, Vector2.zero, Vector2.one, new Vector2(16f, 0f), new Vector2(-16f, 0f));
     }
 
     // A dark rounded pill with an icon inside its left end and an auto-sized value.
@@ -1026,9 +1029,6 @@ public class GameUI
         }
 
         ApplyScrollBox();
-
-        // The totals line has no room next to the buttons on a narrow screen.
-        statsText.gameObject.SetActive(!portrait);
     }
 
     // The list sits under the buy-mode bar on the buildings tab; other tabs have no bar, so it moves up to the tabs.
