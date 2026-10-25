@@ -71,6 +71,7 @@ public class GameUI
     Image tabBuildingsBg, tabUpgradesBg, tabCeuBg, tabDevBg, resetBg;
     GameObject devContent, ceuContent;
     bool showDev, showCeu;
+    readonly bool devEnabled = DevMode.Enabled;
     RowView ascendRow, ossosRow;
     readonly List<RowView> blessingRows = new List<RowView>();
     float ascendConfirmTimer;
@@ -378,7 +379,8 @@ public class GameUI
         }
 
         BuildCeuRows();
-        BuildDevRows();
+        if (devEnabled) BuildDevRows();
+        else tabDevRt.gameObject.SetActive(false);
 
         emptyText = NewText(rt, "EmptyUpgrades", "Nenhuma melhoria por enquanto.\nContinue juntando petiscos!", 30,
             Color.white, TextAlignmentOptions.Center);
@@ -877,7 +879,7 @@ public class GameUI
             Anchors(rightPanel, 0f, 0f, 1f, PortraitShopHeight);
             Box(tabBuildingsRt, new Vector2(0f, 0.895f), new Vector2(0.31f, 0.985f), new Vector2(14f, 0f), new Vector2(-4f, 0f));
             Box(tabUpgradesRt, new Vector2(0.31f, 0.895f), new Vector2(0.62f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
-            Box(tabCeuRt, new Vector2(0.62f, 0.895f), new Vector2(0.82f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
+            Box(tabCeuRt, new Vector2(0.62f, 0.895f), new Vector2(devEnabled ? 0.82f : 1f, 0.985f), new Vector2(4f, 0f), new Vector2(devEnabled ? -4f : -14f, 0f));
             Box(tabDevRt, new Vector2(0.82f, 0.895f), new Vector2(1f, 0.985f), new Vector2(4f, 0f), new Vector2(-14f, 0f));
             Box(buyBarRt, new Vector2(0f, 0.81f), new Vector2(1f, 0.885f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
         }
@@ -887,7 +889,7 @@ public class GameUI
             Anchors(rightPanel, LeftWidth, 0f, 1f, 1f);
             Box(tabBuildingsRt, new Vector2(0f, 0.915f), new Vector2(0.31f, 0.985f), new Vector2(14f, 0f), new Vector2(-4f, 0f));
             Box(tabUpgradesRt, new Vector2(0.31f, 0.915f), new Vector2(0.62f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
-            Box(tabCeuRt, new Vector2(0.62f, 0.915f), new Vector2(0.82f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
+            Box(tabCeuRt, new Vector2(0.62f, 0.915f), new Vector2(devEnabled ? 0.82f : 1f, 0.985f), new Vector2(4f, 0f), new Vector2(devEnabled ? -4f : -14f, 0f));
             Box(tabDevRt, new Vector2(0.82f, 0.915f), new Vector2(1f, 0.985f), new Vector2(4f, 0f), new Vector2(-14f, 0f));
             Box(buyBarRt, new Vector2(0f, 0.845f), new Vector2(1f, 0.905f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
         }
