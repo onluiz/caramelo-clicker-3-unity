@@ -26,7 +26,10 @@ public class GameUI
     static readonly Color InfoBg = ProceduralArt.Hex("#3A2F5C");
     static readonly Color InfoText = ProceduralArt.Hex("#F3ECFF");
     static readonly Color AscendReady = ProceduralArt.Hex("#FFB627");
-    static readonly Color TabOn =ProceduralArt.Hex("#F6A33B");
+    static readonly Color CardBg = ProceduralArt.Hex("#3B2314");
+    static readonly Color CardBorder = ProceduralArt.Hex("#F6A33B");
+    static readonly Color CardText = ProceduralArt.Hex("#FFF1D6");
+    static readonly Color TabOn = ProceduralArt.Hex("#F6A33B");
     static readonly Color TabOff = ProceduralArt.Hex("#6B452B");
 
     class RowView
@@ -73,6 +76,9 @@ public class GameUI
     bool showDev, showCeu;
     readonly bool devEnabled = DevMode.Enabled;
     RowView ascendRow, ossosRow;
+    Image buffChip;
+    RectTransform settingsRoot;
+    TextMeshProUGUI ossosText, cpsShadow;
     readonly List<RowView> blessingRows = new List<RowView>();
     float ascendConfirmTimer;
     readonly List<Image> buyBg = new List<Image>();
@@ -106,6 +112,7 @@ public class GameUI
         BuildLeftPanel();
         BuildRightPanel();
         BuildOverlay();
+        BuildSettings();
         ApplyLayout();
 
         goldenTimer = Random.Range(25f, 45f) * (float)s.GoldenInterval;
@@ -246,18 +253,42 @@ public class GameUI
         var left = NewRect("LeftPanel", safeRoot);
         leftPanel = left;
 
-        var title = NewText(left, "Title", "Caramelo Clicker", 76, ProceduralArt.Hex("#8A3F0A"),
-            TextAlignmentOptions.Center, FontStyles.Bold);
-        Anchors(title.rectTransform, 0f, 0.89f, 1f, 0.99f);
+        // HUD (top row): petiscos pill, ossos pill and the settings button; petiscos per second below.
+        var coinPill = NewImage(left, "CoinPill", ProceduralArt.RoundedRect(), CardBg, true);
+        Box(coinPill.rectTransform, new Vector2(0.05f, 1f), new Vector2(0.46f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
+        counterText = PillContent(coinPill, ProceduralArt.Bone());
 
-        counterText = NewText(left, "Counter", "0 petiscos", 84, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
-        Anchors(counterText.rectTransform, 0f, 0.77f, 1f, 0.89f);
+        var gemPill = NewImage(left, "OssosPill", ProceduralArt.RoundedRect(), CardBg, true);
+        Box(gemPill.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.84f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
+        ossosText = PillContent(gemPill, ProceduralArt.CelestialPlaceholder());
 
-        cpsText = NewText(left, "Cps", "por segundo: 0", 40, Ink, TextAlignmentOptions.Center);
-        Anchors(cpsText.rectTransform, 0f, 0.715f, 1f, 0.77f);
+        var gear = NewButton(left, "SettingsButton", "", 28, CardBg, Color.white, out _, out _);
+        Place((RectTransform)gear.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -28f), new Vector2(92f, 92f));
+        var gearIcon = NewImage(gear.transform, "Gear", ProceduralArt.Gear(), Color.white);
+        Box(gearIcon.rectTransform, Vector2.zero, Vector2.one, new Vector2(14f, 14f), new Vector2(-14f, -14f));
+        gear.onClick.AddListener(() => SetSettingsOpen(true));
 
-        buffText = NewText(left, "Buff", "", 36, ProceduralArt.Hex("#B3261E"), TextAlignmentOptions.Center, FontStyles.Bold);
-        Anchors(buffText.rectTransform, 0f, 0.665f, 1f, 0.715f);
+        // Where a game would show the stage: the income, as "n/s".
+        // The dark copy behind is its drop shadow (the font's outline shader variant is not available).
+        cpsShadow = NewText(left, "CpsShadow", "0/s", 84, ProceduralArt.Hex("#5A2E12"), TextAlignmentOptions.Center, FontStyles.Bold);
+        Box(cpsShadow.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(4f, -256f), new Vector2(4f, -146f));
+        cpsText = NewText(left, "Cps", "0/s", 84, Color.white, TextAlignmentOptions.Center, FontStyles.Bold);
+        Box(cpsText.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, -250f), new Vector2(0f, -140f));
+        foreach (var t in new[] { cpsText, cpsShadow })
+        {
+            t.enableAutoSizing = true;
+            t.fontSizeMin = 40f;
+            t.fontSizeMax = 84f;
+        }
+
+        buffChip = NewImage(left, "BuffChip", ProceduralArt.RoundedRect(), Bad, true);
+        Box(buffChip.rectTransform, new Vector2(0.08f, 1f), new Vector2(0.92f, 1f), new Vector2(0f, -316f), new Vector2(0f, -260f));
+        buffText = NewText(buffChip.transform, "Buff", "", 32, Color.white, TextAlignmentOptions.Center, FontStyles.Bold);
+        Box(buffText.rectTransform, Vector2.zero, Vector2.one, new Vector2(16f, 0f), new Vector2(-16f, 0f));
+        buffText.enableAutoSizing = true;
+        buffText.fontSizeMin = 18f;
+        buffText.fontSizeMax = 32f;
+        buffChip.gameObject.SetActive(false);
 
         BuildGround(left);
 
@@ -273,18 +304,66 @@ public class GameUI
 
         statsText = NewText(left, "Stats", "", 26, ProceduralArt.Hex("#7A4A1E"), TextAlignmentOptions.Center);
         Place(statsText.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 30f), new Vector2(560f, 40f));
+    }
 
-        var muteBtn = NewButton(left, "MuteButton", "", 28, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out muteText);
-        Place((RectTransform)muteBtn.transform, new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(24f, 20f), new Vector2(230f, 60f));
+    // A dark rounded pill with an icon inside its left end and an auto-sized value.
+    static TextMeshProUGUI PillContent(Image pill, Sprite icon)
+    {
+        var img = NewImage(pill.transform, "Icon", icon, Color.white);
+        img.preserveAspect = true;
+        Place(img.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(16f, 0f), new Vector2(68f, 68f));
+        var t = NewText(pill.transform, "Value", "0", 56, Color.white, TextAlignmentOptions.MidlineRight, FontStyles.Bold);
+        Box(t.rectTransform, Vector2.zero, Vector2.one, new Vector2(90f, 4f), new Vector2(-22f, -4f));
+        t.enableAutoSizing = true;
+        t.fontSizeMin = 24f;
+        t.fontSizeMax = 56f;
+        return t;
+    }
+
+    // Settings popup: sound, restart and close. Built last so it draws above everything.
+    void BuildSettings()
+    {
+        settingsRoot = NewRect("Settings", canvasRect);
+        Stretch(settingsRoot);
+
+        var dim = NewImage(settingsRoot, "Dim", null, new Color(0f, 0f, 0f, 0.6f), false, true);
+        Stretch(dim.rectTransform);
+        var dimBtn = dim.gameObject.AddComponent<Button>();
+        dimBtn.transition = Selectable.Transition.None;
+        dimBtn.onClick.AddListener(() => SetSettingsOpen(false));
+
+        var border = NewImage(settingsRoot, "Panel", ProceduralArt.RoundedRect(), CardBorder, true, true);
+        Place(border.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(780f, 640f));
+        var panel = NewImage(border.transform, "Inner", ProceduralArt.RoundedRect(), CardBg, true);
+        Box(panel.rectTransform, Vector2.zero, Vector2.one, new Vector2(6f, 6f), new Vector2(-6f, -6f));
+
+        var title = NewText(panel.transform, "Title", "Configurações", 54, CardText, TextAlignmentOptions.Center, FontStyles.Bold);
+        Place(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -30f), new Vector2(700f, 80f));
+
+        var muteBtn = NewButton(panel.transform, "MuteButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out muteText);
+        Place((RectTransform)muteBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -150f), new Vector2(640f, 100f));
         muteBtn.onClick.AddListener(() =>
         {
             sfx.SetMuted(!sfx.Muted);
             RefreshButtons();
         });
 
-        var resetBtn = NewButton(left, "ResetButton", "", 28, ProceduralArt.Hex("#8A5A2B"), Color.white, out resetBg, out resetText);
-        Place((RectTransform)resetBtn.transform, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-24f, 20f), new Vector2(300f, 60f));
+        var resetBtn = NewButton(panel.transform, "ResetButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out resetBg, out resetText);
+        Place((RectTransform)resetBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -280f), new Vector2(640f, 100f));
         resetBtn.onClick.AddListener(OnResetClicked);
+
+        var closeBtn = NewButton(panel.transform, "CloseButton", "Fechar", 38, TabOn, Ink, out _, out _);
+        Place((RectTransform)closeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -430f), new Vector2(640f, 100f));
+        closeBtn.onClick.AddListener(() => SetSettingsOpen(false));
+
+        settingsRoot.gameObject.SetActive(false);
+    }
+
+    void SetSettingsOpen(bool open)
+    {
+        resetConfirmTimer = 0f;
+        RefreshButtons();
+        settingsRoot.gameObject.SetActive(open);
     }
 
     void BuildRightPanel()
@@ -641,6 +720,7 @@ public class GameUI
         RefreshButtons();
         HideGolden();
         ShowToast("Jogo reiniciado. Boa sorte, Caramelo!", 4f);
+        SetSettingsOpen(false);
         RefreshAll();
     }
 
@@ -708,8 +788,9 @@ public class GameUI
     void RefreshCounters()
     {
         double petiscos = Math.Floor(s.Petiscos);
-        counterText.text = NumberFormat.Format(petiscos) + (petiscos == 1 ? " petisco" : " petiscos");
-        cpsText.text = "por segundo: " + NumberFormat.Format(s.Cps, true);
+        counterText.text = NumberFormat.Format(petiscos);
+        ossosText.text = NumberFormat.Format(s.Ossos);
+        cpsText.text = cpsShadow.text = NumberFormat.Format(s.Cps, true) + "/s";
         statsText.text = "Cliques: " + NumberFormat.Format(s.Clicks) + "   |   Total: " + NumberFormat.Format(s.LifetimeEarned);
 
         if (s.ClickFrenzyActive)
@@ -719,16 +800,8 @@ public class GameUI
         else
             buffText.text = "";
 
-        // Prestige line: shown in the buff slot while no buff is running.
-        if (!s.ClickFrenzyActive && !s.FrenzyActive && s.OssosEver > 0)
-        {
-            buffText.color = ProceduralArt.Hex("#7A4A1E");
-            buffText.text = "Ossos Celestiais: " + NumberFormat.Format(s.Ossos) + "  (+" + NumberFormat.Format(s.PrestigeBonus * 100, true) + "% produção)";
-        }
-        else
-        {
-            buffText.color = Bad;
-        }
+        buffChip.color = Bad;
+        buffChip.gameObject.SetActive(buffText.text.Length > 0);
     }
 
     void RefreshShop()

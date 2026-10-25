@@ -4,7 +4,7 @@ using UnityEngine;
 // All sprites are drawn at startup from signed distance functions, so the game ships with no image files.
 public static class ProceduralArt
 {
-    static Sprite bone, goldenBone, blob, rounded, gradient, celestial;
+    static Sprite bone, goldenBone, blob, rounded, gradient, celestial, gear;
     static readonly Sprite[] icons = new Sprite[11];
 
     public static Color Hex(string html)
@@ -155,6 +155,26 @@ public static class ProceduralArt
         P.Shape(p => Mathf.Max(Sdf.Circle(p, Vector2.zero, 0.8f), -Sdf.Circle(p, new Vector2(0.38f, 0.2f), 0.68f)),
             Hex("#B9A7FF"), Hex("#2E2466"), 0.05f);
         return celestial = P.ToSprite();
+    }
+
+    // Settings cog: a disc with eight teeth and a hole.
+    public static Sprite Gear()
+    {
+        if (gear != null) return gear;
+        var P = new Painter(96);
+        P.Shape(p =>
+        {
+            float d = Sdf.Circle(p, Vector2.zero, 0.58f);
+            for (int k = 0; k < 8; k++)
+            {
+                float a = k * Mathf.PI / 4f;
+                float c = Mathf.Cos(a), sn = Mathf.Sin(a);
+                var q = new Vector2(c * p.x + sn * p.y, -sn * p.x + c * p.y);
+                d = Mathf.Min(d, Sdf.Box(q, new Vector2(0.7f, 0f), new Vector2(0.2f, 0.15f)));
+            }
+            return Mathf.Max(d, -Sdf.Circle(p, Vector2.zero, 0.26f));
+        }, Hex("#EDE3D3"), Hex("#2B1A10"), 0.06f);
+        return gear = P.ToSprite();
     }
 
     public static Sprite Blob()
