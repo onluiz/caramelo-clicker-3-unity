@@ -52,6 +52,7 @@ public class GameState
 
     public double LifetimeEarned => LifetimeBase + TotalEarned;
     public double PendingOssos => Math.Max(0, PrestigeDefs.OssosFor(LifetimeEarned) - OssosEver);
+    public double Fragments => Math.Max(0, PrestigeDefs.OssosExact(LifetimeEarned) - OssosEver);
     public double PrestigeBonus => OssosEver * PrestigeDefs.BonusPerOsso; // 0.2 = +20%
     public double GoldenInterval { get { Recalc(); return goldenInterval; } }
 

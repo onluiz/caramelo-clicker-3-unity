@@ -9,7 +9,9 @@ using Random = UnityEngine.Random;
 // Builds and drives the whole uGUI hierarchy. Layout is anchor-based against a 1600x900 (landscape) or 1080x1920 (portrait) reference.
 public class GameUI
 {
-    const float LeftWidth = 0.62f;        // landscape: share of the width used by the game area
+    const float LeftWidth = 0.58f;        // landscape: share of the width used by the game area
+    const float GameScale = 0.85f;        // the whole game area (HUD, ground, dog) is drawn a bit smaller than the panel
+    const bool ShowDevTab = false;        // the Dev tab stays hidden for now (DevMode still gates it outside production)
     const float PortraitShopHeight = 0.45f; // portrait: share of the height used by the shop
     const float RowHeight = 146f;
     const int FloatPoolSize = 24;
@@ -74,12 +76,12 @@ public class GameUI
     Image tabBuildingsBg, tabUpgradesBg, tabCeuBg, tabDevBg, resetBg;
     GameObject devContent, ceuContent;
     bool showDev, showCeu;
-    readonly bool devEnabled = DevMode.Enabled;
+    readonly bool devEnabled = ShowDevTab && DevMode.Enabled;
     RowView ascendRow, ossosRow;
     Image buffChip;
     RectTransform settingsRoot;
     TextMeshProUGUI buyLabelText, settingsTitleText, closeText, langText;
-    TextMeshProUGUI ossosText, cpsShadow;
+    TextMeshProUGUI ossosText, fragmentsText, cpsShadow;
     readonly List<RowView> blessingRows = new List<RowView>();
     float ascendConfirmTimer;
     readonly List<Image> buyBg = new List<Image>();
@@ -143,6 +145,19 @@ public class GameUI
         rt.anchorMin = new Vector2(x0, y0);
         rt.anchorMax = new Vector2(x1, y1);
         rt.offsetMin = rt.offsetMax = Vector2.zero;
+    }
+
+    // Fills the given region but draws its content at `scale`: the panel is laid out larger by 1/scale
+    // around the region's centre and then scaled down, so the background still covers the whole region.
+    static void AnchorsScaled(RectTransform rt, float x0, float y0, float x1, float y1, float scale)
+    {
+        float cx = (x0 + x1) / 2f, cy = (y0 + y1) / 2f;
+        float hx = (x1 - x0) / 2f / scale, hy = (y1 - y0) / 2f / scale;
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchorMin = new Vector2(cx - hx, cy - hy);
+        rt.anchorMax = new Vector2(cx + hx, cy + hy);
+        rt.offsetMin = rt.offsetMax = Vector2.zero;
+        rt.localScale = new Vector3(scale, scale, 1f);
     }
 
     static void Place(RectTransform rt, Vector2 anchor, Vector2 pivot, Vector2 pos, Vector2 size)
@@ -257,11 +272,16 @@ public class GameUI
 
         // HUD (top row): petiscos pill, ossos pill and the settings button; petiscos per second below.
         var coinPill = NewImage(left, "CoinPill", ProceduralArt.RoundedRect(), CardBg, true);
-        Box(coinPill.rectTransform, new Vector2(0.05f, 1f), new Vector2(0.46f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
+        // Three pills of equal width: petiscos, fragments of the next celestial bone, celestial bones.
+        Box(coinPill.rectTransform, new Vector2(0.05f, 1f), new Vector2(0.30f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
         counterText = PillContent(coinPill, IconLoader.Load("petisco"));
 
+        var fragPill = NewImage(left, "FragmentsPill", ProceduralArt.RoundedRect(), CardBg, true);
+        Box(fragPill.rectTransform, new Vector2(0.32f, 1f), new Vector2(0.57f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
+        fragmentsText = PillContent(fragPill, IconLoader.Load("fragmento-celestial"), 54f);
+
         var gemPill = NewImage(left, "OssosPill", ProceduralArt.RoundedRect(), CardBg, true);
-        Box(gemPill.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.84f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
+        Box(gemPill.rectTransform, new Vector2(0.59f, 1f), new Vector2(0.84f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
         ossosText = PillContent(gemPill, IconLoader.Load("osso-celestial"));
 
         var gear = NewButton(left, "SettingsButton", "", 28, CardBg, Color.white, out _, out _);
@@ -309,11 +329,11 @@ public class GameUI
     }
 
     // A dark rounded pill with an icon inside its left end and an auto-sized value.
-    static TextMeshProUGUI PillContent(Image pill, Sprite icon)
+    static TextMeshProUGUI PillContent(Image pill, Sprite icon, float iconSize = 68f)
     {
         var img = NewImage(pill.transform, "Icon", icon, Color.white);
         img.preserveAspect = true;
-        Place(img.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(16f, 0f), new Vector2(68f, 68f));
+        Place(img.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(16f + (68f - iconSize) / 2f, 0f), new Vector2(iconSize, iconSize));
         var t = NewText(pill.transform, "Value", "0", 56, Color.white, TextAlignmentOptions.MidlineRight, FontStyles.Bold);
         Box(t.rectTransform, Vector2.zero, Vector2.one, new Vector2(90f, 4f), new Vector2(-22f, -4f));
         t.enableAutoSizing = true;
@@ -417,7 +437,7 @@ public class GameUI
         tabUpgradesRt = (RectTransform)tabU.transform;
         tabU.onClick.AddListener(() => ShowTab(1));
 
-        var tabC = NewButton(rt, "TabCeu", "Céu", 28, TabOff, Color.white, out tabCeuBg, out tabCeuText);
+        var tabC = NewButton(rt, "TabCeu", "Renascer", 28, TabOff, Color.white, out tabCeuBg, out tabCeuText);
         tabCeuRt = (RectTransform)tabC.transform;
         tabC.onClick.AddListener(() => ShowTab(2));
 
@@ -506,7 +526,7 @@ public class GameUI
         RefreshBuyBar();
     }
 
-    // "Céu" tab: ascend for Ossos Celestiais, then spend them on permanent blessings.
+    // "Renascer" tab: be reborn for Ossos Celestiais, then spend them on permanent blessings.
     void BuildCeuRows()
     {
         var bone = IconLoader.Load("osso-celestial");
@@ -553,7 +573,7 @@ public class GameUI
         if (ascendConfirmTimer <= 0f)
         {
             ascendConfirmTimer = 6f;
-            ShowToast(Loc.T("Ascender reinicia petiscos, construções e melhorias. Toque de novo para confirmar!"), 6f);
+            ShowToast(Loc.T("Renascer reinicia petiscos, construções e melhorias. Toque de novo para confirmar!"), 6f);
             RefreshCeu();
             return;
         }
@@ -563,7 +583,7 @@ public class GameUI
         s.Save();
         HideGolden();
         sfx.PlayGolden();
-        ShowToast(Loc.F(gained == 1 ? "Você ascendeu! +{0} Osso Celestial" : "Você ascendeu! +{0} Ossos Celestiais", NumberFormat.Format(gained)), 6f);
+        ShowToast(Loc.F(gained == 1 ? "O Caramelo renasceu! +{0} Osso Celestial" : "O Caramelo renasceu! +{0} Ossos Celestiais", NumberFormat.Format(gained)), 6f);
         RefreshAll();
     }
 
@@ -826,6 +846,7 @@ public class GameUI
         double petiscos = Math.Floor(s.Petiscos);
         counterText.text = NumberFormat.Format(petiscos);
         ossosText.text = NumberFormat.Format(s.Ossos);
+        fragmentsText.text = NumberFormat.Fraction(s.Fragments);
         cpsText.text = cpsShadow.text = NumberFormat.Format(s.Cps, true) + "/s";
         statsText.text = Loc.F("Cliques: {0}   |   Total: {1}", NumberFormat.Format(s.Clicks), NumberFormat.Format(s.LifetimeEarned));
 
@@ -852,12 +873,12 @@ public class GameUI
         else RefreshBuildings();
 
         double pending = s.PendingOssos;
-        tabCeuText.text = pending >= 1 ? Loc.F("Céu (+{0})", NumberFormat.Format(pending)) : Loc.T("Céu");
+        tabCeuText.text = Loc.T("Renascer");
 
         int available = 0;
         foreach (var def in GameDefs.Upgrades)
             if (s.IsUpgradeAvailable(def)) available++;
-        tabUpgradesText.text = available > 0 ? Loc.F("Melhorias ({0})", available) : Loc.T("Melhorias");
+        tabUpgradesText.text = Loc.T("Melhorias");
     }
 
     void RefreshCeu()
@@ -865,26 +886,27 @@ public class GameUI
         ossosRow.name.text = Loc.F("Ossos Celestiais: {0}", NumberFormat.Format(s.Ossos));
         ossosRow.desc.text = Loc.F("Cada osso já ganho dá +{0}% de produção (hoje: +{1}%). Gaste os ossos em bênçãos permanentes.",
             (PrestigeDefs.BonusPerOsso * 100).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture), NumberFormat.Format(s.PrestigeBonus * 100, true));
-        ossosRow.cost.text = s.Ascensions > 0 ? Loc.F("Ascensões: {0}", s.Ascensions) : "";
+        ossosRow.cost.text = s.Ascensions > 0 ? Loc.F("Renascimentos: {0}", s.Ascensions) : "";
 
         double pending = s.PendingOssos;
         bool ready = pending >= 1;
         bool confirming = ascendConfirmTimer > 0f;
         ascendRow.bg.color = confirming ? Bad : ready ? AscendReady : RowOff;
-        ascendRow.name.text = Loc.T(confirming ? "Toque de novo para confirmar!" : "Ascender ao Céu dos Cachorros");
+        ascendRow.name.text = Loc.T(confirming ? "Toque de novo para confirmar!" : "Renascer mais poderoso");
         ascendRow.name.color = confirming ? Color.white : Ink;
         ascendRow.desc.color = confirming ? Color.white : ProceduralArt.Hex("#35200D");
-        ascendRow.desc.text = Loc.T("Reinicia petiscos, construções e melhorias comuns. Você mantém ossos, bênçãos e cliques.");
+        ascendRow.desc.text = Loc.T("O Caramelo usa os ossos celestiais para renascer mais poderoso. Reinicia petiscos, construções e melhorias comuns. Você mantém ossos, bênçãos e cliques.");
         if (ready)
         {
             ascendRow.cost.color = confirming ? Color.white : Ink;
-            ascendRow.cost.text = Loc.F(pending == 1 ? "+{0} Osso Celestial" : "+{0} Ossos Celestiais", NumberFormat.Format(pending));
+            ascendRow.cost.text = Loc.F(pending == 1 ? "+{0} Osso Celestial" : "+{0} Ossos Celestiais", NumberFormat.Format(pending))
+                + (s.Fragments - pending >= 0.01 ? " · " + Loc.F("Fragmentos: {0}", NumberFormat.Fraction(s.Fragments)) : "");
         }
         else
         {
             double needed = PrestigeDefs.Threshold * Math.Pow(s.OssosEver + 1, 3) - s.LifetimeEarned;
             ascendRow.cost.color = Bad;
-            ascendRow.cost.text = Loc.F("Faltam {0} petiscos para o próximo osso", NumberFormat.Format(Math.Max(1, needed)));
+            ascendRow.cost.text = Loc.F("Fragmentos: {0} de 1 osso · faltam {1} petiscos", NumberFormat.Fraction(s.Fragments), NumberFormat.Format(Math.Max(1, needed)));
         }
 
         for (int i = 0; i < blessingRows.Count; i++)
@@ -984,7 +1006,7 @@ public class GameUI
 
         if (portrait)
         {
-            Anchors(leftPanel, 0f, PortraitShopHeight, 1f, 1f);
+            AnchorsScaled(leftPanel, 0f, PortraitShopHeight, 1f, 1f, GameScale);
             Anchors(rightPanel, 0f, 0f, 1f, PortraitShopHeight);
             Box(tabBuildingsRt, new Vector2(0f, 0.895f), new Vector2(0.31f, 0.985f), new Vector2(14f, 0f), new Vector2(-4f, 0f));
             Box(tabUpgradesRt, new Vector2(0.31f, 0.895f), new Vector2(0.62f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
@@ -994,7 +1016,7 @@ public class GameUI
         }
         else
         {
-            Anchors(leftPanel, 0f, 0f, LeftWidth, 1f);
+            AnchorsScaled(leftPanel, 0f, 0f, LeftWidth, 1f, GameScale);
             Anchors(rightPanel, LeftWidth, 0f, 1f, 1f);
             Box(tabBuildingsRt, new Vector2(0f, 0.915f), new Vector2(0.31f, 0.985f), new Vector2(14f, 0f), new Vector2(-4f, 0f));
             Box(tabUpgradesRt, new Vector2(0.31f, 0.915f), new Vector2(0.62f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));

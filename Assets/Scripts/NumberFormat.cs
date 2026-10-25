@@ -13,6 +13,15 @@ public static class NumberFormat
         "", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc",
     };
 
+    // Two decimals below 1000 (fragments of a bone), the usual abbreviation above.
+    public static string Fraction(double v)
+    {
+        if (double.IsNaN(v) || v < 0) v = 0;
+        if (v >= 1000) return Format(v);
+        string n = (Math.Floor(v * 100) / 100).ToString("0.00", CultureInfo.InvariantCulture);
+        return Loc.IsEnglish ? n : n.Replace('.', ',');
+    }
+
     // Formats using the pt-BR convention (dot for thousands, comma for decimals), or the English one.
     // WebGL builds ship with limited culture data, so this is done by hand.
     public static string Format(double v, bool decimals = false)

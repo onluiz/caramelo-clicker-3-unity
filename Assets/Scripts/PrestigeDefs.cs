@@ -13,7 +13,7 @@ public class BlessingDef
     public double Value;
 }
 
-// Prestige ("Ascensão"): resetting a run grants Ossos Celestiais based on everything earned across all runs.
+// Prestige ("Renascimento"): resetting a run grants Ossos Celestiais based on everything earned across all runs.
 // Every osso ever earned adds a permanent production bonus, and unspent ossos buy permanent blessings.
 public static class PrestigeDefs
 {
@@ -49,6 +49,12 @@ public static class PrestigeDefs
         var map = new Dictionary<string, BlessingDef>();
         foreach (var b in Blessings) map[b.Id] = b;
         return map;
+    }
+
+    // Ossos including the fraction: the "fragments" that fill up continuously as treats pile up.
+    public static double OssosExact(double lifetimeEarned)
+    {
+        return lifetimeEarned <= 0 ? 0 : Math.Pow(lifetimeEarned / Threshold, 1.0 / 3.0);
     }
 
     // Total ossos a player with this much lifetime production has earned (spent or not).
