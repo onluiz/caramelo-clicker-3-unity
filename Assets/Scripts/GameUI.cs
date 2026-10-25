@@ -425,6 +425,23 @@ public class GameUI
         settingsRoot.gameObject.SetActive(open);
     }
 
+    // Splits the tab row into equal-width buttons (14px outer margin, 8px gaps).
+    void LayoutTabs(float yMin, float yMax)
+    {
+        var tabs = devEnabled
+            ? new[] { tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt }
+            : new[] { tabBuildingsRt, tabUpgradesRt, tabCeuRt };
+        int n = tabs.Length;
+        const float outer = 14f, gap = 8f;
+        float shrink = (2f * outer + gap * (n - 1)) / n;
+        for (int i = 0; i < n; i++)
+        {
+            float left = outer + i * (gap - shrink);
+            Box(tabs[i], new Vector2((float)i / n, yMin), new Vector2((float)(i + 1) / n, yMax),
+                new Vector2(left, 0f), new Vector2(left - shrink, 0f));
+        }
+    }
+
     void BuildRightPanel()
     {
         var right = NewImage(safeRoot, "RightPanel", null, PanelDark, false, true);
@@ -1011,20 +1028,14 @@ public class GameUI
         {
             AnchorsScaled(leftPanel, 0f, PortraitShopHeight, 1f, 1f, GameScale);
             Anchors(rightPanel, 0f, 0f, 1f, PortraitShopHeight);
-            Box(tabBuildingsRt, new Vector2(0f, 0.895f), new Vector2(0.31f, 0.985f), new Vector2(14f, 0f), new Vector2(-4f, 0f));
-            Box(tabUpgradesRt, new Vector2(0.31f, 0.895f), new Vector2(0.62f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
-            Box(tabCeuRt, new Vector2(0.62f, 0.895f), new Vector2(devEnabled ? 0.82f : 1f, 0.985f), new Vector2(4f, 0f), new Vector2(devEnabled ? -4f : -14f, 0f));
-            Box(tabDevRt, new Vector2(0.82f, 0.895f), new Vector2(1f, 0.985f), new Vector2(4f, 0f), new Vector2(-14f, 0f));
+            LayoutTabs(0.895f, 0.985f);
             Box(buyBarRt, new Vector2(0f, 0.81f), new Vector2(1f, 0.885f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
         }
         else
         {
             AnchorsScaled(leftPanel, 0f, 0f, LeftWidth, 1f, GameScale);
             Anchors(rightPanel, LeftWidth, 0f, 1f, 1f);
-            Box(tabBuildingsRt, new Vector2(0f, 0.915f), new Vector2(0.31f, 0.985f), new Vector2(14f, 0f), new Vector2(-4f, 0f));
-            Box(tabUpgradesRt, new Vector2(0.31f, 0.915f), new Vector2(0.62f, 0.985f), new Vector2(4f, 0f), new Vector2(-4f, 0f));
-            Box(tabCeuRt, new Vector2(0.62f, 0.915f), new Vector2(devEnabled ? 0.82f : 1f, 0.985f), new Vector2(4f, 0f), new Vector2(devEnabled ? -4f : -14f, 0f));
-            Box(tabDevRt, new Vector2(0.82f, 0.915f), new Vector2(1f, 0.985f), new Vector2(4f, 0f), new Vector2(-14f, 0f));
+            LayoutTabs(0.915f, 0.985f);
             Box(buyBarRt, new Vector2(0f, 0.845f), new Vector2(1f, 0.905f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
         }
 
