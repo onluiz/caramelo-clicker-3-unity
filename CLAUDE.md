@@ -32,6 +32,21 @@ Gotchas learned the hard way:
 
 To try a build locally: `python -m http.server 55553 -d Build/WebGL` then open `http://localhost:55553`. `Build/` is gitignored.
 
+To test on a phone, build a debug APK (the Android module is installed; IL2CPP, minSdk 25, signed with the debug key, package still `com.DefaultCompany.urp_2d`, so not store-ready) and install it with adb:
+
+```bash
+unity command build run --project-path "$PWD" --caller plugin --skill unity-cli --detach -- --target Android --outputPath Build/Android/CarameloClicker.apk --confirm true
+unity command build status --project-path "$PWD" --format json     # poll until "completed" (~8 min the first time)
+```
+```powershell
+$adb = "C:\Program Files\Unity\Hub\Editor\6000.3.27f1\Editor\Data\PlaybackEngines\AndroidPlayer\SDK\platform-tools\adb.exe"
+& $adb devices -l                                                  # phone needs USB debugging on and authorized
+& $adb install -r Build\Android\CarameloClicker.apk
+& $adb shell monkey -p com.DefaultCompany.urp_2d -c android.intent.category.LAUNCHER 1
+```
+
+The Android build switches the Editor's active build target. **Switch back to WebGL afterwards** (`UnityEditor.EditorUserBuildSettings.SwitchActiveBuildTarget(UnityEditor.BuildTargetGroup.WebGL, UnityEditor.BuildTarget.WebGL)` via `script eval_file`). The build report's `totalSizeBytes` sums intermediate files, so check the real APK size on disk (~39 MB).
+
 ## Architecture
 
 Everything lives in `Assets/Scripts`, with **no prefabs and almost nothing in the scene**: the scene only holds a `Game` object with `GameController`, which builds the entire uGUI hierarchy at runtime. Layout changes mean editing code, not the scene.
