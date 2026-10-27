@@ -11,6 +11,9 @@ public class GameUI
 {
     const float LeftWidth = 0.58f;        // landscape: share of the width used by the game area
     const float GameScale = 0.85f;        // the whole game area (HUD, ground, dog) is drawn a bit smaller than the panel
+    const float GameScaleMin = 0.6f;      // ...and shrinks further on big screens, but never below this
+    const float ShrinkFromShortSide = 1080f; // shortest screen side (px) where the shrinking starts
+    const float ShrinkToShortSide = 2160f;   // shortest screen side (px) where it reaches GameScaleMin
     const bool ShowDevTab = false;        // the Dev tab stays hidden for now (DevMode still gates it outside production)
     const float PortraitShopHeight = 0.45f; // portrait: share of the height used by the shop
     const float RowHeight = 146f;
@@ -1019,6 +1022,9 @@ public class GameUI
 
         scaler.referenceResolution = portrait ? new Vector2(1080f, 1920f) : new Vector2(1600f, 900f);
 
+        float shortSide = Mathf.Min(Screen.width, Screen.height);
+        float gameScale = Mathf.Lerp(GameScale, GameScaleMin, Mathf.InverseLerp(ShrinkFromShortSide, ShrinkToShortSide, shortSide));
+
         var safe = Screen.safeArea;
         safeRoot.anchorMin = new Vector2(safe.xMin / Screen.width, safe.yMin / Screen.height);
         safeRoot.anchorMax = new Vector2(safe.xMax / Screen.width, safe.yMax / Screen.height);
@@ -1026,14 +1032,14 @@ public class GameUI
 
         if (portrait)
         {
-            AnchorsScaled(leftPanel, 0f, PortraitShopHeight, 1f, 1f, GameScale);
+            AnchorsScaled(leftPanel, 0f, PortraitShopHeight, 1f, 1f, gameScale);
             Anchors(rightPanel, 0f, 0f, 1f, PortraitShopHeight);
             LayoutTabs(0.895f, 0.985f);
             Box(buyBarRt, new Vector2(0f, 0.81f), new Vector2(1f, 0.885f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
         }
         else
         {
-            AnchorsScaled(leftPanel, 0f, 0f, LeftWidth, 1f, GameScale);
+            AnchorsScaled(leftPanel, 0f, 0f, LeftWidth, 1f, gameScale);
             Anchors(rightPanel, LeftWidth, 0f, 1f, 1f);
             LayoutTabs(0.915f, 0.985f);
             Box(buyBarRt, new Vector2(0f, 0.845f), new Vector2(1f, 0.905f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
