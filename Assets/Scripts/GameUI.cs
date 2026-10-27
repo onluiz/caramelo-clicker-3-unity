@@ -64,6 +64,7 @@ public class GameUI
     readonly GameAudio sfx;
 
     RectTransform canvasRect, bgLayer, floatLayer, overlayLayer;
+    SkyParallax sky;
     RectTransform safeRoot, tapArea, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
     CanvasScaler scaler;
     bool portrait;
@@ -254,6 +255,9 @@ public class GameUI
         var bg = NewImage(canvasRect, "Background",
             ProceduralArt.Gradient(ProceduralArt.Hex("#FFE2B0"), ProceduralArt.Hex("#F59E4B")), Color.white);
         Stretch(bg.rectTransform);
+
+        // Behind the falling bones; ApplyLayout sizes it to the game area.
+        sky = new SkyParallax(canvasRect);
 
         bgLayer = NewRect("FallingBones", canvasRect);
         Stretch(bgLayer);
@@ -1035,6 +1039,12 @@ public class GameUI
         safeRoot.anchorMax = new Vector2(safe.xMax / Screen.width, safe.yMax / Screen.height);
         safeRoot.offsetMin = safeRoot.offsetMax = Vector2.zero;
 
+        // The sky fills the game area out to the screen edges, and ends where the shop starts.
+        float splitX = (safe.xMin + LeftWidth * safe.width) / Screen.width;
+        float splitY = (safe.yMin + PortraitShopHeight * safe.height) / Screen.height;
+        if (portrait) Anchors(sky.Root, 0f, splitY, 1f, 1f);
+        else Anchors(sky.Root, 0f, 0f, splitX, 1f);
+
         if (portrait)
         {
             AnchorsScaled(leftPanel, 0f, PortraitShopHeight, 1f, 1f, gameScale);
@@ -1123,6 +1133,7 @@ public class GameUI
     void UpdateDog(float dt)
     {
         rig.Tick(dt, s.Cps);
+        sky.Update(dt, rig.StrideSpeed);
         UpdateGround(dt);
     }
 
@@ -1130,7 +1141,8 @@ public class GameUI
     // its marks scroll left to match the stride.
     void BuildGround(Transform parent)
     {
-        var band = NewImage(parent, "Ground", null, new Color(0.88f, 0.54f, 0.24f, 0.55f));
+        // Opaque, so the clouds behind the game area do not show through the ground.
+        var band = NewImage(parent, "Ground", null, new Color(0.93f, 0.62f, 0.3f, 1f));
         groundBand = band.rectTransform;
         groundBand.anchorMin = Vector2.zero;
         groundBand.anchorMax = new Vector2(1f, 0.4f);
