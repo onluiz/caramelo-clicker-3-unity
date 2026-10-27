@@ -64,7 +64,7 @@ public class GameUI
     readonly GameAudio sfx;
 
     RectTransform canvasRect, bgLayer, floatLayer, overlayLayer;
-    RectTransform safeRoot, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
+    RectTransform safeRoot, tapArea, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
     CanvasScaler scaler;
     bool portrait;
     Vector2Int lastScreen;
@@ -267,6 +267,15 @@ public class GameUI
         // Game and shop panels live inside the device's safe area (notches, rounded corners).
         safeRoot = NewRect("SafeArea", canvasRect);
         Stretch(safeRoot);
+
+        // The whole game area is a tap target. It sits under every other element, so anything
+        // that blocks raycasts (buttons, the shop) is not a click on the dog. The HUD counters let taps through.
+        var tap = NewImage(safeRoot, "TapArea", null, new Color(0f, 0f, 0f, 0f), false, true);
+        tapArea = tap.rectTransform;
+        var trigger = tap.gameObject.AddComponent<EventTrigger>();
+        var entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
+        entry.callback.AddListener(data => OnDogDown((PointerEventData)data));
+        trigger.triggers.Add(entry);
     }
 
     void BuildLeftPanel()
@@ -319,10 +328,6 @@ public class GameUI
         BuildGround(left);
 
         rig = new DogRig(left, new Vector2(0.5f, 0.4f));
-        var trigger = rig.Root.AddComponent<EventTrigger>();
-        var entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-        entry.callback.AddListener(data => OnDogDown((PointerEventData)data));
-        trigger.triggers.Add(entry);
 
         toastText = NewText(left, "Toast", "", 32, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
         Anchors(toastText.rectTransform, 0.02f, 0.075f, 0.98f, 0.155f);
@@ -1033,6 +1038,7 @@ public class GameUI
         if (portrait)
         {
             AnchorsScaled(leftPanel, 0f, PortraitShopHeight, 1f, 1f, gameScale);
+            Anchors(tapArea, 0f, PortraitShopHeight, 1f, 1f);
             Anchors(rightPanel, 0f, 0f, 1f, PortraitShopHeight);
             LayoutTabs(0.895f, 0.985f);
             Box(buyBarRt, new Vector2(0f, 0.81f), new Vector2(1f, 0.885f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
@@ -1040,6 +1046,7 @@ public class GameUI
         else
         {
             AnchorsScaled(leftPanel, 0f, 0f, LeftWidth, 1f, gameScale);
+            Anchors(tapArea, 0f, 0f, LeftWidth, 1f);
             Anchors(rightPanel, LeftWidth, 0f, 1f, 1f);
             LayoutTabs(0.915f, 0.985f);
             Box(buyBarRt, new Vector2(0f, 0.845f), new Vector2(1f, 0.905f), new Vector2(14f, 0f), new Vector2(-14f, 0f));

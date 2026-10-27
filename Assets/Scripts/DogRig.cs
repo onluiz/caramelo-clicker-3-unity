@@ -66,7 +66,6 @@ public class DogRig
     bool walkHappy;
     int shownFrame = -1;
 
-    public GameObject Root => rootRt.gameObject;
 
     // Horizontal speed (px/s) the ground should scroll at so the feet look planted.
     public float StrideSpeed { get; private set; }
@@ -77,8 +76,6 @@ public class DogRig
         rootRt.anchorMin = rootRt.anchorMax = anchor;
         rootRt.sizeDelta = new Vector2(700f, 520f);
         rootRt.anchoredPosition = Vector2.zero;
-        var hit = rootRt.gameObject.AddComponent<Image>();
-        hit.color = new Color(0f, 0f, 0f, 0f);
 
         var shadowRt = NewRect("Shadow", rootRt);
         shadowRt.anchoredPosition = new Vector2(0f, GroundY - 4f);
