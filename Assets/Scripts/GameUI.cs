@@ -344,7 +344,7 @@ public partial class GameUI
         BuildHero(left);
 
         toastText = NewText(left, "Toast", "", 32, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
-        Anchors(toastText.rectTransform, 0.02f, 0.075f, 0.98f, 0.155f);
+        Anchors(toastText.rectTransform, 0.02f, 0.115f, 0.98f, 0.195f);
         toastText.textWrappingMode = TextWrappingModes.Normal;
 
         statsPill = NewImage(left, "StatsPill", ProceduralArt.RoundedRect(), new Color(CardBg.r, CardBg.g, CardBg.b, 0.9f), true);
@@ -1181,8 +1181,8 @@ public partial class GameUI
 
     void UpdateDog(float dt)
     {
-        rig.Fighting = enemy.Engaged;
-        rig.Travelling = !enemy.Engaged;
+        rig.Fighting = wave.Engaged;
+        rig.Travelling = !wave.Engaged;
         rig.Tick(dt, s.Cps);
         sky.Update(dt, rig.StrideSpeed);
         UpdateGround(dt);

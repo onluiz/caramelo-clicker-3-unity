@@ -98,6 +98,7 @@ public static class Loc
         { "Acerto no demônio", "Hit chance vs demon" },
         { "Esquiva do demônio", "Dodge vs demon" },
         { "Errou", "Miss" },
+        { "Onda", "Wave" },
         { "Esquivou!", "Dodged!" },
         { "Caramelo foi derrotado! Ele se recupera e segue em frente.", "Caramelo was defeated! He recovers and carries on." },
         { "Crítico!", "Critical!" },

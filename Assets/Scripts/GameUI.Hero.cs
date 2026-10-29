@@ -9,12 +9,15 @@ public partial class GameUI
 {
     const string HeroSaveKey = "caramelo_hero_v1";
 
-    static readonly CombatStats EnemyTemplate = new CombatStats(1, 3, 4, 1, 2, 1, 3); // level, str, vit, int, dex, luck, agi: a bit weaker than the dog
+    static readonly CombatStats EnemyTemplate = new CombatStats(1, 6, 6, 2, 4, 3, 6); // level, str, vit, int, dex, luck, agi: stronger than the dog
     static readonly Stat[] StatOrder = { Stat.Strength, Stat.Vitality, Stat.Intelligence, Stat.Dexterity, Stat.Luck, Stat.Agility };
     static readonly string[] StatNames = { "Força", "Vitalidade", "Inteligência", "Destreza", "Sorte", "Agilidade" };
 
     CombatStats dogStats;
-    Enemy enemy;
+    EnemyWave wave;
+    int shownWave = -1;
+    RectTransform xpBarFillRt;
+    TextMeshProUGUI xpBarText;
     HealthBar dogBar;
 
     Button heroButton;
@@ -60,8 +63,8 @@ public partial class GameUI
     void ResetHero()
     {
         dogStats = NewDogStats();
-        enemy.TargetLevel = 1;
-        enemy.Respawn();
+        wave.TargetLevel = 1;
+        wave.Reset();
         RefreshHeroLabels();
         SaveHero();
         PlayerPrefs.Save();
@@ -71,9 +74,11 @@ public partial class GameUI
 
     void BuildHero(Transform left)
     {
-        enemy = new Enemy(left, new Vector2(0.5f, 0.4f), EnemyTemplate, dogStats.Level);
-        enemy.Tapped = AttackEnemy;
-        enemy.AttackLanded = EnemyAttacks;
+        wave = new EnemyWave(left, new Vector2(0.5f, 0.4f), EnemyTemplate, dogStats.Level);
+        wave.Tapped = AttackEnemy;
+        wave.AttackLanded = EnemyAttacks;
+
+        BuildXpBar(left);
 
         // Name and HP over the dog's head, like the demon's.
         dogBar = new HealthBar(rig.Root, new Vector2(0.5f, 0.5f), new Vector2(0f, DogRig.GroundY + 175f), ProceduralArt.Hex("#5BC46A"));
@@ -86,18 +91,31 @@ public partial class GameUI
         RefreshHeroLabels();
     }
 
+    // Experience bar along the bottom of the game area, above the stats pill.
+    void BuildXpBar(Transform left)
+    {
+        var back = NewImage(left, "XpBar", ProceduralArt.RoundedRect(), new Color(0.12f, 0.05f, 0.02f, 0.85f), true);
+        Place(back.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 98f), new Vector2(720f, 36f));
+        var fill = NewImage(back.transform, "Fill", ProceduralArt.RoundedRect(), ProceduralArt.Hex("#4FB3E8"), true);
+        xpBarFillRt = fill.rectTransform;
+        Box(xpBarFillRt, Vector2.zero, Vector2.one, new Vector2(3f, 3f), new Vector2(-3f, -3f));
+        xpBarText = NewText(back.transform, "Text", "", 26, Color.white, TextAlignmentOptions.Center, FontStyles.Bold);
+        Stretch(xpBarText.rectTransform);
+    }
+
     void UpdateHero(float dt)
     {
-        enemy.Tick(dt, rig.StrideSpeed * dt);
+        wave.Tick(dt, rig.StrideSpeed * dt);
+        if (wave.Number != shownWave) RefreshHeroLabels();
 
         // He catches his breath while running to the next demon.
-        if (!enemy.Engaged && dogStats.Hp < dogStats.MaxHp)
+        if (!wave.Engaged && dogStats.Hp < dogStats.MaxHp)
             dogStats.Hp = Mathf.Min(dogStats.MaxHp, dogStats.Hp + dogStats.MaxHp * 0.08f * dt);
         dogBar.SetFill(dogStats.Hp / dogStats.MaxHp);
     }
 
     // Tapping the demon is an attack from Caramelo.
-    void AttackEnemy()
+    void AttackEnemy(Enemy enemy)
     {
         sfx.PlayClick();
         rig.Pop();
@@ -110,11 +128,11 @@ public partial class GameUI
         else if (hit.Critical) SpawnFloat(pos, Loc.T("Crítico!") + " -" + hit.Damage, new Color(1f, 0.85f, 0.2f));
         else SpawnFloat(pos, "-" + hit.Damage, Color.white);
 
-        if (wasAlive && !enemy.Alive) OnEnemyKilled();
+        if (wasAlive && !enemy.Alive) OnEnemyKilled(enemy);
     }
 
     // The demon's blow lands (or misses) on Caramelo.
-    void EnemyAttacks()
+    void EnemyAttacks(Enemy enemy)
     {
         var hit = enemy.Stats.Attacks(dogStats);
         var pos = dogBar.ScreenPosition + new Vector2(0f, 60f);
@@ -131,15 +149,15 @@ public partial class GameUI
         if (dogStats.IsDead) OnDogDefeated();
     }
 
-    // No penalty: he recovers, the demon goes back down the road and he runs on.
+    // No penalty: he recovers, the wave goes back down the road and he runs on.
     void OnDogDefeated()
     {
         dogStats.Hp = dogStats.MaxHp;
-        enemy.Respawn();
+        wave.Restart();
         ShowToast(Loc.T("Caramelo foi derrotado! Ele se recupera e segue em frente."), 4f);
     }
 
-    void OnEnemyKilled()
+    void OnEnemyKilled(Enemy enemy)
     {
         int xp = enemy.XpReward;
         SpawnFloat(enemy.ScreenPosition + new Vector2(0f, -70f), "+" + xp + " XP", new Color(0.6f, 0.9f, 1f));
@@ -147,7 +165,7 @@ public partial class GameUI
         int levels = dogStats.AddXp(xp);
         if (levels > 0)
         {
-            enemy.TargetLevel = dogStats.Level;
+            wave.TargetLevel = dogStats.Level;
             SpawnFloat(dogBar.ScreenPosition + new Vector2(0f, 60f), Loc.T("Subiu de nível!"), new Color(1f, 0.85f, 0.2f));
             sfx.PlayBuy();
             rig.Poke();
@@ -167,13 +185,17 @@ public partial class GameUI
         heroButtonBg.color = points ? TabOn : ProceduralArt.Hex("#8A5A2B");
         heroButtonText.color = points ? Ink : Color.white;
 
+        shownWave = wave.Number;
+        xpBarFillRt.anchorMax = new Vector2(Mathf.Clamp01((float)dogStats.Xp / dogStats.XpToNext), 1f);
+        xpBarText.text = Loc.T("Nv.") + dogStats.Level + "   XP " + dogStats.Xp + " / " + dogStats.XpToNext + "   -   " + Loc.T("Onda") + " " + wave.Number;
+
         if (heroRoot != null && heroRoot.gameObject.activeSelf) RefreshHeroPanel();
     }
 
     void ApplyHeroLanguage()
     {
         if (dogBar == null) return;
-        enemy.RefreshLabel();
+        wave.RefreshLabels();
         RefreshHeroLabels();
         RefreshHeroPanel();
     }
@@ -269,7 +291,7 @@ public partial class GameUI
             statPlus[i].interactable = dogStats.StatPoints > 0;
         }
 
-        var foe = enemy.Stats;
+        var foe = wave.Preview;
         derivedText.text =
             "HP: " + Mathf.CeilToInt(dogStats.Hp) + " / " + Mathf.CeilToInt(dogStats.MaxHp) + "\n" +
             Loc.T("Ataque") + ": " + Dec(dogStats.Attack) + "\n" +

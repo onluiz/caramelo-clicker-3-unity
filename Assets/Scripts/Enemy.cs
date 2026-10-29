@@ -3,24 +3,17 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// A flying demon that waits far down the road and fights Caramelo when he gets there. It starts
-// `StartDistance` metres away; the road scrolls it toward the dog as he runs, and once it is `FightX`
-// pixels in front of him the fight starts: tapping it is an attack from the dog, and it attacks back
-// every few seconds. At 0 HP it plays its death animation, fades, and a new demon (at `TargetLevel`)
-// starts again from `StartDistance`.
+// One flying demon of a wave (see EnemyWave, which spawns, places and counts them). While the fight is
+// on, tapping it is an attack from the dog and it attacks back every few seconds. At 0 HP it plays its
+// death animation and fades out for good; the wave decides what comes next.
 //
 // Frames come from Resources/Enemy/demon-{flying,hurt,attack,death}.png, sheets of the Flying Demon
 // pack (81x71 frames in a row).
 public class Enemy
 {
-    public const float PixelsPerMeter = 40f;
-    public const float StartDistance = 100f; // metres
-    const float FightX = 300f;               // where it hovers once the fight starts, px in front of the dog
-
     const int FrameWidth = 81;
     const int FrameHeight = 71;
     const float Scale = 3f;              // screen pixels per sprite pixel
-    const float HoverHeight = 120f;      // centre height above the dog's paws
     const float BobAmplitude = 14f;
     const float BobSpeed = 2.2f;
     const float FlyFps = 8f;
@@ -28,9 +21,8 @@ public class Enemy
     const float AttackFps = 12f;
     const float DeathFps = 10f;
     const float FadeTime = 0.5f;         // after the death animation
-    const float RespawnDelay = 1.5f;     // after the fade
 
-    const float AttackInterval = 2.4f;   // seconds between its attacks
+    const float AttackInterval = 3f;     // seconds between its attacks
     const int AttackHitFrame = 4;        // frame of the attack animation where the blow lands
     const float LungeDistance = 50f;     // how far it darts toward the dog while attacking
 
@@ -41,33 +33,27 @@ public class Enemy
     enum State { Flying, Hurt, Attacking, Dying, Gone }
 
     public CombatStats Stats { get; private set; }
-    public float Distance { get; private set; } = StartDistance; // metres from the dog
-    public bool InRange { get; private set; }                    // the fight is on
-    public bool Alive => state != State.Dying && state != State.Gone;
-    // The dog stands and fights from the moment the demon arrives until it is gone.
-    public bool Engaged => InRange && state != State.Gone;
+    public bool InUse { get; private set; }                       // part of the current wave
+    public bool Alive => InUse && state != State.Dying && state != State.Gone;
+    public bool Finished => !InUse || state == State.Gone;        // dead and faded out (or never spawned)
     public int XpReward => 12 + 6 * Stats.Level;
-    public int TargetLevel = 1;          // level of the next demon to appear
-    public Action Tapped;                // the dog attacked it
-    public Action AttackLanded;          // its blow reached the dog
+    public Action<Enemy> Tapped;         // the dog attacked it
+    public Action<Enemy> AttackLanded;   // its blow reached the dog
 
-    readonly CombatStats template;
     readonly RectTransform rt, shadowRt, parentRt;
     readonly Image image, shadowImage;
     readonly HealthBar bar;
     readonly Sprite[] flyFrames, hurtFrames, attackFrames, deathFrames;
 
-    State state = State.Flying;
+    State state = State.Gone;
     float time, stateTime, attackTimer;
-    bool blowLanded;
-    int shownMetres = -1;
+    float xOffset, hover;
+    bool blowLanded, inRange;
+    string meters = "";
     Sprite shown;
 
-    public Enemy(Transform parent, Vector2 anchor, CombatStats template, int level)
+    public Enemy(Transform parent, Vector2 anchor)
     {
-        this.template = template;
-        TargetLevel = level;
-        Stats = CombatStats.Scaled(template, level);
         parentRt = (RectTransform)parent;
 
         // Drawn first so it sits behind the demon.
@@ -92,7 +78,7 @@ public class Enemy
         image.raycastTarget = false; // only tappable once the fight is on
         var trigger = go.AddComponent<EventTrigger>();
         var entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-        entry.callback.AddListener(_ => { if (Alive && InRange) Tapped?.Invoke(); });
+        entry.callback.AddListener(_ => { if (Alive && inRange) Tapped?.Invoke(this); });
         trigger.triggers.Add(entry);
 
         // Name and HP over the demon's head (a child, so it moves and fades with it).
@@ -103,9 +89,7 @@ public class Enemy
         attackFrames = LoadSheet("Enemy/demon-attack");
         deathFrames = LoadSheet("Enemy/demon-death");
 
-        RefreshLabel();
-        Show(flyFrames, 0);
-        Place(0f, 0f);
+        SetShown(false);
     }
 
     static Sprite[] LoadSheet(string path)
@@ -127,12 +111,54 @@ public class Enemy
         return frames;
     }
 
-    // "Demônio Nv.2", plus the distance while it is still on its way.
+    // Puts a fresh demon with `stats` in the wave: `xOffset` px behind the front of the wave, hovering
+    // `hover` px above the dog's paws.
+    public void Activate(CombatStats stats, float xOffset, float hover)
+    {
+        Stats = stats;
+        this.xOffset = xOffset;
+        this.hover = hover;
+        InUse = true;
+        inRange = false;
+        meters = "";
+        state = State.Flying;
+        stateTime = 0f;
+        time = UnityEngine.Random.Range(0f, 6f); // so a group does not bob in lockstep
+        attackTimer = 0f;
+        image.raycastTarget = false;
+        bar.SetFill(1f);
+        RefreshLabel();
+    }
+
+    public void Deactivate()
+    {
+        InUse = false;
+        state = State.Gone;
+        SetShown(false);
+    }
+
+    // The fight starts: its first blow comes some time within the first half of an interval.
+    public void Engage()
+    {
+        inRange = true;
+        image.raycastTarget = true;
+        attackTimer = UnityEngine.Random.Range(0f, AttackInterval * 0.5f);
+        meters = "";
+        RefreshLabel();
+    }
+
+    // The distance shown after the name, while the wave is still on its way ("" to hide it).
+    public void SetMeters(string text)
+    {
+        if (text == meters) return;
+        meters = text;
+        RefreshLabel();
+    }
+
     public void RefreshLabel()
     {
-        string text = Loc.T("Demônio") + " " + Loc.T("Nv.") + Stats.Level;
-        if (!InRange) text += "  " + Mathf.CeilToInt(Distance) + " m";
-        bar.SetLabel(text);
+        if (Stats == null) return;
+        bar.SetLabel(Loc.T("Demônio") + " " + Loc.T("Nv.") + Stats.Level + (meters.Length > 0 ? "  " + meters : ""));
     }
 
     // Screen position of the demon's HP bar, for floating texts.
@@ -147,14 +173,10 @@ public class Enemy
         image.sprite = sprite;
     }
 
-    // x is how far in front of the dog it is, on screen.
-    float ScreenX => Mathf.Max(FightX, Distance * PixelsPerMeter);
-
-    void Place(float bob, float lunge)
+    void SetShown(bool on)
     {
-        float x = ScreenX - lunge;
-        rt.anchoredPosition = new Vector2(x, DogRig.GroundY + HoverHeight + bob);
-        shadowRt.anchoredPosition = new Vector2(x, DogRig.GroundY - 4f);
+        rt.gameObject.SetActive(on);
+        shadowRt.gameObject.SetActive(on);
     }
 
     // Applies a hit from the dog. A miss does nothing here; the caller shows it.
@@ -169,28 +191,13 @@ public class Enemy
         if (state == State.Dying) image.raycastTarget = false;
     }
 
-    // `travel` is how many pixels the road moved this frame (the dog's stride).
-    public void Tick(float dt, float travel)
+    // `frontX` is where the front of the wave is, in px in front of the dog.
+    public void Tick(float dt, float frontX)
     {
+        if (!InUse || state == State.Gone) return;
+
         time += dt;
         stateTime += dt;
-
-        if (!InRange && state != State.Gone)
-        {
-            Distance = Mathf.Max(FightX / PixelsPerMeter, Distance - travel / PixelsPerMeter);
-            if (Distance * PixelsPerMeter <= FightX)
-            {
-                InRange = true;
-                image.raycastTarget = true;
-                attackTimer = 0f;
-                RefreshLabel();
-            }
-            else if (Mathf.CeilToInt(Distance) != shownMetres)
-            {
-                shownMetres = Mathf.CeilToInt(Distance);
-                RefreshLabel();
-            }
-        }
 
         float bob = Mathf.Sin(time * BobSpeed) * BobAmplitude;
         float lunge = 0f;
@@ -200,7 +207,7 @@ public class Enemy
         {
             case State.Flying:
                 Show(flyFrames, (int)(time * FlyFps) % Mathf.Max(1, flyFrames.Length));
-                if (InRange)
+                if (inRange)
                 {
                     attackTimer += dt;
                     if (attackTimer >= AttackInterval) StartAttack();
@@ -233,7 +240,7 @@ public class Enemy
                     if (!blowLanded && frame >= AttackHitFrame)
                     {
                         blowLanded = true;
-                        AttackLanded?.Invoke();
+                        AttackLanded?.Invoke(this);
                     }
                     break;
                 }
@@ -247,24 +254,22 @@ public class Enemy
                     if (stateTime > animLength + FadeTime)
                     {
                         state = State.Gone;
-                        stateTime = 0f;
+                        SetShown(false);
+                        return;
                     }
                     break;
                 }
-
-            case State.Gone:
-                alpha = 0f;
-                if (stateTime >= RespawnDelay) Respawn();
-                break;
         }
 
-        // Off the end of the game area (still far down the road): nothing to draw.
-        bool onScreen = ScreenX < parentRt.rect.width * 0.5f + 250f;
-        rt.gameObject.SetActive(onScreen);
-        shadowRt.gameObject.SetActive(onScreen);
+        float x = frontX + xOffset - lunge;
+        // Far down the road, past the end of the game area: nothing to draw.
+        SetShown(x < parentRt.rect.width * 0.5f + 250f);
 
-        Place(bob, lunge);
-        UpdateShadow(bob, alpha);
+        rt.anchoredPosition = new Vector2(x, DogRig.GroundY + hover + bob);
+        shadowRt.anchoredPosition = new Vector2(x, DogRig.GroundY - 4f);
+        float k = 1f - 0.5f * (bob + BobAmplitude) / (2f * BobAmplitude); // the shadow shrinks as the demon rises
+        shadowRt.localScale = new Vector3(k, k, 1f);
+        shadowImage.color = new Color(0.3f, 0.12f, 0f, ShadowAlpha * k * alpha);
         image.color = new Color(1f, 1f, 1f, alpha);
         bar.SetAlpha(alpha);
     }
@@ -275,28 +280,5 @@ public class Enemy
         stateTime = 0f;
         attackTimer = 0f;
         blowLanded = false;
-    }
-
-    // Brings a new demon, at TargetLevel with full HP, back to the start of the road.
-    public void Respawn()
-    {
-        Stats = CombatStats.Scaled(template, TargetLevel);
-        Distance = StartDistance;
-        InRange = false;
-        shownMetres = -1;
-        bar.SetFill(1f);
-        RefreshLabel();
-        image.raycastTarget = false;
-        state = State.Flying;
-        stateTime = 0f;
-        attackTimer = 0f;
-    }
-
-    // The shadow shrinks and fades as the demon rises.
-    void UpdateShadow(float bob, float alpha)
-    {
-        float k = 1f - 0.5f * (bob + BobAmplitude) / (2f * BobAmplitude);
-        shadowRt.localScale = new Vector3(k, k, 1f);
-        shadowImage.color = new Color(0.3f, 0.12f, 0f, ShadowAlpha * k * alpha);
     }
 }
