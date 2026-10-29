@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 // Builds and drives the whole uGUI hierarchy. Layout is anchor-based against a 1600x900 (landscape) or 1080x1920 (portrait) reference.
-public class GameUI
+public partial class GameUI
 {
     const float LeftWidth = 0.58f;        // landscape: share of the width used by the game area
     const bool ClicksEarnPetiscos = false; // when false, tapping the dog only animates him (click upgrades stay in the shop)
@@ -72,8 +72,6 @@ public class GameUI
     Vector2Int lastScreen;
     Rect lastSafe;
     DogRig rig;
-    Enemy enemy;
-    readonly CombatStats dogStats = new CombatStats(1, 5, 5, 3, 5, 5, 5); // level, str, vit, int, dex, luck, agi
     RectTransform groundBand;
     readonly List<RectTransform> groundMarks = new List<RectTransform>();
     float clock;
@@ -120,12 +118,14 @@ public class GameUI
         s = state;
         sfx = audio;
 
+        LoadHero();
         BuildCanvas();
         BuildBackground();
         BuildLeftPanel();
         BuildRightPanel();
         BuildOverlay();
         BuildSettings();
+        BuildHeroPanel();
         ApplyLayout();
         ApplyLanguage();
 
@@ -341,8 +341,7 @@ public class GameUI
         BuildGround(left);
 
         rig = new DogRig(left, new Vector2(0.5f, 0.4f));
-        enemy = new Enemy(left, new Vector2(0.5f, 0.4f), new CombatStats(1, 4, 6, 2, 3, 2, 4));
-        enemy.Tapped = AttackEnemy;
+        BuildHero(left);
 
         toastText = NewText(left, "Toast", "", 32, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
         Anchors(toastText.rectTransform, 0.02f, 0.075f, 0.98f, 0.155f);
@@ -460,6 +459,7 @@ public class GameUI
         settingsTitleText.text = Loc.T("Configurações");
         closeText.text = Loc.T("Fechar");
         langText.text = Loc.T("Idioma: Português");
+        ApplyHeroLanguage();
 
         for (int i = 0; i < upgradeRows.Count; i++)
         {
@@ -815,19 +815,6 @@ public class GameUI
         SpawnFloat(e.position, "+" + NumberFormat.Format(value, true), Color.white);
     }
 
-    // Tapping the demon is an attack from Caramelo.
-    void AttackEnemy()
-    {
-        sfx.PlayClick();
-        var hit = dogStats.Attacks(enemy.Stats);
-        enemy.TakeHit(hit);
-
-        var pos = enemy.ScreenPosition;
-        if (hit.Missed) SpawnFloat(pos, Loc.T("Errou"), new Color(0.85f, 0.85f, 0.85f));
-        else if (hit.Critical) SpawnFloat(pos, Loc.T("Crítico!") + " -" + hit.Damage, new Color(1f, 0.85f, 0.2f));
-        else SpawnFloat(pos, "-" + hit.Damage, Color.white);
-    }
-
     void BuyBuilding(int index)
     {
         int mode = BuyModes[buyModeIndex];
@@ -865,6 +852,7 @@ public class GameUI
         resetConfirmTimer = 0f;
         s.ResetAll();
         s.Save();
+        ResetHero();
         RefreshButtons();
         HideGolden();
         ShowToast(Loc.T("Jogo reiniciado. Boa sorte, Caramelo!"), 4f);
@@ -1193,10 +1181,12 @@ public class GameUI
 
     void UpdateDog(float dt)
     {
+        rig.Fighting = enemy.Engaged;
+        rig.Travelling = !enemy.Engaged;
         rig.Tick(dt, s.Cps);
         sky.Update(dt, rig.StrideSpeed);
         UpdateGround(dt);
-        enemy.Tick(dt);
+        UpdateHero(dt);
     }
 
     // Ground under the dog's paws, filling the panel down to its bottom edge (behind the buttons);

@@ -33,23 +33,29 @@ public class GameController : MonoBehaviour
         if (saveTimer >= AutoSaveSeconds)
         {
             saveTimer = 0f;
-            state.Save();
+            SaveAll();
         }
     }
 
     void OnApplicationPause(bool paused)
     {
-        if (paused && state != null) state.Save();
+        if (paused && state != null) SaveAll();
     }
 
     void OnApplicationFocus(bool focused)
     {
-        if (!focused && state != null) state.Save();
+        if (!focused && state != null) SaveAll();
     }
 
     void OnApplicationQuit()
     {
-        if (state != null) state.Save();
+        if (state != null) SaveAll();
+    }
+
+    void SaveAll()
+    {
+        if (ui != null) ui.SaveHero();
+        state.Save();
     }
 
     static void EnsureEventSystem()
