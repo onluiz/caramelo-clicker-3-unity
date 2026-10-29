@@ -10,7 +10,8 @@ using Random = UnityEngine.Random;
 public class GameUI
 {
     const float LeftWidth = 0.58f;        // landscape: share of the width used by the game area
-    const float GameScale = 0.85f;        // the whole game area (HUD, ground, dog) is drawn a bit smaller than the panel
+    const bool ClicksEarnPetiscos = false; // when false, tapping the dog only animates him (click upgrades stay in the shop)
+    const float GameScale = 0.85f;       // the whole game area (HUD, ground, dog) is drawn a bit smaller than the panel
     const float GameScaleMin = 0.6f;      // ...and shrinks further on big screens, but never below this
     const float ShrinkFromShortSide = 1080f; // shortest screen side (px) where the shrinking starts
     const float ShrinkToShortSide = 2160f;   // shortest screen side (px) where it reaches GameScaleMin
@@ -71,10 +72,14 @@ public class GameUI
     Vector2Int lastScreen;
     Rect lastSafe;
     DogRig rig;
+    Enemy enemy;
+    readonly CombatStats dogStats = new CombatStats(1, 5, 5, 3, 5, 5, 5); // level, str, vit, int, dex, luck, agi
     RectTransform groundBand;
     readonly List<RectTransform> groundMarks = new List<RectTransform>();
     float clock;
 
+    Image clickChip, percentChip;
+    TextMeshProUGUI clickChipText, percentChipText;
     TextMeshProUGUI counterText, cpsText, buffText, toastText, statsText;
     Image statsPill;
     TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, resetText;
@@ -293,6 +298,10 @@ public class GameUI
         Box(coinPill.rectTransform, new Vector2(0.05f, 1f), new Vector2(0.30f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
         counterText = PillContent(coinPill, IconLoader.Load("petisco"));
 
+        // Click upgrades bought, under the petiscos pill: one paw chip per kind with how many were bought.
+        clickChip = MakeClickChip(left, "ClickChip", -128f, out clickChipText);
+        percentChip = MakeClickChip(left, "PercentChip", -196f, out percentChipText);
+
         var fragPill = NewImage(left, "FragmentsPill", ProceduralArt.RoundedRect(), CardBg, true);
         Box(fragPill.rectTransform, new Vector2(0.32f, 1f), new Vector2(0.57f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
         fragmentsText = PillContent(fragPill, IconLoader.Load("fragmento-celestial"), 54f);
@@ -332,6 +341,8 @@ public class GameUI
         BuildGround(left);
 
         rig = new DogRig(left, new Vector2(0.5f, 0.4f));
+        enemy = new Enemy(left, new Vector2(0.5f, 0.4f), new CombatStats(1, 4, 6, 2, 3, 2, 4));
+        enemy.Tapped = AttackEnemy;
 
         toastText = NewText(left, "Toast", "", 32, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
         Anchors(toastText.rectTransform, 0.02f, 0.075f, 0.98f, 0.155f);
@@ -344,6 +355,41 @@ public class GameUI
     }
 
     // A dark rounded pill with an icon inside its left end and an auto-sized value.
+    static Image MakeClickChip(Transform parent, string name, float y, out TextMeshProUGUI text)
+    {
+        var chip = NewImage(parent, name, ProceduralArt.RoundedRect(), CardBg, true);
+        Place(chip.rectTransform, new Vector2(0.05f, 1f), new Vector2(0f, 1f), new Vector2(0f, y), new Vector2(190f, 60f));
+        var icon = NewImage(chip.transform, "Icon", ProceduralArt.Icon(GameDefs.PawIcon), Color.white);
+        icon.preserveAspect = true;
+        Place(icon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(10f, 0f), new Vector2(44f, 44f));
+        text = NewText(chip.transform, "Count", "", 38, Color.white, TextAlignmentOptions.MidlineRight, FontStyles.Bold);
+        Box(text.rectTransform, Vector2.zero, Vector2.one, new Vector2(60f, 2f), new Vector2(-14f, -2f));
+        text.enableAutoSizing = true;
+        text.fontSizeMin = 20f;
+        text.fontSizeMax = 38f;
+        chip.gameObject.SetActive(false);
+        return chip;
+    }
+
+    void RefreshClickChips()
+    {
+        int clicks = 0, percents = 0;
+        foreach (var id in s.Upgrades)
+        {
+            if (!GameDefs.ById.TryGetValue(id, out var u)) continue;
+            if (u.Kind == UpgradeKind.ClickMultiplier) clicks++;
+            else if (u.Kind == UpgradeKind.ClickPercent) percents++;
+        }
+
+        clickChip.gameObject.SetActive(clicks > 0);
+        clickChipText.text = "x" + clicks;
+
+        // The second chip moves up when the first is hidden.
+        percentChip.gameObject.SetActive(percents > 0);
+        percentChipText.text = "x" + percents;
+        percentChip.rectTransform.anchoredPosition = new Vector2(percentChip.rectTransform.anchoredPosition.x, clicks > 0 ? -196f : -128f);
+    }
+
     static TextMeshProUGUI PillContent(Image pill, Sprite icon, float iconSize = 68f)
     {
         var img = NewImage(pill.transform, "Icon", icon, Color.white);
@@ -762,10 +808,24 @@ public class GameUI
 
     void OnDogDown(PointerEventData e)
     {
-        double value = s.Click();
         sfx.PlayClick();
         rig.Poke();
+        if (!ClicksEarnPetiscos) return;
+        double value = s.Click();
         SpawnFloat(e.position, "+" + NumberFormat.Format(value, true), Color.white);
+    }
+
+    // Tapping the demon is an attack from Caramelo.
+    void AttackEnemy()
+    {
+        sfx.PlayClick();
+        var hit = dogStats.Attacks(enemy.Stats);
+        enemy.TakeHit(hit);
+
+        var pos = enemy.ScreenPosition;
+        if (hit.Missed) SpawnFloat(pos, Loc.T("Errou"), new Color(0.85f, 0.85f, 0.85f));
+        else if (hit.Critical) SpawnFloat(pos, Loc.T("Crítico!") + " -" + hit.Damage, new Color(1f, 0.85f, 0.2f));
+        else SpawnFloat(pos, "-" + hit.Damage, Color.white);
     }
 
     void BuyBuilding(int index)
@@ -878,6 +938,7 @@ public class GameUI
         double petiscos = Math.Floor(s.Petiscos);
         counterText.text = NumberFormat.Format(petiscos);
         ossosText.text = NumberFormat.Format(s.Ossos);
+        RefreshClickChips();
         fragmentsText.text = NumberFormat.Fraction(s.Fragments);
         cpsText.text = cpsShadow.text = NumberFormat.Format(s.Cps, true) + "/s";
         statsText.text = Loc.F("Cliques: {0}   |   Total: {1}", NumberFormat.Format(s.Clicks), NumberFormat.Format(s.LifetimeEarned));
@@ -1135,6 +1196,7 @@ public class GameUI
         rig.Tick(dt, s.Cps);
         sky.Update(dt, rig.StrideSpeed);
         UpdateGround(dt);
+        enemy.Tick(dt);
     }
 
     // Ground under the dog's paws, filling the panel down to its bottom edge (behind the buttons);
