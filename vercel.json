@@ -1,0 +1,16 @@
+{
+  "headers": [
+    {
+      "source": "/Build/(.*)\\.br",
+      "headers": [{ "key": "Content-Encoding", "value": "br" }]
+    },
+    {
+      "source": "/Build/(.*)\\.wasm\\.br",
+      "headers": [{ "key": "Content-Type", "value": "application/wasm" }]
+    },
+    {
+      "source": "/Build/(.*)\\.js\\.br",
+      "headers": [{ "key": "Content-Type", "value": "application/javascript" }]
+    }
+  ]
+}
