@@ -13,8 +13,8 @@ public class DogRig
     const int Columns = 10;
     const int FrameCount = 69;
 
-    // Pixel-art scale: 7 screen pixels per sprite pixel.
-    const float Scale = 7f;
+    // Pixel-art scale: 3 screen pixels per sprite pixel.
+    const float Scale = 3f;
     // The feet sit on row 88 (from the top) of each 120px cell, i.e. 28 rows below the cell centre.
     const float FeetBelowCentre = 28f * Scale;
     public const float GroundY = -280f; // paws offset from the anchor (the ground strip top is at -215)
@@ -79,7 +79,7 @@ public class DogRig
 
         var shadowRt = NewRect("Shadow", rootRt);
         shadowRt.anchoredPosition = new Vector2(0f, GroundY - 4f);
-        shadowRt.sizeDelta = new Vector2(470f, 50f);
+        shadowRt.sizeDelta = new Vector2(200f, 22f);
         var shadowImg = shadowRt.gameObject.AddComponent<Image>();
         shadowImg.sprite = ProceduralArt.Blob();
         shadowImg.color = new Color(0.3f, 0.12f, 0f, 0.2f);
