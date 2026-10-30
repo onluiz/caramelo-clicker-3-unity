@@ -7,11 +7,10 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 // Builds and drives the whole uGUI hierarchy. Layout is anchor-based against a 1600x900 (landscape) or 1080x1920 (portrait) reference.
-public partial class GameUI
+public class GameUI
 {
     const float LeftWidth = 0.58f;        // landscape: share of the width used by the game area
-    const bool ClicksEarnPetiscos = false; // when false, tapping the dog only animates him (click upgrades stay in the shop)
-    const float GameScale = 0.85f;       // the whole game area (HUD, ground, dog) is drawn a bit smaller than the panel
+    const float GameScale = 0.85f;        // the whole game area (HUD, ground, dog) is drawn a bit smaller than the panel
     const float GameScaleMin = 0.6f;      // ...and shrinks further on big screens, but never below this
     const float ShrinkFromShortSide = 1080f; // shortest screen side (px) where the shrinking starts
     const float ShrinkToShortSide = 2160f;   // shortest screen side (px) where it reaches GameScaleMin
@@ -76,8 +75,6 @@ public partial class GameUI
     readonly List<RectTransform> groundMarks = new List<RectTransform>();
     float clock;
 
-    Image clickChip, percentChip;
-    TextMeshProUGUI clickChipText, percentChipText;
     TextMeshProUGUI counterText, cpsText, buffText, toastText, statsText;
     Image statsPill;
     TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, resetText;
@@ -118,14 +115,12 @@ public partial class GameUI
         s = state;
         sfx = audio;
 
-        LoadHero();
         BuildCanvas();
         BuildBackground();
         BuildLeftPanel();
         BuildRightPanel();
         BuildOverlay();
         BuildSettings();
-        BuildHeroPanel();
         ApplyLayout();
         ApplyLanguage();
 
@@ -298,10 +293,6 @@ public partial class GameUI
         Box(coinPill.rectTransform, new Vector2(0.05f, 1f), new Vector2(0.30f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
         counterText = PillContent(coinPill, IconLoader.Load("petisco"));
 
-        // Click upgrades bought, under the petiscos pill: one paw chip per kind with how many were bought.
-        clickChip = MakeClickChip(left, "ClickChip", -128f, out clickChipText);
-        percentChip = MakeClickChip(left, "PercentChip", -196f, out percentChipText);
-
         var fragPill = NewImage(left, "FragmentsPill", ProceduralArt.RoundedRect(), CardBg, true);
         Box(fragPill.rectTransform, new Vector2(0.32f, 1f), new Vector2(0.57f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
         fragmentsText = PillContent(fragPill, IconLoader.Load("fragmento-celestial"), 54f);
@@ -341,10 +332,9 @@ public partial class GameUI
         BuildGround(left);
 
         rig = new DogRig(left, new Vector2(0.5f, 0.4f));
-        BuildHero(left);
 
         toastText = NewText(left, "Toast", "", 32, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
-        Anchors(toastText.rectTransform, 0.02f, 0.115f, 0.98f, 0.195f);
+        Anchors(toastText.rectTransform, 0.02f, 0.075f, 0.98f, 0.155f);
         toastText.textWrappingMode = TextWrappingModes.Normal;
 
         statsPill = NewImage(left, "StatsPill", ProceduralArt.RoundedRect(), new Color(CardBg.r, CardBg.g, CardBg.b, 0.9f), true);
@@ -354,41 +344,6 @@ public partial class GameUI
     }
 
     // A dark rounded pill with an icon inside its left end and an auto-sized value.
-    static Image MakeClickChip(Transform parent, string name, float y, out TextMeshProUGUI text)
-    {
-        var chip = NewImage(parent, name, ProceduralArt.RoundedRect(), CardBg, true);
-        Place(chip.rectTransform, new Vector2(0.05f, 1f), new Vector2(0f, 1f), new Vector2(0f, y), new Vector2(190f, 60f));
-        var icon = NewImage(chip.transform, "Icon", ProceduralArt.Icon(GameDefs.PawIcon), Color.white);
-        icon.preserveAspect = true;
-        Place(icon.rectTransform, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(10f, 0f), new Vector2(44f, 44f));
-        text = NewText(chip.transform, "Count", "", 38, Color.white, TextAlignmentOptions.MidlineRight, FontStyles.Bold);
-        Box(text.rectTransform, Vector2.zero, Vector2.one, new Vector2(60f, 2f), new Vector2(-14f, -2f));
-        text.enableAutoSizing = true;
-        text.fontSizeMin = 20f;
-        text.fontSizeMax = 38f;
-        chip.gameObject.SetActive(false);
-        return chip;
-    }
-
-    void RefreshClickChips()
-    {
-        int clicks = 0, percents = 0;
-        foreach (var id in s.Upgrades)
-        {
-            if (!GameDefs.ById.TryGetValue(id, out var u)) continue;
-            if (u.Kind == UpgradeKind.ClickMultiplier) clicks++;
-            else if (u.Kind == UpgradeKind.ClickPercent) percents++;
-        }
-
-        clickChip.gameObject.SetActive(clicks > 0);
-        clickChipText.text = "x" + clicks;
-
-        // The second chip moves up when the first is hidden.
-        percentChip.gameObject.SetActive(percents > 0);
-        percentChipText.text = "x" + percents;
-        percentChip.rectTransform.anchoredPosition = new Vector2(percentChip.rectTransform.anchoredPosition.x, clicks > 0 ? -196f : -128f);
-    }
-
     static TextMeshProUGUI PillContent(Image pill, Sprite icon, float iconSize = 68f)
     {
         var img = NewImage(pill.transform, "Icon", icon, Color.white);
@@ -459,7 +414,6 @@ public partial class GameUI
         settingsTitleText.text = Loc.T("Configurações");
         closeText.text = Loc.T("Fechar");
         langText.text = Loc.T("Idioma: Português");
-        ApplyHeroLanguage();
 
         for (int i = 0; i < upgradeRows.Count; i++)
         {
@@ -808,10 +762,9 @@ public partial class GameUI
 
     void OnDogDown(PointerEventData e)
     {
+        double value = s.Click();
         sfx.PlayClick();
         rig.Poke();
-        if (!ClicksEarnPetiscos) return;
-        double value = s.Click();
         SpawnFloat(e.position, "+" + NumberFormat.Format(value, true), Color.white);
     }
 
@@ -852,7 +805,6 @@ public partial class GameUI
         resetConfirmTimer = 0f;
         s.ResetAll();
         s.Save();
-        ResetHero();
         RefreshButtons();
         HideGolden();
         ShowToast(Loc.T("Jogo reiniciado. Boa sorte, Caramelo!"), 4f);
@@ -926,7 +878,6 @@ public partial class GameUI
         double petiscos = Math.Floor(s.Petiscos);
         counterText.text = NumberFormat.Format(petiscos);
         ossosText.text = NumberFormat.Format(s.Ossos);
-        RefreshClickChips();
         fragmentsText.text = NumberFormat.Fraction(s.Fragments);
         cpsText.text = cpsShadow.text = NumberFormat.Format(s.Cps, true) + "/s";
         statsText.text = Loc.F("Cliques: {0}   |   Total: {1}", NumberFormat.Format(s.Clicks), NumberFormat.Format(s.LifetimeEarned));
@@ -1181,12 +1132,9 @@ public partial class GameUI
 
     void UpdateDog(float dt)
     {
-        rig.Fighting = wave.Engaged;
-        rig.Travelling = !wave.Engaged;
         rig.Tick(dt, s.Cps);
         sky.Update(dt, rig.StrideSpeed);
         UpdateGround(dt);
-        UpdateHero(dt);
     }
 
     // Ground under the dog's paws, filling the panel down to its bottom edge (behind the buttons);

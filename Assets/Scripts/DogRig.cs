@@ -6,15 +6,15 @@ using UnityEngine.UI;
 //
 // Frames come from Resources/Caramelo/caramelo-sheet.png, a compact sheet cut from the web game's
 // caramelo.png (120x120 cells, 10 per row): sit_1 (0-16), walk_2_loop (17-27), walk_1 (28-44),
-// sprint_1_loop (45-56), sprint_2_loop (57-68), idle_1 (69-85: standing and barking, the fighting stance).
+// sprint_1_loop (45-56), sprint_2_loop (57-68).
 public class DogRig
 {
     const int CellSize = 120;
     const int Columns = 10;
-    const int FrameCount = 86;
+    const int FrameCount = 69;
 
-    // Pixel-art scale: 3 screen pixels per sprite pixel.
-    const float Scale = 3f;
+    // Pixel-art scale: 7 screen pixels per sprite pixel.
+    const float Scale = 7f;
     // The feet sit on row 88 (from the top) of each 120px cell, i.e. 28 rows below the cell centre.
     const float FeetBelowCentre = 28f * Scale;
     public const float GroundY = -280f; // paws offset from the anchor (the ground strip top is at -215)
@@ -28,7 +28,6 @@ public class DogRig
 
     static readonly Clip Sit = new Clip(0, 17, false);
     static readonly Clip Seated = new Clip(6, 11, true); // last 11 frames of sit_1
-    static readonly Clip Fight = new Clip(69, 17, true); // idle_1
     static readonly Clip[] GaitClips =
     {
         new Clip(17, 11, true), // walk_2_loop
@@ -43,8 +42,6 @@ public class DogRig
     static readonly float[] EffortMin = { 0.03f, 1.2f, 2.6f };
     static readonly float[] EffortMax = { 1.2f, 2.6f, 5f };
 
-    const float FightFps = 12f;
-    const float TravelEffort = 1.5f; // effort while heading for an enemy: the first running gait
     const float SeatedFps = 8f;
     const float SitFps = 14f;
     const float ClickDecay = 1.2f;
@@ -64,7 +61,7 @@ public class DogRig
     float fps = SeatedFps;
     float clickEnergy, punch;
     float movingBlend;
-    float effortSmooth = TravelEffort; // he starts out already running
+    float effortSmooth;
     int gait;
     bool walkHappy;
     int shownFrame = -1;
@@ -72,12 +69,6 @@ public class DogRig
 
     // Horizontal speed (px/s) the ground should scroll at so the feet look planted.
     public float StrideSpeed { get; private set; }
-
-    // Heading for an enemy: he runs even with no income. Fighting: he stops in his fighting stance.
-    public bool Travelling, Fighting;
-
-    // The dog's root, for hanging things (like the name and HP bar) over him.
-    public RectTransform Root => rootRt;
 
     public DogRig(Transform parent, Vector2 anchor)
     {
@@ -88,7 +79,7 @@ public class DogRig
 
         var shadowRt = NewRect("Shadow", rootRt);
         shadowRt.anchoredPosition = new Vector2(0f, GroundY - 4f);
-        shadowRt.sizeDelta = new Vector2(230f, 26f);
+        shadowRt.sizeDelta = new Vector2(470f, 50f);
         var shadowImg = shadowRt.gameObject.AddComponent<Image>();
         shadowImg.sprite = ProceduralArt.Blob();
         shadowImg.color = new Color(0.3f, 0.12f, 0f, 0.2f);
@@ -154,12 +145,6 @@ public class DogRig
         spriteImage.sprite = frames[index];
     }
 
-    // A short pop and hop, for attacking or being hit (unlike Poke it does not speed him up).
-    public void Pop()
-    {
-        punch = 1f;
-    }
-
     public void Poke()
     {
         clickEnergy += 1f;
@@ -173,16 +158,14 @@ public class DogRig
         float boost = 0.3f * Mathf.Max(0f, clickRate - 1f);
 
         // Stand up for any income or sustained clicking; sit back down once both are gone.
-        if (Travelling && !Fighting) standing = true;
-        else if (!standing && (cps > 0.0 || boost > 0.25f)) standing = true;
-        else if (standing && !Travelling && cps <= 0.0 && boost < 0.1f) standing = false;
+        if (!standing && (cps > 0.0 || boost > 0.25f)) standing = true;
+        else if (standing && cps <= 0.0 && boost < 0.1f) standing = false;
 
         // Smooth the effort so single clicks speed the stride up gradually instead of flipping clips.
         float baseEffort = Mathf.Log10(1f + (float)cps);
-        if (Travelling && !Fighting) baseEffort = Mathf.Max(baseEffort, TravelEffort);
         float rawEffort = baseEffort + boost;
         float follow = rawEffort > effortSmooth ? 2.5f : 1.2f;
-        if (!Fighting) effortSmooth = Mathf.Lerp(effortSmooth, rawEffort, 1f - Mathf.Exp(-dt * follow)); // held during a fight, so he sets off at the same pace
+        effortSmooth = Mathf.Lerp(effortSmooth, rawEffort, 1f - Mathf.Exp(-dt * follow));
         float effort = effortSmooth;
 
         // Hysteresis: move up at the threshold, only come back down after dropping below it by a margin.
@@ -196,12 +179,7 @@ public class DogRig
 
         Clip desired;
         float targetFps;
-        if (Fighting)
-        {
-            desired = Fight;
-            targetFps = FightFps;
-        }
-        else if (standing)
+        if (standing)
         {
             // The walk variant depends on income only, so clicking never swaps the walk cycle.
             desired = gait == 0 && walkHappy ? WalkHappy : GaitClips[gait];
@@ -254,7 +232,7 @@ public class DogRig
 
     static bool IsMoving(Clip c)
     {
-        return c.start != Sit.start && c.start != Seated.start && c.start != Fight.start;
+        return c.start != Sit.start && c.start != Seated.start;
     }
 
     void UpdateSpeedLines(float dt, float amount)
