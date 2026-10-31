@@ -73,6 +73,39 @@ public class TownProps
 
     Runner runner;
     int runnerBuilding = -1;
+
+    // The delivery drone (building "drone-entregas"): not tied to a slot either. It cruises around the sky in screen space,
+    // hopping between random spots (one of four models), then flies off to the right, is gone for a while and comes back as another model.
+    const string DroneBuilding = "drone-entregas";
+    const string DroneLine = "Olá Boss, indo fazer entrega! :D";
+    const float DroneSpeed = 170f;            // px/s cruising
+    const float DroneMinAway = 25f, DroneMaxAway = 50f;
+    const float DroneFps = 12f;
+    static readonly Def[] DroneVariants =
+    {
+        new Def { File = "red-drone", Cols = 5, Frames = 17, FrameW = 357, FrameH = 282, Height = 200f },
+        new Def { File = "gray-drone", Cols = 17, Frames = 17, FrameW = 192, FrameH = 128, Height = 180f },
+        new Def { File = "evolved-drone", Cols = 17, Frames = 17, FrameW = 164, FrameH = 144, Height = 190f },
+        new Def { File = "drone-sheet", Cols = 4, Frames = 4, FrameW = 384, FrameH = 512, Height = 230f },
+    };
+
+    enum DroneState { Away, Fly, Pause, Leave }
+
+    class DroneFlyer
+    {
+        public RectTransform rt, bubble;
+        public Image img;
+        public CanvasGroup bubbleGroup;
+        public Sprite[] frames;
+        public int variant = -1, frame = -1, legs;
+        public DroneState state = DroneState.Away;
+        public float timer = 1.5f, t, dur = 1f, anim, bob, sayDelay, sayTimer, angle;
+        public bool easeOut, said;
+        public Vector2 from, to, pos;
+    }
+
+    DroneFlyer drone;
+    int droneBuilding = -1;
     const string CanBuildingKey = "vira-lata";
     int canBuilding = -1;
 
@@ -197,6 +230,7 @@ public class TownProps
         }
 
         runnerBuilding = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == RunnerBuilding);
+        droneBuilding = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == DroneBuilding);
 
         canBuilding = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == CanBuildingKey);
 
@@ -410,6 +444,7 @@ public class TownProps
         }
 
         TickRunner(dt, worldX, panelW, owned, darkness);
+        TickDrone(dt, panelW, owned);
     }
 
     void TickRunner(float dt, double worldX, float panelW, int[] owned, float darkness)
@@ -549,13 +584,186 @@ public class TownProps
         r.glowImg.color = new Color(1f, 0.82f, 0.45f, 0.22f * on);
     }
 
+    void DestroyDrone()
+    {
+        if (drone == null) return;
+        Object.Destroy(drone.rt.gameObject);
+        Object.Destroy(drone.bubble.gameObject);
+        drone = null;
+    }
+
+    void TickDrone(float dt, float panelW, int[] owned)
+    {
+        if (droneBuilding < 0 || owned[droneBuilding] <= 0 || litLayer == null)
+        {
+            DestroyDrone();
+            return;
+        }
+
+        var d = drone;
+        if (d == null)
+        {
+            var go = new GameObject("delivery-drone", typeof(RectTransform));
+            var rt = go.GetComponent<RectTransform>();
+            rt.SetParent(litLayer, false);
+            rt.anchorMin = rt.anchorMax = Vector2.zero;
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            var img = go.AddComponent<Image>();
+            img.raycastTarget = false;
+            go.SetActive(false);
+            d = drone = new DroneFlyer { rt = rt, img = img, timer = 1.5f };
+            d.bubble = MakeBubble(litLayer, DroneLine, out d.bubbleGroup);
+        }
+
+        // The sky band the drone roams in, in the layer's space (its origin sits on the ground line).
+        float panelH = ((RectTransform)layer.parent).rect.height;
+        float origin = 0.4f * panelH + layer.anchoredPosition.y;
+        float minY = 0.42f * panelH - origin, maxY = 0.56f * panelH - origin;
+        float w = d.rt.sizeDelta.x;
+
+        d.bob += dt;
+        switch (d.state)
+        {
+            case DroneState.Away:
+                d.timer -= dt;
+                if (d.timer > 0f) return;
+                DroneArrive(d, panelW, minY, maxY);
+                return;
+
+            case DroneState.Pause:
+                d.timer -= dt;
+                d.angle = Mathf.MoveTowards(d.angle, 0f, 14f * dt);
+                if (d.timer <= 0f)
+                {
+                    if (d.legs > 0) DroneHop(d, panelW, minY, maxY, false);
+                    else DroneLeave(d, panelW, minY, maxY);
+                }
+
+                break;
+
+            default: // Fly, Leave
+                d.t += dt / d.dur;
+                float k = Mathf.Clamp01(d.t);
+                float e = d.state == DroneState.Leave ? k * k : (d.easeOut ? Mathf.Sin(k * Mathf.PI * 0.5f) : k * k * (3f - 2f * k));
+                d.pos = Vector2.Lerp(d.from, d.to, e);
+                float target = Mathf.Sign(d.to.x - d.from.x) * -7f;
+                d.angle = Mathf.MoveTowards(d.angle, target, 30f * dt);
+                if (d.t >= 1f)
+                {
+                    if (d.state == DroneState.Leave)
+                    {
+                        d.state = DroneState.Away;
+                        d.timer = Random.Range(DroneMinAway, DroneMaxAway);
+                        d.rt.gameObject.SetActive(false);
+                        d.bubble.gameObject.SetActive(false);
+                        d.sayTimer = 0f;
+                        return;
+                    }
+
+                    d.state = DroneState.Pause;
+                    d.timer = Random.Range(0f, 0.9f);
+                }
+
+                break;
+        }
+
+        // Says hello a moment after it shows up.
+        if (!d.said)
+        {
+            d.sayDelay -= dt;
+            if (d.sayDelay <= 0f)
+            {
+                d.said = true;
+                d.sayTimer = 3.2f;
+            }
+        }
+
+        d.anim += dt * DroneFps;
+        int f = (int)d.anim % d.frames.Length;
+        if (f != d.frame)
+        {
+            d.frame = f;
+            d.img.sprite = d.frames[f];
+        }
+
+        var p = d.pos + new Vector2(0f, Mathf.Sin(d.bob * 2.2f) * 9f);
+        d.rt.anchoredPosition = p;
+        d.rt.localRotation = Quaternion.Euler(0f, 0f, d.angle);
+
+        if (d.sayTimer > 0f)
+        {
+            d.sayTimer -= dt;
+            d.bubble.gameObject.SetActive(d.sayTimer > 0f);
+            d.bubbleGroup.alpha = Mathf.Clamp01(d.sayTimer / 0.5f);
+            float half = d.bubble.sizeDelta.x * 0.5f;
+            d.bubble.anchoredPosition = new Vector2(Mathf.Clamp(p.x, half, Mathf.Max(half, panelW - half)), p.y + d.rt.sizeDelta.y * 0.5f + 10f);
+            d.bubble.SetAsLastSibling();
+        }
+    }
+
+    // A new visit: another model than the last one, entering from the right edge.
+    void DroneArrive(DroneFlyer d, float panelW, float minY, float maxY)
+    {
+        int v;
+        do v = Random.Range(0, DroneVariants.Length); while (v == d.variant && DroneVariants.Length > 1);
+        var def = DroneVariants[v];
+        var frames = Frames(def);
+        if (frames == null) { d.timer = 5f; return; }
+
+        d.variant = v;
+        d.frames = frames;
+        d.frame = -1;
+        d.img.sprite = frames[0];
+        d.rt.sizeDelta = new Vector2(def.Height * def.FrameW / def.FrameH, def.Height);
+        d.pos = new Vector2(panelW + d.rt.sizeDelta.x, Random.Range(minY, maxY));
+        d.legs = Random.Range(3, 6);
+        d.said = false;
+        d.sayDelay = 1.2f;
+        d.angle = 0f;
+        d.rt.gameObject.SetActive(true);
+        DroneHop(d, panelW, minY, maxY, true);
+    }
+
+    void DroneHop(DroneFlyer d, float panelW, float minY, float maxY, bool easeOut)
+    {
+        d.legs--;
+        float margin = 56f + d.rt.sizeDelta.x * 0.5f;
+        Vector2 target = d.pos;
+        for (int i = 0; i < 6; i++)
+        {
+            target = new Vector2(Random.Range(margin, Mathf.Max(margin, panelW - margin)), Random.Range(minY, maxY));
+            if (Vector2.Distance(d.pos, target) >= 300f) break;
+        }
+
+        d.from = d.pos;
+        d.to = target;
+        d.t = 0f;
+        d.dur = Mathf.Max(2.5f, Vector2.Distance(d.from, d.to) / DroneSpeed);
+        d.easeOut = easeOut;
+        d.state = DroneState.Fly;
+    }
+
+    void DroneLeave(DroneFlyer d, float panelW, float minY, float maxY)
+    {
+        d.from = d.pos;
+        d.to = new Vector2(panelW + d.rt.sizeDelta.x, Mathf.Clamp(d.pos.y + Random.Range(-60f, 60f), minY, maxY));
+        d.t = 0f;
+        d.dur = Mathf.Max(2.5f, Vector2.Distance(d.from, d.to) / (DroneSpeed * 1.6f));
+        d.state = DroneState.Leave;
+    }
+
     const float BubblePadX = 56f;   // left/right padding between the delivery dog's dialogue text and the box edge
 
     static void BuildBubble(Runner r)
     {
+        r.bubble = MakeBubble(r.rt.parent, RunnerLine, out r.bubbleGroup);
+    }
+
+    static RectTransform MakeBubble(Transform parent, string line, out CanvasGroup group)
+    {
         var go = new GameObject("delivery-bubble", typeof(RectTransform), typeof(CanvasGroup));
         var rt = go.GetComponent<RectTransform>();
-        rt.SetParent(r.rt.parent, false);
+        rt.SetParent(parent, false);
         rt.anchorMin = rt.anchorMax = Vector2.zero;
         rt.pivot = new Vector2(0.5f, 0f);
         rt.sizeDelta = new Vector2(780f, 130f);
@@ -574,7 +782,7 @@ public class TownProps
         trt.offsetMin = new Vector2(BubblePadX, 0f);
         trt.offsetMax = new Vector2(-BubblePadX, 0f);
         var text = tgo.AddComponent<TMPro.TextMeshProUGUI>();
-        text.text = Loc.T(RunnerLine);
+        text.text = Loc.T(line);
         text.fontSize = 50f;
         text.fontStyle = TMPro.FontStyles.Bold;
         text.alignment = TMPro.TextAlignmentOptions.Center;
@@ -588,10 +796,10 @@ public class TownProps
         body.rectTransform.sizeDelta = new Vector2(width + 12f, 110f);
         inner.rectTransform.sizeDelta = new Vector2(width, 98f);
 
-        r.bubble = rt;
-        r.bubbleGroup = go.GetComponent<CanvasGroup>();
-        r.bubbleGroup.blocksRaycasts = false;
+        group = go.GetComponent<CanvasGroup>();
+        group.blocksRaycasts = false;
         go.SetActive(false);
+        return rt;
     }
 
     void Explode(double x, float canH)
@@ -821,6 +1029,7 @@ public class TownProps
     {
         var used = new HashSet<string> { "trash-can", "explosion", "light" };
         if (runner != null) used.Add(RunnerDef.File);
+        if (drone != null && drone.variant >= 0) used.Add(DroneVariants[drone.variant].File);
         foreach (var inst in insts)
             if (inst.banner != null && inst.banner.def == LampDef) { used.Add(LampDef.File); used.Add(LampOnDef.File); }
         foreach (var inst in insts)

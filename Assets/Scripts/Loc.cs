@@ -108,6 +108,7 @@ public static class Loc
         { "Bem-vindo à\nÁrea Industrial Caramelo", "Welcome to\nCaramelo Industrial Area" },
         { "Achado na lixeira! +{0} petiscos!", "Trash can find! +{0} treats!" },
         { "E aí boss, só fazendo entrega", "Hey boss, just making deliveries" },
+        { "Olá Boss, indo fazer entrega! :D", "Hello Boss, off to make a delivery! :D" },
         { "Sorte! +{0} petiscos!", "Lucky! +{0} treats!" },
         { "Filhotes na creche! +{0} petiscos!", "Puppies at the daycare! +{0} treats!" },
         { "Frenesi! Produção x{0} por 30s!", "Frenzy! Production x{0} for 30s!" },
