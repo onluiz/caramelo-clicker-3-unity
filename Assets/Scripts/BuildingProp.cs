@@ -53,7 +53,7 @@ public class BuildingProp : MonoBehaviour
         UnityEditor.EditorApplication.delayCall += () => { if (this != null) RefreshPreview(); };
     }
 
-    void RefreshPreview()
+    public void RefreshPreview()
     {
         if (Application.isPlaying || string.IsNullOrEmpty(file)) return;
         var old = transform.Find(PreviewName);

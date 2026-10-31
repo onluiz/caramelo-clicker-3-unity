@@ -13,7 +13,6 @@ public class TownProps
     const string SaleBuilding = "petshop";
 
     const float PxPerMeter = 10f;
-    const float SlotSpacing = 540f;   // world px between building slots
     const float LapPx = 1000f * PxPerMeter; // the road is a loop of 1000 "meters": the town, then open country, then the town again
     const float Ahead = 450f;         // town is built this far past the right edge (a prop reaches at most ~425 px to either side of its slot)
     const float Behind = 500f;        // and destroyed once its slot is this far past the left edge
@@ -30,13 +29,14 @@ public class TownProps
     static readonly Dictionary<string, Sprite[]> Cache = new Dictionary<string, Sprite[]>();
 
     readonly RectTransform layer;
-    // One prefab per building (Resources/Buildings), in draw order: the slots repeat in this order along the road.
+    // One prefab per building (children of the Resources/TownLayout prefab), in draw order: the slots repeat in this order along the road.
     readonly BuildingProp[] defs;
     readonly int[] buildingOf;
     readonly int[] defSlot;
     readonly bool[] slotOwned, slotWasOwned;
     readonly List<Inst> insts = new List<Inst>();
     readonly Queue<int> queue = new Queue<int>(); // slots bought mid-run: built before the regular cycle goes on
+    readonly float slotSpacing; // world px between building slots, from the TownLayout prefab
     readonly int slotCount;
     readonly int saleSlot;
     int cursor = -1;
@@ -56,8 +56,10 @@ public class TownProps
         layer.anchoredPosition = new Vector2(0f, groundY - 64f);
         layer.sizeDelta = Vector2.zero;
 
-        defs = Resources.LoadAll<BuildingProp>("Buildings");
-        System.Array.Sort(defs, (a, b) => a.drawOrder.CompareTo(b.drawOrder));
+        var layoutPrefab = Resources.Load<TownLayout>("TownLayout");
+        if (layoutPrefab == null) Debug.LogError("TownProps: Resources/TownLayout prefab not found");
+        defs = layoutPrefab != null ? layoutPrefab.Buildings() : new BuildingProp[0];
+        slotSpacing = layoutPrefab != null ? layoutPrefab.slotSpacing : 540f;
         buildingOf = new int[defs.Length];
         defSlot = new int[defs.Length];
 
@@ -179,12 +181,12 @@ public class TownProps
                     x = worldX + 0.78f * panelW;
                     popIn = true;
                     lapStart = x;
-                    nextSpawnX = x + SlotSpacing;
+                    nextSpawnX = x + slotSpacing;
                     cursor = q;
                 }
                 else
                 {
-                    while (NearInst(x)) x += SlotSpacing;
+                    while (NearInst(x)) x += slotSpacing;
                 }
 
                 AddInst(q, x, popIn, owned);
@@ -203,7 +205,7 @@ public class TownProps
                 if (wrapped) lapStart = x;
                 cursor = slot;
                 AddInst(slot, x, false, owned);
-                nextSpawnX = x + SlotSpacing;
+                nextSpawnX = x + slotSpacing;
                 dirty = true;
             }
         }
@@ -229,7 +231,7 @@ public class TownProps
     bool NearInst(double x)
     {
         foreach (var inst in insts)
-            if (System.Math.Abs(inst.x - x) < SlotSpacing) return true;
+            if (System.Math.Abs(inst.x - x) < slotSpacing) return true;
         return false;
     }
 
