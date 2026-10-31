@@ -29,7 +29,6 @@ public class TownProps
         new Def { Building = "venda-petiscos", Slot = "o-inicio", File = "stall-treats", Height = 21f, Offset = -26f, Lift = 39f }, // on the stall counter, left
         new Def { Building = "racao-caramelo", Slot = "o-inicio", File = "stall-feed", Height = 31f, Offset = 26f, Lift = 39f }, // same stall, right
         new Def { Building = "petshop", File = "petshop", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
-        // hidden for now: new Def { Building = "iluminacao-caramelo", File = "street-lamp-on", Height = 190f },
         // hidden for now: new Def { Building = "drone-entregas", File = "red-drone", Cols = 5, Frames = 17, FrameW = 357, FrameH = 282, Height = 100f, Air = 190f, Bob = true },
         new Def { Building = "faro-minerador", File = "mina-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
         new Def { Building = "fabrica-de-petiscos", File = "fabrica-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f },
@@ -144,6 +143,16 @@ public class TownProps
     static readonly string[] BannerText = { "Bem-vindo à\nCidade Caramelo", "Bem-vindo à\nÁrea Industrial Caramelo" };
     const float BannerWidth = 900f;
 
+    // Street lamps (pseudo slots after the banners): one in every gap between two buildings of a district, and one
+    // every LampEvery along the open road, never inside a district.
+    static readonly Def LampDef = new Def { File = "street-lamp-on", Height = 130f };
+    const float LampEvery = 15f * PxPerMeter;
+    const int MaxLamps = 200;
+    int slotTotal;
+    const string LampBuilding = "iluminacao-caramelo"; // the lamps only exist once this is bought
+    int lampBuilding = -1;
+    bool lampsOn, lampsInit;
+
     // groundY is the top of the ground strip, in the parent's space (distance from its 40% height line).
     public TownProps(Transform parent, float groundY)
     {
@@ -171,6 +180,8 @@ public class TownProps
 
         canBuilding = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == CanBuildingKey);
 
+        lampBuilding = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == LampBuilding);
+
         slotCount = slots.Count;
         slotOwned = new bool[slotCount];
 
@@ -178,8 +189,8 @@ public class TownProps
         // prop in the slot), and the gap between neighbouring edges is constant, so spacing never depends on size.
         var names = new string[slotCount];
         foreach (var kv in slots) names[kv.Value] = kv.Key;
-        slotX = new double[slotCount + 2];
-        slotHalf = new double[slotCount + 2];
+        slotX = new double[slotCount + 2 + MaxLamps];
+        slotHalf = new double[slotCount + 2 + MaxLamps];
         for (int i = 0; i < Defs.Length; i++)
         {
             var fr = Frames(Defs[i]);
@@ -206,6 +217,33 @@ public class TownProps
         }
 
         lapPx = MapMeters * PxPerMeter;
+        slotTotal = slotCount + 2;
+        var lf = Frames(LampDef);
+        double lampHalf = LampDef.Height * SizeScale * (lf != null ? lf[0].rect.width / lf[0].rect.height : 0.25f) * 0.5;
+
+        // Between neighbouring buildings of the same district.
+        for (int k = 1; k < order.Count; k++)
+        {
+            int a = order[k - 1], b = order[k];
+            if (a >= slotCount || b >= slotCount) continue;
+            AddLamp((slotX[a] + slotHalf[a] + slotX[b] - slotHalf[b]) * 0.5, lampHalf);
+        }
+
+        // Along the open road, skipping both districts (from their welcome board to their last building).
+        double cityL = slotX[slotCount] - slotHalf[slotCount], cityR = 0, indL = slotX[slotCount + 1] - slotHalf[slotCount + 1], indR = 0;
+        for (int sl = 0; sl < slotCount; sl++)
+        {
+            if (Factories.Contains(names[sl])) indR = System.Math.Max(indR, slotX[sl] + slotHalf[sl]);
+            else cityR = System.Math.Max(cityR, slotX[sl] + slotHalf[sl]);
+        }
+
+        for (double x = LampEvery; x < lapPx; x += LampEvery)
+        {
+            if (x > cityL - lampHalf && x < cityR + lampHalf) continue;
+            if (x > indL - lampHalf && x < indR + lampHalf) continue;
+            AddLamp(x, lampHalf);
+        }
+
         if (edge > lapPx) Debug.LogError("TownProps: layout (" + edge / PxPerMeter + " m) is longer than the map (" + MapMeters + " m)");
     }
 
@@ -233,6 +271,11 @@ public class TownProps
         for (int i = 0; i < Defs.Length; i++)
             if (Has(i, owned)) slotOwned[defSlot[i]] = true;
 
+        bool lamps = lampBuilding >= 0 && owned[lampBuilding] > 0;
+        bool lampsJustBought = lamps && !lampsOn && lampsInit;
+        lampsOn = lamps;
+        lampsInit = true;
+
         bool dirty = false;
 
         // Drop what the dog left behind, and keep the stretches still in front of him in line with what is owned
@@ -241,6 +284,13 @@ public class TownProps
         {
             var inst = insts[k];
             if (inst.x + inst.half < worldX - EdgeMargin)
+            {
+                DestroyInst(inst);
+                insts.RemoveAt(k);
+                continue;
+            }
+
+            if (inst.slot >= slotCount + 2 && !lamps)
             {
                 DestroyInst(inst);
                 insts.RemoveAt(k);
@@ -286,11 +336,12 @@ public class TownProps
         long lap1 = (long)System.Math.Floor(limit / lapPx);
         for (long lap = lap0; lap <= lap1; lap++)
         {
-            for (int sl = 0; sl < slotX.Length; sl++)
+            for (int sl = 0; sl < slotTotal; sl++)
             {
                 double x = lap * lapPx + slotX[sl];
+                if (sl >= slotCount + 2 && !lamps) continue;
                 if (x + slotHalf[sl] < from || x - slotHalf[sl] >= limit || HasInst(sl, x)) continue;
-                AddInst(sl, x, false, owned);
+                AddInst(sl, x, lampsJustBought && sl >= slotCount + 2, owned);
                 dirty = true;
             }
         }
@@ -559,7 +610,7 @@ public class TownProps
         var inst = new Inst { slot = slot, x = x, half = slotHalf[slot] };
         if (slot >= slotCount)
         {
-            inst.banner = SpawnBanner(BannerText[slot - slotCount]);
+            inst.banner = slot < slotCount + 2 ? SpawnBanner(BannerText[slot - slotCount]) : Spawn(LampDef, popIn);
             insts.Add(inst);
             return;
         }
@@ -574,10 +625,20 @@ public class TownProps
 
     // Frees the sprites and textures of every prop that has no instance alive anymore, so only what is near the
     // dog stays in memory (they are loaded again on demand by Frames).
+    void AddLamp(double x, double half)
+    {
+        if (slotTotal >= slotX.Length) return;
+        slotX[slotTotal] = x;
+        slotHalf[slotTotal] = half;
+        slotTotal++;
+    }
+
     void ReleaseUnused()
     {
         var used = new HashSet<string> { "trash-can", "explosion" };
         if (runner != null) used.Add(RunnerDef.File);
+        foreach (var inst in insts)
+            if (inst.banner != null && inst.banner.def == LampDef) used.Add(LampDef.File);
         foreach (var inst in insts)
             foreach (var p in inst.byDef)
                 if (p != null) used.Add(p.def.File);
