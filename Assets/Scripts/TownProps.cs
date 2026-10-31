@@ -9,79 +9,31 @@ using UnityEngine.UI;
 // the town and a rebirth clears it.
 public class TownProps
 {
-    class Def
-    {
-        public string Building, File;
-        public string Slot;                               // building whose slot to share (default: its own), e.g. goods on another building's stall
-        public int Cols = 1, Frames = 1, FrameW, FrameH; // sheet layout, row-major from the top; FrameW 0 = single image
-        public float Height;                              // drawn height in canvas px
-        public float Air;                                 // hovering height above the ground
-        public float Lift;                                // height above the ground for things resting on a counter
-        public float Offset;                              // sideways shift inside the building's slot
-        public float Fps = 10f;
-        public bool Patrol, Bob;
-    }
-
-    // In shop order: the slots repeat in this order along the road, so the town fills up as the game progresses.
-    static readonly Def[] Defs =
-    {
-        new Def { Building = "vira-lata", File = "trash-can", Height = 40f, Offset = 90f },
-        new Def { Building = "vira-lata", File = "tiny_dog", Height = 50f, Offset = -70f },
-        new Def { Building = "o-inicio", File = "dog-stall", Height = 120f },
-        new Def { Building = "venda-petiscos", Slot = "o-inicio", File = "stall-treats", Height = 21f, Offset = -26f, Lift = 39f }, // on the stall counter, left
-        new Def { Building = "cachorro-entregador", File = "cachorro-entregador", Cols = 5, Frames = 17, FrameW = 68, FrameH = 60, Height = 78f, Patrol = true },
-        new Def { Building = "racao-caramelo", Slot = "o-inicio", File = "stall-feed", Height = 31f, Offset = 26f, Lift = 39f }, // same stall, right
-        new Def { Building = "petshop", File = "petshop", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
-        new Def { Building = "iluminacao-caramelo", File = "street-lamp-on", Height = 190f },
-        new Def { Building = "drone-entregas", File = "red-drone", Cols = 5, Frames = 17, FrameW = 357, FrameH = 282, Height = 100f, Air = 190f, Bob = true },
-        new Def { Building = "faro-minerador", File = "mina-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
-        new Def { Building = "fabrica-de-petiscos", File = "fabrica-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f },
-        new Def { Building = "fabrica-de-racao", File = "fabrica-racao", Cols = 3, Frames = 8, FrameW = 256, FrameH = 256, Height = 210f },
-        new Def { Building = "estatua-caramelo", File = "dog_statue", Height = 115f },
-        new Def { Building = "templo-caramelo", File = "templo-caramelo", Height = 185f },
-        new Def { Building = "banco-canino", File = "banco-canino", Height = 170f },
-        new Def { Building = "planta-lunar", File = "lunar-flower", Cols = 3, Frames = 9, FrameW = 246, FrameH = 256, Height = 180f },
-        new Def { Building = "fabrica-de-pudim-lunar", File = "fabrica-pudim-lunar", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f },
-    };
-
     // A "for sale" sign stands where this building will be, until it is bought.
     const string SaleBuilding = "petshop";
-    static readonly Def SignDef = new Def { Building = SaleBuilding, File = "sale-sign" };
 
-    const float SizeScale = 3.7f;    // all prop heights are multiplied by this, so buildings tower over the dog as he runs past
     const float PxPerMeter = 10f;
-    const float SlotSpacing = 340f;   // world px between building slots
+    const float SlotSpacing = 540f;   // world px between building slots
     const float LapPx = 1000f * PxPerMeter; // the road is a loop of 1000 "meters": the town, then open country, then the town again
     const float Ahead = 450f;         // town is built this far past the right edge (a prop reaches at most ~425 px to either side of its slot)
     const float Behind = 500f;        // and destroyed once its slot is this far past the left edge
-    const float PopSeconds = 0.45f;
-    const float PatrolSpeed = 40f, PatrolRange = 110f;
-
-    class Prop
-    {
-        public Def def;
-        public RectTransform rt;
-        public Image img;
-        public Sprite[] frames;
-        public float pop;        // 0..1 growing in
-        public float anim, bob, patrolX;
-        public int dir = 1, frame = -1;
-    }
 
     // One stretch of town: everything built around one slot position in the world.
     class Inst
     {
         public int slot;
         public double x;
-        public readonly Prop[] byDef = new Prop[Defs.Length];
-        public Prop sign;
+        public BuildingProp[] byDef;
+        public BuildingProp sign;
     }
 
     static readonly Dictionary<string, Sprite[]> Cache = new Dictionary<string, Sprite[]>();
 
     readonly RectTransform layer;
-    readonly int[] buildingOf = new int[Defs.Length];
-    readonly int[] defSlot = new int[Defs.Length];
+    // One prefab per building (Resources/Buildings), in draw order: the slots repeat in this order along the road.
+    readonly BuildingProp[] defs;
+    readonly int[] buildingOf;
+    readonly int[] defSlot;
     readonly bool[] slotOwned, slotWasOwned;
     readonly List<Inst> insts = new List<Inst>();
     readonly Queue<int> queue = new Queue<int>(); // slots bought mid-run: built before the regular cycle goes on
@@ -104,13 +56,18 @@ public class TownProps
         layer.anchoredPosition = new Vector2(0f, groundY - 64f);
         layer.sizeDelta = Vector2.zero;
 
+        defs = Resources.LoadAll<BuildingProp>("Buildings");
+        System.Array.Sort(defs, (a, b) => a.drawOrder.CompareTo(b.drawOrder));
+        buildingOf = new int[defs.Length];
+        defSlot = new int[defs.Length];
+
         var slots = new Dictionary<string, int>();
-        for (int i = 0; i < Defs.Length; i++)
+        for (int i = 0; i < defs.Length; i++)
         {
-            string key = Defs[i].Building;
+            string key = defs[i].building;
             buildingOf[i] = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == key);
             if (buildingOf[i] < 0) Debug.LogError("TownProps: unknown building " + key);
-            string slot = Defs[i].Slot ?? key;
+            string slot = string.IsNullOrEmpty(defs[i].sharedSlot) ? key : defs[i].sharedSlot;
             if (!slots.ContainsKey(slot)) slots[slot] = slots.Count;
             defSlot[i] = slots[slot];
         }
@@ -137,7 +94,7 @@ public class TownProps
         if (initial) nextSpawnX = lapStart = worldX - Behind;
 
         System.Array.Clear(slotOwned, 0, slotCount);
-        for (int i = 0; i < Defs.Length; i++)
+        for (int i = 0; i < defs.Length; i++)
             if (Has(i, owned)) slotOwned[defSlot[i]] = true;
 
         int ownedCount = 0;
@@ -165,18 +122,18 @@ public class TownProps
             float sx = (float)(inst.x - worldX);
             bool onScreen = sx > -200f && sx < panelW + 200f;
             bool any = false;
-            for (int i = 0; i < Defs.Length; i++)
+            for (int i = 0; i < defs.Length; i++)
             {
                 if (defSlot[i] != inst.slot) continue;
                 bool has = Has(i, owned);
                 if (has && inst.byDef[i] == null)
                 {
-                    inst.byDef[i] = Spawn(Defs[i], onScreen);
+                    inst.byDef[i] = Spawn(defs[i], onScreen);
                     dirty |= inst.byDef[i] != null;
                 }
                 else if (!has && inst.byDef[i] != null)
                 {
-                    Object.Destroy(inst.byDef[i].rt.gameObject);
+                    Object.Destroy(inst.byDef[i].gameObject);
                     inst.byDef[i] = null;
                 }
 
@@ -192,7 +149,7 @@ public class TownProps
             }
             else if (!wantSign && inst.sign != null)
             {
-                Object.Destroy(inst.sign.rt.gameObject);
+                Object.Destroy(inst.sign.gameObject);
                 inst.sign = null;
             }
 
@@ -256,9 +213,9 @@ public class TownProps
         foreach (var inst in insts)
         {
             float baseX = (float)(inst.x - worldX);
-            for (int i = 0; i < Defs.Length; i++)
-                if (inst.byDef[i] != null) Place(inst.byDef[i], baseX, dt);
-            if (inst.sign != null) Place(inst.sign, baseX, dt);
+            for (int i = 0; i < defs.Length; i++)
+                if (inst.byDef[i] != null) inst.byDef[i].Place(baseX, dt);
+            if (inst.sign != null) inst.sign.Place(baseX, dt);
         }
     }
 
@@ -296,9 +253,9 @@ public class TownProps
 
     void AddInst(int slot, double x, bool popIn, int[] owned)
     {
-        var inst = new Inst { slot = slot, x = x };
-        for (int i = 0; i < Defs.Length; i++)
-            if (defSlot[i] == slot && Has(i, owned)) inst.byDef[i] = Spawn(Defs[i], popIn);
+        var inst = new Inst { slot = slot, x = x, byDef = new BuildingProp[defs.Length] };
+        for (int i = 0; i < defs.Length; i++)
+            if (defSlot[i] == slot && Has(i, owned)) inst.byDef[i] = Spawn(defs[i], popIn);
         if (slot == saleSlot && !slotOwned[slot]) inst.sign = SpawnSign(popIn);
         insts.Add(inst);
     }
@@ -306,12 +263,12 @@ public class TownProps
     static void DestroyInst(Inst inst)
     {
         foreach (var p in inst.byDef)
-            if (p != null) Object.Destroy(p.rt.gameObject);
-        if (inst.sign != null) Object.Destroy(inst.sign.rt.gameObject);
+            if (p != null) Object.Destroy(p.gameObject);
+        if (inst.sign != null) Object.Destroy(inst.sign.gameObject);
     }
 
     // A wooden post with a red "VENDA" board, drawn from uGUI pieces instead of a sheet.
-    Prop SpawnSign(bool popIn)
+    BuildingProp SpawnSign(bool popIn)
     {
         var go = new GameObject("sale-sign", typeof(RectTransform));
         var rt = go.GetComponent<RectTransform>();
@@ -342,11 +299,9 @@ public class TownProps
         text.raycastTarget = false;
         post.transform.SetAsFirstSibling();
 
-        return new Prop
-        {
-            def = SignDef, rt = rt, frames = new Sprite[1],
-            pop = popIn ? 0f : 1f,
-        };
+        var prop = go.AddComponent<BuildingProp>();
+        prop.Setup(null, popIn);
+        return prop;
     }
 
     static Image Piece(RectTransform parent, string name, Vector2 anchor, Vector2 size, Vector2 pos, Color color)
@@ -369,110 +324,55 @@ public class TownProps
     // Later defs are drawn in front, so goods end up on top of the stall whichever was built first.
     void Reorder()
     {
-        for (int i = 0; i < Defs.Length; i++)
+        for (int i = 0; i < defs.Length; i++)
             foreach (var inst in insts)
-                if (inst.byDef[i] != null) inst.byDef[i].rt.SetAsLastSibling();
+                if (inst.byDef[i] != null) inst.byDef[i].transform.SetAsLastSibling();
         foreach (var inst in insts)
-            if (inst.sign != null) inst.sign.rt.SetAsLastSibling();
+            if (inst.sign != null) inst.sign.transform.SetAsLastSibling();
     }
 
-    Prop Spawn(Def def, bool popIn)
+    BuildingProp Spawn(BuildingProp def, bool popIn)
     {
         var frames = Frames(def);
         if (frames == null) return null;
 
-        var go = new GameObject(def.File, typeof(RectTransform));
-        var rt = go.GetComponent<RectTransform>();
-        rt.SetParent(layer, false);
-        rt.anchorMin = rt.anchorMax = Vector2.zero;
-        rt.pivot = new Vector2(0.5f, 0f);
-        var img = go.AddComponent<Image>();
-        img.raycastTarget = false;
-        img.sprite = frames[0];
-        float aspect = frames[0].rect.width / frames[0].rect.height;
-        float h = def.Height * SizeScale;
-        rt.sizeDelta = new Vector2(h * aspect, h);
-
-        return new Prop
-        {
-            def = def, rt = rt, img = img, frames = frames,
-            pop = popIn ? 0f : 1f,
-            anim = Random.value * frames.Length,
-            bob = Random.value * 6f,
-            patrolX = Random.Range(-PatrolRange, PatrolRange),
-            dir = Random.value < 0.5f ? 1 : -1,
-        };
-    }
-
-    void Place(Prop p, float slotScreenX, float dt)
-    {
-        if (p.pop < 1f) p.pop = Mathf.Min(1f, p.pop + dt / PopSeconds);
-
-        float t = p.pop - 1f;
-        float grow = p.pop >= 1f ? 1f : 1f + 2.70158f * t * t * t + 1.70158f * t * t; // ease-out-back
-
-        float x = slotScreenX + p.def.Offset * SizeScale;
-        if (p.def.Patrol)
-        {
-            p.patrolX += p.dir * PatrolSpeed * dt;
-            if (p.patrolX > PatrolRange) p.dir = -1;
-            else if (p.patrolX < -PatrolRange) p.dir = 1;
-            x += p.patrolX;
-        }
-
-        float y = (p.def.Air + p.def.Lift) * SizeScale;
-        if (p.def.Bob)
-        {
-            p.bob += dt;
-            y += Mathf.Sin(p.bob * 2.2f) * 9f;
-        }
-
-        p.rt.anchoredPosition = new Vector2(x, y);
-        p.rt.localScale = new Vector3(grow * (p.def.Patrol && p.dir < 0 ? -1f : 1f), grow, 1f);
-
-        if (p.frames.Length > 1)
-        {
-            p.anim += dt * p.def.Fps;
-            int f = (int)p.anim % p.frames.Length;
-            if (f != p.frame)
-            {
-                p.frame = f;
-                p.img.sprite = p.frames[f];
-            }
-        }
+        var prop = Object.Instantiate(def, layer, false);
+        prop.name = def.file;
+        prop.Setup(frames, popIn);
+        return prop;
     }
 
     // Cuts the sheet into sprites (cached by file). Single images give one sprite.
-    static Sprite[] Frames(Def def)
+    static Sprite[] Frames(BuildingProp def)
     {
-        if (Cache.TryGetValue(def.File, out var cached) && cached != null && cached.Length > 0 && cached[0] != null) return cached;
+        if (Cache.TryGetValue(def.file, out var cached) && cached != null && cached.Length > 0 && cached[0] != null) return cached;
 
-        var tex = Resources.Load<Texture2D>("Props/" + def.File);
+        var tex = Resources.Load<Texture2D>("Props/" + def.file);
         if (tex == null)
         {
-            Debug.LogError("Prop not found at Resources/Props/" + def.File);
+            Debug.LogError("Prop not found at Resources/Props/" + def.file);
             return null;
         }
 
         tex.filterMode = FilterMode.Point;
-        var frames = new Sprite[def.Frames];
+        var frames = new Sprite[def.frames];
         for (int i = 0; i < frames.Length; i++)
         {
             Rect rect;
-            if (def.FrameW <= 0)
+            if (def.frameW <= 0)
             {
                 rect = new Rect(0, 0, tex.width, tex.height);
             }
             else
             {
-                int col = i % def.Cols, row = i / def.Cols;
-                rect = new Rect(col * def.FrameW, tex.height - (row + 1) * def.FrameH, def.FrameW, def.FrameH);
+                int col = i % def.cols, row = i / def.cols;
+                rect = new Rect(col * def.frameW, tex.height - (row + 1) * def.frameH, def.frameW, def.frameH);
             }
 
             frames[i] = Sprite.Create(tex, rect, new Vector2(0.5f, 0f), 100f, 0, SpriteMeshType.FullRect);
         }
 
-        Cache[def.File] = frames;
+        Cache[def.file] = frames;
         return frames;
     }
 }

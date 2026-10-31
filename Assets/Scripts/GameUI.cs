@@ -410,8 +410,46 @@ public class GameUI
         Place((RectTransform)resetBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -344f), new Vector2(640f, 96f));
         resetBtn.onClick.AddListener(OnResetClicked);
 
+        float closeY = -476f;
+        if (DevMode.Enabled)
+        {
+            // Dev only (Editor / local builds): type an amount of petiscos and add it to the balance.
+            border.rectTransform.sizeDelta = new Vector2(780f, 760f);
+            closeY = -596f;
+
+            var field = NewImage(panel.transform, "DevAmount", ProceduralArt.RoundedRect(), ProceduralArt.Hex("#2B1A0E"), true, true);
+            Place(field.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(-114f, -452f), new Vector2(400f, 96f));
+            var viewport = NewRect("Viewport", field.transform);
+            Stretch(viewport);
+            viewport.offsetMin = new Vector2(20f, 6f);
+            viewport.offsetMax = new Vector2(-20f, -6f);
+            viewport.gameObject.AddComponent<RectMask2D>();
+            var inputText = NewText(viewport, "Text", "", 38, Color.white, TextAlignmentOptions.MidlineLeft, FontStyles.Bold);
+            Stretch(inputText.rectTransform);
+            var hint = NewText(viewport, "Placeholder", "Petiscos (ex: 1e12)", 32, new Color(1f, 1f, 1f, 0.4f), TextAlignmentOptions.MidlineLeft, FontStyles.Italic);
+            Stretch(hint.rectTransform);
+            var input = field.gameObject.AddComponent<TMP_InputField>();
+            input.textViewport = viewport;
+            input.textComponent = inputText;
+            input.placeholder = hint;
+            input.contentType = TMP_InputField.ContentType.Standard;
+            input.lineType = TMP_InputField.LineType.SingleLine;
+            input.targetGraphic = field;
+
+            var addBtn = NewButton(panel.transform, "DevAddButton", "Adicionar", 34, TabOn, Ink, out _, out _);
+            Place((RectTransform)addBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(256f, -452f), new Vector2(224f, 96f));
+            addBtn.onClick.AddListener(() =>
+            {
+                string raw = input.text.Trim().Replace(',', '.');
+                if (double.TryParse(raw, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double amount)
+                    && amount > 0.0 && !double.IsInfinity(amount))
+                    DevAdd(amount);
+                else sfx.PlayError();
+            });
+        }
+
         var closeBtn = NewButton(panel.transform, "CloseButton", "Fechar", 38, TabOn, Ink, out _, out closeText);
-        Place((RectTransform)closeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -476f), new Vector2(640f, 96f));
+        Place((RectTransform)closeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, closeY), new Vector2(640f, 96f));
         closeBtn.onClick.AddListener(() => SetSettingsOpen(false));
 
         settingsRoot.gameObject.SetActive(false);
