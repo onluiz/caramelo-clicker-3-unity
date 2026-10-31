@@ -884,7 +884,7 @@ public class GameUI
         double value = s.Click();
         sfx.PlayClick();
         rig.Poke();
-        minis.Spawn(e.position);
+        minis.Spawn(e.position, worldX);
         SpawnFloat(e.position, "+" + NumberFormat.Format(value, true), Color.white);
     }
 
@@ -912,10 +912,10 @@ public class GameUI
         RefreshAll();
     }
 
-    // Running past the daycare: the puppies that were following him stay there, and he earns a golden-bone style reward.
+    // Running past the daycare: the puppies that were following him and have run a full lap since birth stay there, and he earns a golden-bone style reward.
     void OnCrechePassed()
     {
-        int n = minis.DropOff();
+        int n = minis.DropOff(worldX, town.LapPx);
         if (n <= 0) return;
         sfx.PlayGolden();
         string msg = s.ApplyCreche((double)n / MiniDogs.MaxDogs, out double gain);

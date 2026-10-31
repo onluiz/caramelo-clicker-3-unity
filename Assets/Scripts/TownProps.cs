@@ -32,7 +32,7 @@ public class TownProps
         new Def { Building = "o-inicio", File = "stall-good-full", Height = 122.7f, MinStall = 3 },
         new Def { Building = "venda-petiscos", Slot = "o-inicio", File = "stall-treats", Height = 21f, Offset = -26f, Lift = 39f, MaxStall = 0 }, // on the bare stall's counter, left
         new Def { Building = "racao-caramelo", Slot = "o-inicio", File = "stall-feed", Height = 31f, Offset = 26f, Lift = 39f, MaxStall = 0 }, // same stall, right
-        new Def { Building = "creche-caramelo", File = "creche-caramelo", Height = 190f }, // right after the stall
+        new Def { Building = "creche-caramelo", File = "creche-caramelo", Cols = 3, Frames = 8, FrameW = 431, FrameH = 428, Height = 190f }, // right after the stall
         // hidden for now: new Def { Building = "drone-entregas", File = "red-drone", Cols = 5, Frames = 17, FrameW = 357, FrameH = 282, Height = 100f, Air = 190f, Bob = true },
         new Def { Building = "faro-minerador", File = "mina-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f, Lift = -26f },
         new Def { Building = "fabrica-de-petiscos", File = "fabrica-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f, Lift = -20f },
@@ -124,6 +124,7 @@ public class TownProps
     }
 
     const float CanHeight = 75f;
+    const float CanDrop = 40f;        // how far below the building baseline the bonus can sits, so it stands on the road
     const int MaxCans = 1;
     readonly List<Can> cans = new List<Can>();
     float canTimer = Random.Range(8f, 20f);
@@ -149,6 +150,7 @@ public class TownProps
     readonly bool[] slotOwned;
     readonly double[] slotX, slotHalf; // fixed world x of each slot centre within a lap, and half its width   // fixed world x of each slot within a lap
     readonly double lapPx;
+    public double LapPx => lapPx;   // length of the looping map, in canvas px
     readonly List<Inst> insts = new List<Inst>();
     readonly int slotCount;
 
@@ -567,7 +569,8 @@ public class TownProps
         trt.SetParent(inner.rectTransform, false);
         trt.anchorMin = Vector2.zero;
         trt.anchorMax = Vector2.one;
-        trt.offsetMin = trt.offsetMax = Vector2.zero;
+        trt.offsetMin = new Vector2(24f, 0f);
+        trt.offsetMax = new Vector2(-24f, 0f);
         var text = tgo.AddComponent<TMPro.TextMeshProUGUI>();
         text.text = Loc.T(RunnerLine);
         text.fontSize = 50f;
@@ -599,7 +602,7 @@ public class TownProps
         img.sprite = frames[0];
         rt.SetAsLastSibling();
         booms.Add(new Boom { x = x, rt = rt, img = img, t = 0f });
-        boomY = canH * 0.5f;
+        boomY = canH * 0.5f - CanDrop;
     }
 
     float boomY;
@@ -643,7 +646,7 @@ public class TownProps
             c.pop = Mathf.Min(1f, c.pop + dt / PopSeconds);
             float t = c.pop - 1f;
             float grow = c.pop >= 1f ? 1f : 1f + 2.70158f * t * t * t + 1.70158f * t * t;
-            c.rt.anchoredPosition = new Vector2((float)(c.x - worldX), 0f);
+            c.rt.anchoredPosition = new Vector2((float)(c.x - worldX), -CanDrop);
             c.rt.localScale = new Vector3(grow, grow, 1f);
         }
 

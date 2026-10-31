@@ -30,6 +30,7 @@ public class MiniDogs
         public bool wantRun;
         public int face = 1;
         public float leaveDelay, leaveT;
+        public double bornX;         // world x (how far Caramelo had run) when it was born
     }
 
     readonly RectTransform root, panel;
@@ -51,8 +52,8 @@ public class MiniDogs
 
     public int Count => dogs.Count;
 
-    // A new mini falls from above the tap point.
-    public void Spawn(Vector2 screenPos)
+    // A new mini falls from above the tap point. worldX is how far Caramelo has run so far.
+    public void Spawn(Vector2 screenPos, double worldX)
     {
         if (dogs.Count >= MaxDogs) return;
 
@@ -91,6 +92,7 @@ public class MiniDogs
             homeFrac = Random.value,
             phase = Random.value * 10f,
             wantRun = rig.Running,
+            bornX = worldX,
             reactDelay = Random.Range(0.05f, 0.7f),
         };
         dogs.Add(m);
@@ -116,13 +118,15 @@ public class MiniDogs
         m.rt.anchoredPosition = new Vector2(m.x, m.y);
     }
 
-    // The puppies on the ground stay at the daycare (they walk in and vanish). Returns how many there were.
-    public int DropOff()
+    // The puppies on the ground stay at the daycare (they walk in and vanish). Only those that have run a full lap of
+    // the map since they were born are let in, so tapping right in front of the daycare does not feed it. Returns how many went in.
+    public int DropOff(double worldX, double lapPx)
     {
         int n = 0;
         foreach (var m in dogs)
         {
             if (m.mode == Mode.Fall || m.mode == Mode.Leave) continue;
+            if (worldX - m.bornX < lapPx) continue;
             m.mode = Mode.Leave;
             m.leaveDelay = Random.Range(0f, 0.5f);
             m.leaveT = 0f;
