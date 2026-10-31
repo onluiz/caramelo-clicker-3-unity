@@ -38,6 +38,7 @@ public class TownProps
         new Def { Building = "fabrica-de-petiscos", File = "fabrica-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f, Lift = -20f },
         new Def { Building = "fabrica-de-racao", File = "fabrica-racao", Cols = 3, Frames = 8, FrameW = 256, FrameH = 256, Height = 210f, Lift = -22f },
         new Def { Building = "estatua-caramelo", File = "dog_statue", Height = 115f },
+        new Def { Building = "sorveteria-caramelo", File = "sorveteria", Height = 170f },
         new Def { Building = "templo-caramelo", File = "templo-caramelo", Height = 185f },
         new Def { Building = "banco-canino", File = "banco-canino", Height = 170f },
         new Def { Building = "pet-shop-caramelo", File = "petshop", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
