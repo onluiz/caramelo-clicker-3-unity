@@ -75,6 +75,7 @@ public class DogRig
 
     // Horizontal speed (px/s) the ground should scroll at so the feet look planted.
     public float StrideSpeed { get; private set; }
+    public RectTransform Root => rootRt;
 
     // The player made him sit: he stays seated, ignoring income and clicks, until this is turned off.
     public bool Sitting { get; set; }

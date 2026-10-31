@@ -59,6 +59,8 @@ public class TownProps
         public double x;
         public float clock, anim, wait, prevRel, sayTimer, cooldown;
         public int enterSide = -1;
+        public RectTransform lightRt, glowRt;   // the delivery dog's own light (lit layer)
+        public Image lightImg, glowImg;
         public int frame = -1;
     }
 
@@ -91,6 +93,10 @@ public class TownProps
         public float pop;        // 0..1 growing in
         public float anim, bob, patrolX;
         public int dir = 1, frame = -1;
+        public RectTransform lit, glow;  // street lamps: the lit copy and its glow, in the lit layer
+        public Image litImg, glowImg;
+        public Image[] pieces;           // signs and boards: their parts, tinted at night
+        public Color[] pieceColors;
     }
 
     // One stretch of town: everything built around one slot position in the world.
@@ -145,7 +151,12 @@ public class TownProps
 
     // Street lamps (pseudo slots after the banners): one in every gap between two buildings of a district, and one
     // every LampEvery along the open road, never inside a district.
-    static readonly Def LampDef = new Def { File = "street-lamp-on", Height = 130f };
+    static readonly Def LampDef = new Def { File = "street-lamp-off", Height = 130f };       // by day
+    static readonly Def LampOnDef = new Def { File = "street-lamp-on", Height = 130f };      // lit copy drawn above the night shade
+    public const float LightAlpha = 0.55f; // the light animation is kept soft
+    const float GlowSize = 1100f, LampHeadFrac = 0.8f;
+    RectTransform litLayer;
+    static Sprite glowSprite;
     const float LampEvery = 15f * PxPerMeter;
     const int MaxLamps = 200;
     int slotTotal;
@@ -253,11 +264,12 @@ public class TownProps
     }
 
     // worldX: how far the dog has run, in canvas px. A thing's screen x is its world x minus worldX.
-    public void Tick(float dt, double worldX, int[] owned)
+    public void Tick(float dt, double worldX, int[] owned, float darkness)
     {
         float panelW = layer.rect.width;
         if (panelW <= 1f) return; // layout not ready yet
 
+        nightTint = Color.Lerp(Color.white, NightTint, darkness);
         TickCans(dt, worldX, panelW, canBuilding >= 0 && owned[canBuilding] > 0);
 
         releaseTimer -= dt;
@@ -354,13 +366,17 @@ public class TownProps
             for (int i = 0; i < Defs.Length; i++)
                 if (inst.byDef[i] != null) Place(inst.byDef[i], baseX, dt);
             if (inst.sign != null) Place(inst.sign, baseX, dt);
-            if (inst.banner != null) Place(inst.banner, baseX, dt);
+            if (inst.banner != null)
+            {
+                Place(inst.banner, baseX, dt);
+                if (inst.banner.lit != null) UpdateLampLight(inst.banner, darkness);
+            }
         }
 
-        TickRunner(dt, worldX, panelW, owned);
+        TickRunner(dt, worldX, panelW, owned, darkness);
     }
 
-    void TickRunner(float dt, double worldX, float panelW, int[] owned)
+    void TickRunner(float dt, double worldX, float panelW, int[] owned, float darkness)
     {
         bool has = runnerBuilding >= 0 && owned[runnerBuilding] > 0;
         if (!has)
@@ -369,6 +385,8 @@ public class TownProps
             {
                 Object.Destroy(runner.rt.gameObject);
                 Object.Destroy(runner.bubble.gameObject);
+                if (runner.lightRt != null) Object.Destroy(runner.lightRt.gameObject);
+                if (runner.glowRt != null) Object.Destroy(runner.glowRt.gameObject);
                 runner = null;
             }
 
@@ -383,7 +401,7 @@ public class TownProps
 
             var go = new GameObject("delivery-dog", typeof(RectTransform));
             var rt = go.GetComponent<RectTransform>();
-            rt.SetParent(layer, false);
+            rt.SetParent(litLayer != null ? litLayer : layer, false); // above the night shade: he stays as bright as by day
             rt.anchorMin = rt.anchorMax = Vector2.zero;
             rt.pivot = new Vector2(0.5f, 0f);
             var img = go.AddComponent<Image>();
@@ -394,6 +412,7 @@ public class TownProps
 
             runner = new Runner { rt = rt, img = img, frames = frames, x = worldX - limit, prevRel = -limit, cooldown = 4f };
             BuildBubble(runner);
+            BuildRunnerLight(runner);
         }
 
         var r = runner;
@@ -407,6 +426,7 @@ public class TownProps
             r.x = worldX + r.enterSide * limit;
             r.prevRel = r.enterSide * limit;
             r.rt.gameObject.SetActive(true);
+            SetRunnerLight(r, true);
         }
 
         // His pace swings slowly between slower and faster than Caramelo's top speed.
@@ -420,6 +440,7 @@ public class TownProps
             r.wait = Random.Range(6f, 14f);
             r.enterSide = rel > 0f ? -1 : 1;
             r.rt.gameObject.SetActive(false);
+            SetRunnerLight(r, false);
             r.sayTimer = 0f;
             r.bubble.gameObject.SetActive(false);
             return;
@@ -445,6 +466,7 @@ public class TownProps
         float screenX = panelW * 0.5f + rel;
         r.rt.anchoredPosition = new Vector2(screenX, 0f);
         r.rt.SetAsLastSibling();
+        UpdateRunnerLight(r, screenX, darkness);
 
         if (r.sayTimer > 0f)
         {
@@ -454,6 +476,41 @@ public class TownProps
             r.bubble.anchoredPosition = new Vector2(screenX, r.rt.sizeDelta.y + 10f);
             r.bubble.SetAsLastSibling();
         }
+    }
+
+    // The delivery dog carries a light above his head too (drawn in the lit layer, above the night shade).
+    void BuildRunnerLight(Runner r)
+    {
+        if (litLayer == null) return;
+        var sheet = Sheet("light", 4, 12, 48, 48);
+        if (sheet == null) return;
+
+        var g = NewLightImage(litLayer, "runner-glow", GlowSprite());
+        g.rectTransform.sizeDelta = new Vector2(GlowSize, GlowSize);
+        g.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+        var l = NewLightImage(litLayer, "runner-light", sheet[0]);
+        l.rectTransform.sizeDelta = new Vector2(48f * 5f, 48f * 5f);
+        l.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+        r.lightRt = l.rectTransform; r.lightImg = l;
+        r.glowRt = g.rectTransform; r.glowImg = g;
+    }
+
+    static void SetRunnerLight(Runner r, bool on)
+    {
+        if (r.lightRt != null) r.lightRt.gameObject.SetActive(on);
+        if (r.glowRt != null) r.glowRt.gameObject.SetActive(on);
+    }
+
+    void UpdateRunnerLight(Runner r, float screenX, float darkness)
+    {
+        if (r.lightRt == null) return;
+        float on = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.12f, 0.55f, darkness));
+        var sheet = Sheet("light", 4, 12, 48, 48);
+        if (sheet != null) r.lightImg.sprite = sheet[(int)(r.clock * 10f) % sheet.Length];
+        r.lightRt.anchoredPosition = new Vector2(screenX + 20f, 250f);
+        r.lightImg.color = new Color(1f, 0.95f, 0.7f, LightAlpha * on);
+        r.glowRt.anchoredPosition = new Vector2(screenX, 110f);
+        r.glowImg.color = new Color(1f, 0.82f, 0.45f, 0.22f * on);
     }
 
     static void BuildBubble(Runner r)
@@ -610,7 +667,7 @@ public class TownProps
         var inst = new Inst { slot = slot, x = x, half = slotHalf[slot] };
         if (slot >= slotCount)
         {
-            inst.banner = slot < slotCount + 2 ? SpawnBanner(BannerText[slot - slotCount]) : Spawn(LampDef, popIn);
+            inst.banner = slot < slotCount + 2 ? SpawnBanner(BannerText[slot - slotCount]) : MakeLampLight(Spawn(LampDef, popIn));
             insts.Add(inst);
             return;
         }
@@ -625,6 +682,88 @@ public class TownProps
 
     // Frees the sprites and textures of every prop that has no instance alive anymore, so only what is near the
     // dog stays in memory (they are loaded again on demand by Frames).
+    // A layer above the night shade (built by GameUI right after it), where lit lamps and their glow are drawn.
+    public void AttachLitLayer(Transform parent)
+    {
+        var go = new GameObject("TownLights", typeof(RectTransform));
+        litLayer = go.GetComponent<RectTransform>();
+        litLayer.SetParent(parent, false);
+        litLayer.anchorMin = layer.anchorMin;
+        litLayer.anchorMax = layer.anchorMax;
+        litLayer.pivot = layer.pivot;
+        litLayer.anchoredPosition = layer.anchoredPosition;
+        litLayer.sizeDelta = Vector2.zero;
+    }
+
+    Prop MakeLampLight(Prop p)
+    {
+        if (p == null || litLayer == null) return p;
+        var on = Frames(LampOnDef);
+        if (on == null) return p;
+
+        var g = NewLightImage(litLayer, "lamp-glow", GlowSprite());
+        g.rectTransform.sizeDelta = new Vector2(GlowSize, GlowSize);
+        g.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+        var l = NewLightImage(litLayer, "lamp-lit", on[0]);
+        l.rectTransform.sizeDelta = p.rt.sizeDelta;
+        l.rectTransform.pivot = new Vector2(0.5f, 0f);
+        p.lit = l.rectTransform; p.litImg = l;
+        p.glow = g.rectTransform; p.glowImg = g;
+        return p;
+    }
+
+    static Image NewLightImage(RectTransform parent, string name, Sprite sprite)
+    {
+        var go = new GameObject(name, typeof(RectTransform));
+        var rt = go.GetComponent<RectTransform>();
+        rt.SetParent(parent, false);
+        rt.anchorMin = rt.anchorMax = Vector2.zero;
+        var img = go.AddComponent<Image>();
+        img.sprite = sprite;
+        img.raycastTarget = false;
+        return img;
+    }
+
+    // Lamps switch on as it gets dark: the lit copy fades in over the unlit one and a warm glow spreads around the lamp.
+    void UpdateLampLight(Prop p, float darkness)
+    {
+        float on = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.12f, 0.55f, darkness));
+        Vector2 pos = p.rt.anchoredPosition;
+        p.lit.anchoredPosition = pos;
+        p.lit.localScale = p.rt.localScale;
+        p.litImg.color = new Color(1f, 1f, 1f, on);
+        p.glow.anchoredPosition = pos + new Vector2(0f, p.rt.sizeDelta.y * LampHeadFrac * p.rt.localScale.y);
+        p.glow.localScale = p.rt.localScale;
+        p.glowImg.color = new Color(1f, 0.82f, 0.45f, 0.6f * on);
+    }
+
+    public static Sprite GlowSprite()
+    {
+        if (glowSprite != null) return glowSprite;
+        const int n = 128;
+        var tex = new Texture2D(n, n, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+        var px = new Color32[n * n];
+        for (int y = 0; y < n; y++)
+            for (int x = 0; x < n; x++)
+            {
+                float d = Mathf.Sqrt((x - n * 0.5f) * (x - n * 0.5f) + (y - n * 0.5f) * (y - n * 0.5f)) / (n * 0.5f);
+                float a = Mathf.Clamp01(1f - d);
+                a *= a;
+                px[y * n + x] = new Color32(255, 255, 255, (byte)(a * 255f));
+            }
+
+        tex.SetPixels32(px);
+        tex.Apply();
+        glowSprite = Sprite.Create(tex, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f), 100f);
+        return glowSprite;
+    }
+
+    // A sprite sheet cut into frames (row-major from the top), cached and kept loaded by ReleaseUnused for "light".
+    public static Sprite[] Sheet(string file, int cols, int frames, int frameW, int frameH)
+    {
+        return Frames(new Def { File = file, Cols = cols, Frames = frames, FrameW = frameW, FrameH = frameH });
+    }
+
     void AddLamp(double x, double half)
     {
         if (slotTotal >= slotX.Length) return;
@@ -635,10 +774,10 @@ public class TownProps
 
     void ReleaseUnused()
     {
-        var used = new HashSet<string> { "trash-can", "explosion" };
+        var used = new HashSet<string> { "trash-can", "explosion", "light" };
         if (runner != null) used.Add(RunnerDef.File);
         foreach (var inst in insts)
-            if (inst.banner != null && inst.banner.def == LampDef) used.Add(LampDef.File);
+            if (inst.banner != null && inst.banner.def == LampDef) { used.Add(LampDef.File); used.Add(LampOnDef.File); }
         foreach (var inst in insts)
             foreach (var p in inst.byDef)
                 if (p != null) used.Add(p.def.File);
@@ -664,7 +803,12 @@ public class TownProps
         foreach (var p in inst.byDef)
             if (p != null) Object.Destroy(p.rt.gameObject);
         if (inst.sign != null) Object.Destroy(inst.sign.rt.gameObject);
-        if (inst.banner != null) Object.Destroy(inst.banner.rt.gameObject);
+        if (inst.banner != null)
+        {
+            Object.Destroy(inst.banner.rt.gameObject);
+            if (inst.banner.lit != null) Object.Destroy(inst.banner.lit.gameObject);
+            if (inst.banner.glow != null) Object.Destroy(inst.banner.glow.gameObject);
+        }
     }
 
     // A welcome board on two wooden posts, drawn from uGUI pieces.
@@ -699,7 +843,7 @@ public class TownProps
         text.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
         text.raycastTarget = false;
 
-        return new Prop { def = SignDef, rt = rt, frames = new Sprite[1], pop = 1f };
+        return WithPieces(new Prop { def = SignDef, rt = rt, frames = new Sprite[1], pop = 1f });
     }
 
     // A wooden post with a red "VENDA" board, drawn from uGUI pieces instead of a sheet.
@@ -734,11 +878,11 @@ public class TownProps
         text.raycastTarget = false;
         post.transform.SetAsFirstSibling();
 
-        return new Prop
+        return WithPieces(new Prop
         {
             def = SignDef, rt = rt, frames = new Sprite[1],
             pop = popIn ? 0f : 1f,
-        };
+        });
     }
 
     static Image Piece(RectTransform parent, string name, Vector2 anchor, Vector2 size, Vector2 pos, Color color)
@@ -797,8 +941,27 @@ public class TownProps
         };
     }
 
+    static Prop WithPieces(Prop p)
+    {
+        p.pieces = p.rt.GetComponentsInChildren<Image>();
+        p.pieceColors = new Color[p.pieces.Length];
+        for (int i = 0; i < p.pieces.Length; i++) p.pieceColors[i] = p.pieces[i].color;
+        return p;
+    }
+
+    // Buildings stay only a little darker at night than by day.
+    static readonly Color NightTint = new Color(0.74f, 0.78f, 0.93f);
+    Color nightTint = Color.white;
+
+    public void RaiseAboveShade() { layer.SetAsLastSibling(); }
+
     void Place(Prop p, float slotScreenX, float dt)
     {
+        if (p.img != null) p.img.color = nightTint;
+        if (p.pieces != null)
+            for (int i = 0; i < p.pieces.Length; i++)
+                if (p.pieces[i] != null) p.pieces[i].color = p.pieceColors[i] * nightTint;
+
         if (p.pop < 1f) p.pop = Mathf.Min(1f, p.pop + dt / PopSeconds);
 
         float t = p.pop - 1f;

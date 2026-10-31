@@ -3,25 +3,42 @@ using UnityEngine.UI;
 
 // Sky behind the game area: a day that runs through sets of layered clouds (Resources/Clouds/<set>/1..n.png, back to
 // front). The first layer is the fixed sky; the others tile sideways and scroll with parallax, faster the nearer they
-// are, following the dog's stride plus a slow drift of their own. The sets take turns in a loop: each holds for a few
-// minutes, then crossfades into the next. The loop runs on the wall clock, so the sky also moves on between sessions.
+// are, following the dog's stride plus a slow drift of their own. A cycle is a day (one of
+// sets 1, 2, 4 or 5), the evening (7) and the night (3); each holds for a while, then crossfades into the next. The loop runs on the wall clock, so the sky also moves on between sessions.
 public class SkyParallax
 {
-    // The order of the day: set number and how many layers it has.
-    static readonly (int set, int layers)[] Day =
+    // Layers in each cloud set (Resources/Clouds/<set>).
+    static int LayersOf(int set)
     {
-        (1, 4), // day
-        (5, 5), // bright day
-        (6, 6), // hazy afternoon
-        (7, 4), // sunset
-        (2, 3), // lavender dusk
-        (8, 6), // purple dusk
-        (3, 4), // night
-        (4, 4), // dawn
-    };
+        switch (set)
+        {
+            case 1: return 4;
+            case 2: return 3;
+            case 3: return 4;
+            case 4: return 4;
+            case 5: return 5;
+            case 6: return 6;
+            case 7: return 4;
+            default: return 6;
+        }
+    }
 
-    const float HoldSeconds = 300f;   // how long a sky stays as it is
-    const float FadeSeconds = 60f;    // how long the crossfade into the next one takes
+    // A cycle is a day, then the evening, then the night, then the next day. Each day picks one of these skies
+    // (the pick depends only on the cycle number, so it is the same for the whole loop on the wall clock).
+    static readonly int[] DaySets = { 1, 2, 4, 5 };
+    const int EveningSet = 7, NightSet = 3;
+    static readonly float[] HoldSeconds = { 300f, 90f, 240f }; // day, evening, night: how long each sky stays as it is
+    const float FadeSeconds = 60f;                              // crossfade into the next sky
+    const int Segments = 3;
+
+    static int SetOf(long cycle, int segment)
+    {
+        if (segment == 1) return EveningSet;
+        if (segment == 2) return NightSet;
+        uint h = (uint)cycle * 2654435761u;
+        return DaySets[(int)((h >> 16) % (uint)DaySets.Length)];
+    }
+
     const int MaxLayers = 6;
     const float ImageAspect = 576f / 324f;
     const float FollowFar = 0.02f, FollowNear = 0.14f;  // share of the stride speed, back layer to front layer
@@ -38,7 +55,7 @@ public class SkyParallax
         public float[] follow = new float[MaxLayers];
         public float[] drift = new float[MaxLayers];
         public int count;
-        public int dayIndex = -1;
+        public int dayIndex = -1; // set number shown, -1 when empty
     }
 
     readonly RectTransform root;
@@ -46,6 +63,11 @@ public class SkyParallax
 
     // Seconds into the loop. Starts from the wall clock; the Editor can set it to look at a given moment.
     public double Clock;
+
+    // 0 by day, 1 at full night: how dark the scene in front of the sky should be (the sky itself is just its art).
+    public float Darkness { get; private set; }
+    public bool ForceNight;   // dev option: stay at full night
+    static readonly float[] SegmentDarkness = { 0f, 0.35f, 1f };
 
     public RectTransform Root => root;
 
@@ -90,11 +112,11 @@ public class SkyParallax
         return slot;
     }
 
-    void Show(Slot slot, int dayIndex)
+    void Show(Slot slot, int set)
     {
         Clear(slot);
-        var def = Day[dayIndex];
-        slot.dayIndex = dayIndex;
+        var def = (set: set, layers: LayersOf(set));
+        slot.dayIndex = set;
         slot.count = Mathf.Min(def.layers, MaxLayers);
         for (int i = 0; i < slot.count; i++)
         {
@@ -150,11 +172,25 @@ public class SkyParallax
     // Decides which set is current and, while one is fading in, which one comes next and how far along it is.
     void PickSkies()
     {
-        double span = HoldSeconds + FadeSeconds;
-        double p = Clock % (span * Day.Length);
-        int cur = (int)(p / span);
-        float within = (float)(p - cur * span);
-        float t = within > HoldSeconds ? Mathf.SmoothStep(0f, 1f, (within - HoldSeconds) / FadeSeconds) : 0f;
+        double cycleLen = 0;
+        for (int s = 0; s < Segments; s++) cycleLen += HoldSeconds[s] + FadeSeconds;
+
+        long cycle = (long)System.Math.Floor(Clock / cycleLen);
+        double p = Clock - cycle * cycleLen;
+        int seg = 0;
+        while (seg < Segments - 1 && p >= HoldSeconds[seg] + FadeSeconds)
+        {
+            p -= HoldSeconds[seg] + FadeSeconds;
+            seg++;
+        }
+
+        if (ForceNight) { seg = Segments - 1; p = 0.0; }
+        float within = (float)p;
+        float t = within > HoldSeconds[seg] ? Mathf.SmoothStep(0f, 1f, (within - HoldSeconds[seg]) / FadeSeconds) : 0f;
+        int cur = SetOf(cycle, seg);
+        float darkNow = SegmentDarkness[seg];
+        float darkNext = SegmentDarkness[(seg + 1) % Segments];
+        Darkness = Mathf.Lerp(darkNow, darkNext, t);
 
         if (a.dayIndex != cur)
         {
@@ -166,7 +202,7 @@ public class SkyParallax
 
         if (t > 0f)
         {
-            int next = (cur + 1) % Day.Length;
+            int next = seg + 1 < Segments ? SetOf(cycle, seg + 1) : SetOf(cycle + 1, 0);
             if (b.dayIndex != next)
             {
                 Show(b, next);

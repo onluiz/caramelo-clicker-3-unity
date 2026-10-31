@@ -66,6 +66,12 @@ public class GameUI
 
     RectTransform canvasRect, bgLayer, floatLayer, overlayLayer;
     SkyParallax sky;
+    Image nightShade, headLight, headGlow;
+    TextMeshProUGUI forceNightText;
+    Sprite[] headLightFrames;
+    const float NightShadeMax = 0.58f;
+    const float HeadGlowY = -150f; // the glow is centred on his body, so he is lit too
+    const float HeadLightX = 25f, HeadLightY = -30f; // from the dog anchor: right above his head
     RectTransform safeRoot, tapArea, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
     CanvasScaler scaler;
     bool portrait;
@@ -350,11 +356,42 @@ public class GameUI
         buffText.fontSizeMax = 32f;
         buffChip.gameObject.SetActive(false);
 
+        int hudCount = left.childCount; // everything built so far is HUD, and goes back on top of the night shade
         BuildGround(left);
         town = new TownProps(left, -GroundTop);
         town.OnCanClicked = OnTrashCanClicked;
 
         rig = new DogRig(left, new Vector2(0.5f, 0.4f));
+
+        // Night shade over the ground, town and dogs; lit lamps and their glow go above it, then the HUD.
+        nightShade = NewImage(left, "NightShade", null, new Color(0.02f, 0.04f, 0.16f, 0f), false);
+        Stretch(nightShade.rectTransform);
+        town.RaiseAboveShade(); // buildings are only slightly tinted at night, not shaded as much as the ground
+        town.AttachLitLayer(left);
+
+        // Caramelo's own light, above his head: switches on with the dark.
+        headLightFrames = TownProps.Sheet("light", 4, 12, 48, 48);
+        headGlow = NewImage(left, "HeadGlow", TownProps.GlowSprite(), new Color(1f, 0.82f, 0.45f, 0f), false);
+        {
+            var grt = headGlow.rectTransform;
+            grt.anchorMin = grt.anchorMax = new Vector2(0.5f, 0.4f);
+            grt.pivot = new Vector2(0.5f, 0.5f);
+            grt.sizeDelta = new Vector2(900f, 900f);
+            grt.anchoredPosition = new Vector2(0f, HeadGlowY);
+        }
+
+        rig.Root.SetAsLastSibling(); // Caramelo is drawn above the night shade, so he stays as bright as by day
+
+        if (headLightFrames != null)
+        {
+            headLight = NewImage(left, "HeadLight", headLightFrames[0], new Color(1f, 0.95f, 0.7f, 0f), false);
+            var hrt = headLight.rectTransform;
+            hrt.anchorMin = hrt.anchorMax = new Vector2(0.5f, 0.4f);
+            hrt.pivot = new Vector2(0.5f, 0.5f);
+            hrt.sizeDelta = new Vector2(48f * 5f, 48f * 5f);
+            hrt.anchoredPosition = new Vector2(HeadLightX, HeadLightY);
+        }
+        for (int i = 0; i < hudCount; i++) left.GetChild(0).SetAsLastSibling();
 
         toastText = NewText(left, "Toast", "", 32, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
         Anchors(toastText.rectTransform, 0.02f, 0.075f, 0.98f, 0.155f);
@@ -424,8 +461,17 @@ public class GameUI
         if (DevMode.Enabled)
         {
             // Dev only (Editor / local builds): type an amount of petiscos and add it to the balance.
-            border.rectTransform.sizeDelta = new Vector2(780f, 760f);
-            closeY = -596f;
+            border.rectTransform.sizeDelta = new Vector2(780f, 868f);
+            closeY = -704f;
+
+            var nightBtn = NewButton(panel.transform, "ForceNightButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out forceNightText);
+            Place((RectTransform)nightBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -560f), new Vector2(640f, 96f));
+            nightBtn.onClick.AddListener(() =>
+            {
+                sky.ForceNight = !sky.ForceNight;
+                forceNightText.text = sky.ForceNight ? "Forçar noite: ligado" : "Forçar noite: desligado";
+            });
+            forceNightText.text = "Forçar noite: desligado";
 
             var field = NewImage(panel.transform, "DevAmount", ProceduralArt.RoundedRect(), ProceduralArt.Hex("#2B1A0E"), true, true);
             Place(field.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(-114f, -452f), new Vector2(400f, 96f));
@@ -1221,7 +1267,15 @@ public class GameUI
     {
         rig.Tick(dt, s.Cps);
         worldX += rig.StrideSpeed * dt; // the dog is the one who moves; everything else sits at fixed world positions
-        town.Tick(dt, worldX, s.Owned);
+        town.Tick(dt, worldX, s.Owned, sky.Darkness);
+        nightShade.color = new Color(0.02f, 0.04f, 0.16f, NightShadeMax * sky.Darkness);
+        if (headLight != null)
+        {
+            float on = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.12f, 0.55f, sky.Darkness));
+            headLight.color = new Color(1f, 0.95f, 0.7f, TownProps.LightAlpha * on);
+            headGlow.color = new Color(1f, 0.82f, 0.45f, 0.26f * on);
+            headLight.sprite = headLightFrames[(int)(clock * 10f) % headLightFrames.Length];
+        }
         sky.Update(dt, rig.StrideSpeed);
         UpdateGround();
     }
