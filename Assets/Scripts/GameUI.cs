@@ -89,7 +89,7 @@ public class GameUI
 
     TextMeshProUGUI counterText, cpsText, buffText, toastText, statsText;
     Image statsPill;
-    TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, resetText;
+    TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, resetText, sitText;
     Image tabBuildingsBg, tabUpgradesBg, tabCeuBg, tabDevBg, resetBg;
     GameObject devContent, ceuContent;
     bool showDev, showCeu;
@@ -319,6 +319,15 @@ public class GameUI
         Box(gearIcon.rectTransform, Vector2.zero, Vector2.one, new Vector2(14f, 14f), new Vector2(-14f, -14f));
         gear.onClick.AddListener(() => SetSettingsOpen(true));
 
+        // Sit / run toggle under the gear: the dog sits until the button is pressed again.
+        var sitBtn = NewButton(left, "SitButton", "Sentar", 32, CardBg, Color.white, out _, out sitText);
+        Place((RectTransform)sitBtn.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -134f), new Vector2(190f, 76f));
+        sitBtn.onClick.AddListener(() =>
+        {
+            rig.Sitting = !rig.Sitting;
+            RefreshSitLabel();
+        });
+
         // Where a game would show the stage: the income, as "n/s".
         // The dark copy behind is its drop shadow (the font's outline shader variant is not available).
         cpsShadow = NewText(left, "CpsShadow", "0/s", 84, ProceduralArt.Hex("#5A2E12"), TextAlignmentOptions.Center, FontStyles.Bold);
@@ -465,6 +474,7 @@ public class GameUI
         settingsTitleText.text = Loc.T("Configurações");
         closeText.text = Loc.T("Fechar");
         langText.text = Loc.T("Idioma: Português");
+        RefreshSitLabel();
 
         for (int i = 0; i < upgradeRows.Count; i++)
         {
@@ -479,6 +489,12 @@ public class GameUI
 
         RefreshButtons();
         RefreshAll();
+    }
+
+    // The button offers the action the dog is not doing: "Sentar" while he runs, "Correr" while he sits.
+    void RefreshSitLabel()
+    {
+        sitText.text = Loc.T(rig.Sitting ? "Correr" : "Sentar");
     }
 
     void SetSettingsOpen(bool open)

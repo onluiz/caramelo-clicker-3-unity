@@ -81,6 +81,8 @@ public static class Loc
     static readonly Dictionary<string, string> Ui = new Dictionary<string, string>
     {
         { "Construções", "Buildings" },
+        { "Sentar", "Sit" },
+        { "Correr", "Run" },
         { "VENDA", "FOR SALE" },
         { "Melhorias", "Upgrades" },
         { "Melhorias ({0})", "Upgrades ({0})" },

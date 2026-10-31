@@ -76,6 +76,9 @@ public class DogRig
     // Horizontal speed (px/s) the ground should scroll at so the feet look planted.
     public float StrideSpeed { get; private set; }
 
+    // The player made him sit: he stays seated, ignoring income and clicks, until this is turned off.
+    public bool Sitting { get; set; }
+
     public DogRig(Transform parent, Vector2 anchor)
     {
         rootRt = NewRect("Dog", parent);
@@ -158,12 +161,14 @@ public class DogRig
 
     public void Tick(float dt, double cps)
     {
+        if (Sitting) clickEnergy = 0f;
         clickEnergy *= Mathf.Exp(-dt * ClickDecay);
         float clickRate = clickEnergy * ClickDecay;
         float boost = 0.3f * Mathf.Max(0f, clickRate - 1f);
 
         // Stand up for any income or sustained clicking; sit back down once both are gone.
-        if (!standing && (cps > 0.0 || boost > 0.25f)) standing = true;
+        if (Sitting) standing = false;
+        else if (!standing && (cps > 0.0 || boost > 0.25f)) standing = true;
         else if (standing && cps <= 0.0 && boost < 0.1f) standing = false;
 
         // Smooth the effort so single clicks speed the stride up gradually instead of flipping clips.

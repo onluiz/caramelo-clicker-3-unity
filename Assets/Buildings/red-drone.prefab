@@ -101,5 +101,6 @@ MonoBehaviour:
   air: 190
   lift: 0
   offset: 0
+  bottomPadding: 0
   bobAmplitude: 9
   bobSpeed: 2.2

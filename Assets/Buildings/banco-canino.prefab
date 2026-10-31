@@ -101,3 +101,4 @@ MonoBehaviour:
   air: 0
   lift: 0
   offset: 0
+  bottomPadding: 0

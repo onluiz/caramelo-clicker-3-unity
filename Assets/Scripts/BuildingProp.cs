@@ -35,23 +35,43 @@ public class BuildingProp : MonoBehaviour
     public float lift;
     [Tooltip("Sideways shift inside the building's slot.")]
     public float offset;
+    [Tooltip("Vertical shift on top of air/lift. Negative sinks the prop into the ground. Dragging the prop up or down in the TownLayout prefab changes this.")]
+    public float yOffset;
+    [Tooltip("Empty (transparent) rows under the art in the source image, in source px. The prop sinks by this much so the art itself stands on the ground.")]
+    public float bottomPadding;
 
     RectTransform rt;
     Image img;
     Sprite[] sprites;
     float pop = 1f;
+    float sink; // canvas px the prop is lowered by (bottomPadding scaled to the drawn size)
     float anim;
     int shown = -1;
 
 #if UNITY_EDITOR
     // Editor preview: while a prefab is open (or an instance sits in a scene), a hidden RawImage child shows the first
-    // frame at the real size, shifted by offset/air/lift, so the fields can be tuned by eye. It is never saved nor built.
+    // frame at the real size, so the fields can be tuned by eye. Inside the TownLayout prefab the prop's own rect sits where the
+    // game will draw it (slot + offset, air/lift/yOffset, minus the bottom padding), and moving it there writes back into
+    // offset and yOffset. The preview is never saved nor built.
     const string PreviewName = "EditorPreview";
 
     void OnValidate()
     {
         if (Application.isPlaying || UnityEditor.EditorUtility.IsPersistent(this)) return;
-        UnityEditor.EditorApplication.delayCall += () => { if (this != null) RefreshPreview(); };
+        Relayout();
+    }
+
+    // Re-draws this prop (and, inside a TownLayout, re-positions the whole town) once the current edit is over.
+    void Relayout()
+    {
+        var layout = GetComponentInParent<TownLayout>();
+        if (layout != null) layout.MarkDirty();
+        UnityEditor.EditorApplication.delayCall += () =>
+        {
+            if (this == null) return;
+            if (layout != null) layout.Arrange();
+            else RefreshPreview();
+        };
     }
 
     Vector2 previewSize; // the size the preview last set; zero until it has run
@@ -66,13 +86,38 @@ public class BuildingProp : MonoBehaviour
         float h = rt.sizeDelta.y / SizeScale;
         if (Mathf.Abs(h - height) < 0.001f)
         {
-            RefreshPreview(); // only the width was dragged: snap it back to the sprite's proportions
+            Relayout(); // only the width was dragged: snap it back to the sprite's proportions
             return;
         }
 
         UnityEditor.Undo.RecordObject(this, "Resize building");
         height = Mathf.Round(h * 10f) / 10f;
-        UnityEditor.EditorApplication.delayCall += () => { if (this != null) RefreshPreview(); };
+        Relayout();
+    }
+
+    float SourceFrameHeight()
+    {
+        var tex = Resources.Load<Texture2D>("Props/" + file);
+        if (tex == null) return 0f;
+        return frameH > 0 ? frameH : tex.height;
+    }
+
+    // Where this prop's own rect sits inside the TownLayout, given its slot's x.
+    public Vector2 EditorExpectedPosition(float slotX)
+    {
+        float fh = SourceFrameHeight();
+        float sinkPx = fh > 0f ? bottomPadding * height * SizeScale / fh : 0f;
+        return new Vector2(slotX + offset * SizeScale, (air + lift + yOffset) * SizeScale - sinkPx);
+    }
+
+    // The prop was dragged in the Scene view: turn the move into offset / yOffset.
+    public void EditorSyncFromPosition(float slotX)
+    {
+        var d = ((RectTransform)transform).anchoredPosition - EditorExpectedPosition(slotX);
+        if (d.sqrMagnitude < 0.25f) return;
+        UnityEditor.Undo.RecordObject(this, "Move building");
+        offset += d.x / SizeScale;
+        yOffset += d.y / SizeScale;
     }
 
     public void RefreshPreview()
@@ -101,7 +146,7 @@ public class BuildingProp : MonoBehaviour
         rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
         rt.pivot = new Vector2(0.5f, 0f);
         rt.sizeDelta = size;
-        rt.anchoredPosition = new Vector2(offset, air + lift) * SizeScale;
+        rt.anchoredPosition = Vector2.zero; // the root rect carries the position
         var raw = go.GetComponent<UnityEngine.UI.RawImage>();
         raw.texture = tex;
         raw.raycastTarget = false;
@@ -127,6 +172,7 @@ public class BuildingProp : MonoBehaviour
             float aspect = cut[0].rect.width / cut[0].rect.height;
             float h = height * SizeScale;
             rt.sizeDelta = new Vector2(h * aspect, h);
+            sink = bottomPadding * h / cut[0].rect.height;
         }
 
         OnSetup();
@@ -148,7 +194,7 @@ public class BuildingProp : MonoBehaviour
         float flip = 1f;
         Move(dt, ref shift, ref flip);
 
-        rt.anchoredPosition = new Vector2(slotScreenX + offset * SizeScale + shift.x, (air + lift) * SizeScale + shift.y);
+        rt.anchoredPosition = new Vector2(slotScreenX + offset * SizeScale + shift.x, (air + lift + yOffset) * SizeScale - sink + shift.y);
         rt.localScale = new Vector3(grow * flip, grow, 1f);
 
         if (sprites != null && sprites.Length > 1)
