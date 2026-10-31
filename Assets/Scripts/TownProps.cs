@@ -27,7 +27,6 @@ public class TownProps
     {
         new Def { Building = "o-inicio", File = "dog-stall", Height = 120f },
         new Def { Building = "venda-petiscos", Slot = "o-inicio", File = "stall-treats", Height = 21f, Offset = -26f, Lift = 39f }, // on the stall counter, left
-        new Def { Building = "cachorro-entregador", File = "cachorro-entregador", Cols = 5, Frames = 17, FrameW = 68, FrameH = 60, Height = 78f, Patrol = true },
         new Def { Building = "racao-caramelo", Slot = "o-inicio", File = "stall-feed", Height = 31f, Offset = 26f, Lift = 39f }, // same stall, right
         new Def { Building = "petshop", File = "petshop", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
         // hidden for now: new Def { Building = "iluminacao-caramelo", File = "street-lamp-on", Height = 190f },
@@ -43,6 +42,31 @@ public class TownProps
         // hidden for now: new Def { Building = "planta-lunar", File = "lunar-flower", Cols = 3, Frames = 9, FrameW = 246, FrameH = 256, Height = 180f },
         new Def { Building = "fabrica-de-pudim-lunar", File = "fabrica-pudim-lunar", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f },
     };
+
+    // The delivery dog is not tied to a slot: once bought he runs along the road like Caramelo, at his own pace.
+    const string RunnerBuilding = "cachorro-entregador";
+    static readonly Def RunnerDef = new Def { File = "cachorro-entregador", Cols = 5, Frames = 17, FrameW = 68, FrameH = 60, Height = 60f * 3f / SizeScale }; // same pixel scale as Caramelo (3 px per sprite px)
+    const float RunnerSpeed = 1000f;      // px/s at his average; Caramelo's top sprint is ~1050, so they trade places
+    const float RunnerStride = 44f;       // px covered per animation frame
+    const float RunnerSayCooldown = 15f;
+    const string RunnerLine = "E aí boss, só fazendo entrega";
+
+    class Runner
+    {
+        public RectTransform rt, bubble;
+        public Image img;
+        public CanvasGroup bubbleGroup;
+        public Sprite[] frames;
+        public double x;
+        public float clock, anim, wait, prevRel, sayTimer, cooldown;
+        public int enterSide = -1;
+        public int frame = -1;
+    }
+
+    Runner runner;
+    int runnerBuilding = -1;
+    const string CanBuildingKey = "vira-lata";
+    int canBuilding = -1;
 
     // An unowned building's slot stays empty with a "VENDA" sign in the middle. Factories form their own district.
     static readonly HashSet<string> Factories = new HashSet<string> { "faro-minerador", "fabrica-de-petiscos", "fabrica-de-racao", "fabrica-de-pudim-lunar" };
@@ -76,7 +100,7 @@ public class TownProps
         public int slot;
         public double x, half;
         public readonly Prop[] byDef = new Prop[Defs.Length];
-        public Prop sign;
+        public Prop sign, banner;   // banner: welcome board (pseudo slots past slotCount)
     }
 
     // Bonus trash cans: appear at random spots ahead of the dog, stay in the world and can be tapped for a reward.
@@ -116,6 +140,10 @@ public class TownProps
     readonly List<Inst> insts = new List<Inst>();
     readonly int slotCount;
 
+    // Welcome boards stand at the start of each district, as pseudo slots numbered after the real ones.
+    static readonly string[] BannerText = { "Bem-vindo à\nCidade Caramelo", "Bem-vindo à\nÁrea Industrial Caramelo" };
+    const float BannerWidth = 900f;
+
     // groundY is the top of the ground strip, in the parent's space (distance from its 40% height line).
     public TownProps(Transform parent, float groundY)
     {
@@ -139,6 +167,10 @@ public class TownProps
             defSlot[i] = slots[slot];
         }
 
+        runnerBuilding = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == RunnerBuilding);
+
+        canBuilding = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == CanBuildingKey);
+
         slotCount = slots.Count;
         slotOwned = new bool[slotCount];
 
@@ -146,8 +178,8 @@ public class TownProps
         // prop in the slot), and the gap between neighbouring edges is constant, so spacing never depends on size.
         var names = new string[slotCount];
         foreach (var kv in slots) names[kv.Value] = kv.Key;
-        slotX = new double[slotCount];
-        slotHalf = new double[slotCount];
+        slotX = new double[slotCount + 2];
+        slotHalf = new double[slotCount + 2];
         for (int i = 0; i < Defs.Length; i++)
         {
             var fr = Frames(Defs[i]);
@@ -156,21 +188,21 @@ public class TownProps
             slotHalf[defSlot[i]] = System.Math.Max(slotHalf[defSlot[i]], w * 0.5);
         }
 
-        double edge = StartX;
-        bool firstOfGroup = true;
-        for (int pass = 0; pass < 2; pass++)
-        {
-            bool factoryPass = pass == 1;
-            for (int sl = 0; sl < slotCount; sl++)
-            {
-                if (Factories.Contains(names[sl]) != factoryPass) continue;
-                if (!firstOfGroup || (factoryPass && edge > StartX)) edge += factoryPass && firstOfGroup ? FactoryGap : SlotGap;
-                firstOfGroup = false;
-                slotX[sl] = edge + slotHalf[sl];
-                edge += slotHalf[sl] * 2;
-            }
+        slotHalf[slotCount] = slotHalf[slotCount + 1] = BannerWidth * 0.5;
 
-            firstOfGroup = true;
+        // Each district starts with its welcome board, then its slots.
+        var order = new List<int> { slotCount };
+        for (int sl = 0; sl < slotCount; sl++) if (!Factories.Contains(names[sl])) order.Add(sl);
+        order.Add(slotCount + 1);
+        for (int sl = 0; sl < slotCount; sl++) if (Factories.Contains(names[sl])) order.Add(sl);
+
+        double edge = StartX;
+        for (int k = 0; k < order.Count; k++)
+        {
+            int idx = order[k];
+            if (k > 0) edge += idx == slotCount + 1 ? FactoryGap : SlotGap;
+            slotX[idx] = edge + slotHalf[idx];
+            edge += slotHalf[idx] * 2;
         }
 
         lapPx = MapMeters * PxPerMeter;
@@ -188,7 +220,7 @@ public class TownProps
         float panelW = layer.rect.width;
         if (panelW <= 1f) return; // layout not ready yet
 
-        TickCans(dt, worldX, panelW);
+        TickCans(dt, worldX, panelW, canBuilding >= 0 && owned[canBuilding] > 0);
 
         releaseTimer -= dt;
         if (releaseTimer <= 0f)
@@ -214,6 +246,8 @@ public class TownProps
                 insts.RemoveAt(k);
                 continue;
             }
+
+            if (inst.slot >= slotCount) continue; // welcome board: nothing to keep in line
 
             float sx = (float)(inst.x - worldX);
             bool onScreen = sx + inst.half > -100f && sx - inst.half < panelW + 100f;
@@ -252,7 +286,7 @@ public class TownProps
         long lap1 = (long)System.Math.Floor(limit / lapPx);
         for (long lap = lap0; lap <= lap1; lap++)
         {
-            for (int sl = 0; sl < slotCount; sl++)
+            for (int sl = 0; sl < slotX.Length; sl++)
             {
                 double x = lap * lapPx + slotX[sl];
                 if (x + slotHalf[sl] < from || x - slotHalf[sl] >= limit || HasInst(sl, x)) continue;
@@ -269,7 +303,142 @@ public class TownProps
             for (int i = 0; i < Defs.Length; i++)
                 if (inst.byDef[i] != null) Place(inst.byDef[i], baseX, dt);
             if (inst.sign != null) Place(inst.sign, baseX, dt);
+            if (inst.banner != null) Place(inst.banner, baseX, dt);
         }
+
+        TickRunner(dt, worldX, panelW, owned);
+    }
+
+    void TickRunner(float dt, double worldX, float panelW, int[] owned)
+    {
+        bool has = runnerBuilding >= 0 && owned[runnerBuilding] > 0;
+        if (!has)
+        {
+            if (runner != null)
+            {
+                Object.Destroy(runner.rt.gameObject);
+                Object.Destroy(runner.bubble.gameObject);
+                runner = null;
+            }
+
+            return;
+        }
+
+        float limit = panelW * 0.5f + 450f; // distance from Caramelo at which he is surely off screen
+        if (runner == null)
+        {
+            var frames = Frames(RunnerDef);
+            if (frames == null) return;
+
+            var go = new GameObject("delivery-dog", typeof(RectTransform));
+            var rt = go.GetComponent<RectTransform>();
+            rt.SetParent(layer, false);
+            rt.anchorMin = rt.anchorMax = Vector2.zero;
+            rt.pivot = new Vector2(0.5f, 0f);
+            var img = go.AddComponent<Image>();
+            img.raycastTarget = false;
+            img.sprite = frames[0];
+            float h = RunnerDef.Height * SizeScale;
+            rt.sizeDelta = new Vector2(h * frames[0].rect.width / frames[0].rect.height, h);
+
+            runner = new Runner { rt = rt, img = img, frames = frames, x = worldX - limit, prevRel = -limit, cooldown = 4f };
+            BuildBubble(runner);
+        }
+
+        var r = runner;
+        r.clock += dt;
+        r.cooldown -= dt;
+
+        if (r.wait > 0f)
+        {
+            r.wait -= dt;
+            if (r.wait > 0f) return;
+            r.x = worldX + r.enterSide * limit;
+            r.prevRel = r.enterSide * limit;
+            r.rt.gameObject.SetActive(true);
+        }
+
+        // His pace swings slowly between slower and faster than Caramelo's top speed.
+        float speed = RunnerSpeed * (0.95f + 0.2f * Mathf.Sin(r.clock * 2f * Mathf.PI / 28f));
+        r.x += speed * dt;
+        float rel = (float)(r.x - worldX);
+
+        if (Mathf.Abs(rel) > limit)
+        {
+            // Out of sight: rest a while, then come back from the other side.
+            r.wait = Random.Range(6f, 14f);
+            r.enterSide = rel > 0f ? -1 : 1;
+            r.rt.gameObject.SetActive(false);
+            r.sayTimer = 0f;
+            r.bubble.gameObject.SetActive(false);
+            return;
+        }
+
+        // Crossing Caramelo (he stands at the middle of the panel): say hi.
+        if (r.prevRel * rel < 0f && r.cooldown <= 0f)
+        {
+            r.sayTimer = 3.2f;
+            r.cooldown = RunnerSayCooldown;
+        }
+
+        r.prevRel = rel;
+
+        r.anim += dt * speed / RunnerStride;
+        int f = (int)r.anim % r.frames.Length;
+        if (f != r.frame)
+        {
+            r.frame = f;
+            r.img.sprite = r.frames[f];
+        }
+
+        float screenX = panelW * 0.5f + rel;
+        r.rt.anchoredPosition = new Vector2(screenX, 0f);
+        r.rt.SetAsLastSibling();
+
+        if (r.sayTimer > 0f)
+        {
+            r.sayTimer -= dt;
+            r.bubble.gameObject.SetActive(r.sayTimer > 0f);
+            r.bubbleGroup.alpha = Mathf.Clamp01(r.sayTimer / 0.5f);
+            r.bubble.anchoredPosition = new Vector2(screenX, r.rt.sizeDelta.y + 10f);
+            r.bubble.SetAsLastSibling();
+        }
+    }
+
+    static void BuildBubble(Runner r)
+    {
+        var go = new GameObject("delivery-bubble", typeof(RectTransform), typeof(CanvasGroup));
+        var rt = go.GetComponent<RectTransform>();
+        rt.SetParent(r.rt.parent, false);
+        rt.anchorMin = rt.anchorMax = Vector2.zero;
+        rt.pivot = new Vector2(0.5f, 0f);
+        rt.sizeDelta = new Vector2(780f, 130f);
+
+        var body = Piece(rt, "Body", new Vector2(0.5f, 1f), new Vector2(780f, 110f), Vector2.zero, new Color(0.15f, 0.1f, 0.06f));
+        var inner = Piece(body.rectTransform, "Inner", new Vector2(0.5f, 0.5f), new Vector2(768f, 98f), Vector2.zero, Color.white);
+        var tail = Piece(rt, "Tail", new Vector2(0.5f, 0f), new Vector2(34f, 34f), new Vector2(0f, 4f), Color.white);
+        tail.rectTransform.localRotation = Quaternion.Euler(0f, 0f, 45f);
+        tail.transform.SetAsFirstSibling();
+
+        var tgo = new GameObject("Text", typeof(RectTransform));
+        var trt = tgo.GetComponent<RectTransform>();
+        trt.SetParent(inner.rectTransform, false);
+        trt.anchorMin = Vector2.zero;
+        trt.anchorMax = Vector2.one;
+        trt.offsetMin = trt.offsetMax = Vector2.zero;
+        var text = tgo.AddComponent<TMPro.TextMeshProUGUI>();
+        text.text = Loc.T(RunnerLine);
+        text.fontSize = 50f;
+        text.fontStyle = TMPro.FontStyles.Bold;
+        text.alignment = TMPro.TextAlignmentOptions.Center;
+        text.color = new Color(0.15f, 0.1f, 0.06f);
+        text.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
+        text.raycastTarget = false;
+
+        r.bubble = rt;
+        r.bubbleGroup = go.GetComponent<CanvasGroup>();
+        r.bubbleGroup.blocksRaycasts = false;
+        go.SetActive(false);
     }
 
     void Explode(double x, float canH)
@@ -293,8 +462,15 @@ public class TownProps
 
     float boomY;
 
-    void TickCans(float dt, double worldX, float panelW)
+    void TickCans(float dt, double worldX, float panelW, bool unlocked)
     {
+        if (!unlocked && cans.Count > 0)
+        {
+            // Bonus cans only exist once "Amigo Vira-lata" is bought (a rebirth takes them away again).
+            foreach (var c in cans) Object.Destroy(c.rt.gameObject);
+            cans.Clear();
+        }
+
         for (int i = booms.Count - 1; i >= 0; i--)
         {
             var b = booms[i];
@@ -327,6 +503,12 @@ public class TownProps
             float grow = c.pop >= 1f ? 1f : 1f + 2.70158f * t * t * t + 1.70158f * t * t;
             c.rt.anchoredPosition = new Vector2((float)(c.x - worldX), 0f);
             c.rt.localScale = new Vector3(grow, grow, 1f);
+        }
+
+        if (!unlocked)
+        {
+            canTimer = Mathf.Max(canTimer, 8f); // starts counting once the building is bought
+            return;
         }
 
         canTimer -= dt;
@@ -375,6 +557,13 @@ public class TownProps
     void AddInst(int slot, double x, bool popIn, int[] owned)
     {
         var inst = new Inst { slot = slot, x = x, half = slotHalf[slot] };
+        if (slot >= slotCount)
+        {
+            inst.banner = SpawnBanner(BannerText[slot - slotCount]);
+            insts.Add(inst);
+            return;
+        }
+
         for (int i = 0; i < Defs.Length; i++)
             if (defSlot[i] == slot && Has(i, owned)) inst.byDef[i] = Spawn(Defs[i], popIn);
         if (!slotOwned[slot]) inst.sign = SpawnSign(popIn);
@@ -388,6 +577,7 @@ public class TownProps
     void ReleaseUnused()
     {
         var used = new HashSet<string> { "trash-can", "explosion" };
+        if (runner != null) used.Add(RunnerDef.File);
         foreach (var inst in insts)
             foreach (var p in inst.byDef)
                 if (p != null) used.Add(p.def.File);
@@ -413,6 +603,42 @@ public class TownProps
         foreach (var p in inst.byDef)
             if (p != null) Object.Destroy(p.rt.gameObject);
         if (inst.sign != null) Object.Destroy(inst.sign.rt.gameObject);
+        if (inst.banner != null) Object.Destroy(inst.banner.rt.gameObject);
+    }
+
+    // A welcome board on two wooden posts, drawn from uGUI pieces.
+    Prop SpawnBanner(string message)
+    {
+        var go = new GameObject("welcome-board", typeof(RectTransform));
+        var rt = go.GetComponent<RectTransform>();
+        rt.SetParent(layer, false);
+        rt.anchorMin = rt.anchorMax = Vector2.zero;
+        rt.pivot = new Vector2(0.5f, 0f);
+        rt.sizeDelta = new Vector2(BannerWidth, 400f);
+
+        var wood = new Color(0.45f, 0.27f, 0.12f);
+        var cream = new Color(0.97f, 0.93f, 0.82f);
+        Piece(rt, "PostL", new Vector2(0.14f, 0f), new Vector2(40f, 220f), Vector2.zero, wood);
+        Piece(rt, "PostR", new Vector2(0.86f, 0f), new Vector2(40f, 220f), Vector2.zero, wood);
+        var board = Piece(rt, "Board", new Vector2(0.5f, 1f), new Vector2(BannerWidth, 230f), Vector2.zero, wood);
+        var inner = Piece(board.rectTransform, "Inner", new Vector2(0.5f, 0.5f), new Vector2(BannerWidth - 28f, 202f), Vector2.zero, cream);
+
+        var tgo = new GameObject("Text", typeof(RectTransform));
+        var trt = tgo.GetComponent<RectTransform>();
+        trt.SetParent(inner.rectTransform, false);
+        trt.anchorMin = Vector2.zero;
+        trt.anchorMax = Vector2.one;
+        trt.offsetMin = trt.offsetMax = Vector2.zero;
+        var text = tgo.AddComponent<TMPro.TextMeshProUGUI>();
+        text.text = Loc.T(message);
+        text.fontSize = 64f;
+        text.fontStyle = TMPro.FontStyles.Bold;
+        text.alignment = TMPro.TextAlignmentOptions.Center;
+        text.color = new Color(0.45f, 0.27f, 0.12f);
+        text.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
+        text.raycastTarget = false;
+
+        return new Prop { def = SignDef, rt = rt, frames = new Sprite[1], pop = 1f };
     }
 
     // A wooden post with a red "VENDA" board, drawn from uGUI pieces instead of a sheet.
