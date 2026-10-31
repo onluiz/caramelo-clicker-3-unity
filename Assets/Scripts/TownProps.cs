@@ -30,8 +30,8 @@ public class TownProps
         new Def { Building = "cachorro-entregador", File = "cachorro-entregador", Cols = 5, Frames = 17, FrameW = 68, FrameH = 60, Height = 78f, Patrol = true },
         new Def { Building = "racao-caramelo", Slot = "o-inicio", File = "stall-feed", Height = 31f, Offset = 26f, Lift = 39f }, // same stall, right
         new Def { Building = "petshop", File = "petshop", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
-        new Def { Building = "iluminacao-caramelo", File = "street-lamp-on", Height = 190f },
-        new Def { Building = "drone-entregas", File = "red-drone", Cols = 5, Frames = 17, FrameW = 357, FrameH = 282, Height = 100f, Air = 190f, Bob = true },
+        // hidden for now: new Def { Building = "iluminacao-caramelo", File = "street-lamp-on", Height = 190f },
+        // hidden for now: new Def { Building = "drone-entregas", File = "red-drone", Cols = 5, Frames = 17, FrameW = 357, FrameH = 282, Height = 100f, Air = 190f, Bob = true },
         new Def { Building = "faro-minerador", File = "mina-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
         new Def { Building = "fabrica-de-petiscos", File = "fabrica-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f },
         new Def { Building = "fabrica-de-racao", File = "fabrica-racao", Cols = 3, Frames = 8, FrameW = 256, FrameH = 256, Height = 210f },
@@ -39,21 +39,23 @@ public class TownProps
         new Def { Building = "templo-caramelo", File = "templo-caramelo", Height = 185f },
         new Def { Building = "banco-canino", File = "banco-canino", Height = 170f },
         new Def { Building = "veterinaria-caramelo", File = "veterinaria-caramelo", Height = 190f },
-        new Def { Building = "base-lunar-caramelo", File = "base-lunar-caramelo", Height = 105f }, // wide: ~900 px on screen, fits the Ahead margin
-        new Def { Building = "planta-lunar", File = "lunar-flower", Cols = 3, Frames = 9, FrameW = 246, FrameH = 256, Height = 180f },
+        new Def { Building = "base-lunar-caramelo", File = "base-lunar-caramelo", Height = 200f }, // wide: ~1710 px on screen, fits the Ahead margin
+        // hidden for now: new Def { Building = "planta-lunar", File = "lunar-flower", Cols = 3, Frames = 9, FrameW = 246, FrameH = 256, Height = 180f },
         new Def { Building = "fabrica-de-pudim-lunar", File = "fabrica-pudim-lunar", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f },
     };
 
-    // A "for sale" sign stands where this building will be, until it is bought.
-    const string SaleBuilding = "petshop";
-    static readonly Def SignDef = new Def { Building = SaleBuilding, File = "sale-sign" };
+    // An unowned building's slot stays empty with a "VENDA" sign in the middle. Factories form their own district.
+    static readonly HashSet<string> Factories = new HashSet<string> { "faro-minerador", "fabrica-de-petiscos", "fabrica-de-racao", "fabrica-de-pudim-lunar" };
+    static readonly Def SignDef = new Def { Building = "", File = "sale-sign" };
 
     const float SizeScale = 3.7f;    // all prop heights are multiplied by this, so buildings tower over the dog as he runs past
     const float PxPerMeter = 100f;
-    const float SlotSpacing = 540f;   // world px between building slots
-    const float LapPx = 100f * PxPerMeter; // the road is a loop of 100 "meters": the town, then open country, then the town again
-    const float Ahead = 450f;         // town is built this far past the right edge (a prop reaches at most ~425 px to either side of its slot)
-    const float Behind = 500f;        // and destroyed once its slot is this far past the left edge
+    const float SlotGap = 4f * PxPerMeter;           // empty road between the edges of two neighbouring slots, whatever their sizes
+    const float FactoryGap = 20f * PxPerMeter;       // same, between the last town slot and the first factory
+    const float StartX = 9f * PxPerMeter;            // world x of the first slot's left edge
+    const float OpenCountry = 30f * PxPerMeter;      // empty road after the last slot before the loop starts again
+    const float EdgeMargin = 150f;    // a slot is built once its left edge is this far past the screen's right edge, and destroyed once its right edge is this far past the left edge
+    const float Behind = 950f;        // bonus cans are destroyed this far past the left edge
     const float PopSeconds = 0.45f;
     const float PatrolSpeed = 40f, PatrolRange = 110f;
 
@@ -72,7 +74,7 @@ public class TownProps
     class Inst
     {
         public int slot;
-        public double x;
+        public double x, half;
         public readonly Prop[] byDef = new Prop[Defs.Length];
         public Prop sign;
     }
@@ -108,15 +110,11 @@ public class TownProps
     readonly RectTransform layer;
     readonly int[] buildingOf = new int[Defs.Length];
     readonly int[] defSlot = new int[Defs.Length];
-    readonly bool[] slotOwned, slotWasOwned;
+    readonly bool[] slotOwned;
+    readonly double[] slotX, slotHalf; // fixed world x of each slot centre within a lap, and half its width   // fixed world x of each slot within a lap
+    readonly double lapPx;
     readonly List<Inst> insts = new List<Inst>();
-    readonly Queue<int> queue = new Queue<int>(); // slots bought mid-run: built before the regular cycle goes on
     readonly int slotCount;
-    readonly int saleSlot;
-    int cursor = -1;
-    double nextSpawnX;  // where the next slot of the current lap goes
-    double lapStart;    // world x of the current lap's first slot
-    bool started;
 
     // groundY is the top of the ground strip, in the parent's space (distance from its 40% height line).
     public TownProps(Transform parent, float groundY)
@@ -142,9 +140,40 @@ public class TownProps
         }
 
         slotCount = slots.Count;
-        saleSlot = slots.TryGetValue(SaleBuilding, out int ss) ? ss : -1;
         slotOwned = new bool[slotCount];
-        slotWasOwned = new bool[slotCount];
+
+        // Fixed layout: town slots in shop order, then the factories. Slot widths come from the art (the widest
+        // prop in the slot), and the gap between neighbouring edges is constant, so spacing never depends on size.
+        var names = new string[slotCount];
+        foreach (var kv in slots) names[kv.Value] = kv.Key;
+        slotX = new double[slotCount];
+        slotHalf = new double[slotCount];
+        for (int i = 0; i < Defs.Length; i++)
+        {
+            var fr = Frames(Defs[i]);
+            float h = Defs[i].Height * SizeScale;
+            float w = fr != null ? h * fr[0].rect.width / fr[0].rect.height : h;
+            slotHalf[defSlot[i]] = System.Math.Max(slotHalf[defSlot[i]], w * 0.5);
+        }
+
+        double edge = StartX;
+        bool firstOfGroup = true;
+        for (int pass = 0; pass < 2; pass++)
+        {
+            bool factoryPass = pass == 1;
+            for (int sl = 0; sl < slotCount; sl++)
+            {
+                if (Factories.Contains(names[sl]) != factoryPass) continue;
+                if (!firstOfGroup || (factoryPass && edge > StartX)) edge += factoryPass && firstOfGroup ? FactoryGap : SlotGap;
+                firstOfGroup = false;
+                slotX[sl] = edge + slotHalf[sl];
+                edge += slotHalf[sl] * 2;
+            }
+
+            firstOfGroup = true;
+        }
+
+        lapPx = edge + OpenCountry;
     }
 
     bool Has(int def, int[] owned)
@@ -160,30 +189,18 @@ public class TownProps
 
         TickCans(dt, worldX, panelW);
 
-        bool initial = !started;
-        started = true;
-        if (initial) nextSpawnX = lapStart = worldX - Behind;
-
         System.Array.Clear(slotOwned, 0, slotCount);
         for (int i = 0; i < Defs.Length; i++)
             if (Has(i, owned)) slotOwned[defSlot[i]] = true;
 
-        int ownedCount = 0;
-        for (int sl = 0; sl < slotCount; sl++)
-        {
-            if (slotOwned[sl]) ownedCount++;
-            if (slotOwned[sl] && !slotWasOwned[sl] && !initial && !HasInst(sl)) queue.Enqueue(sl);
-            slotWasOwned[sl] = slotOwned[sl];
-        }
-
         bool dirty = false;
 
         // Drop what the dog left behind, and keep the stretches still in front of him in line with what is owned
-        // (goods bought later land on a stall that is already built; a rebirth removes everything).
+        // (a purchase pops the building up in its slot; a rebirth puts the sign back).
         for (int k = insts.Count - 1; k >= 0; k--)
         {
             var inst = insts[k];
-            if (inst.x < worldX - Behind)
+            if (inst.x + inst.half < worldX - EdgeMargin)
             {
                 DestroyInst(inst);
                 insts.RemoveAt(k);
@@ -191,8 +208,7 @@ public class TownProps
             }
 
             float sx = (float)(inst.x - worldX);
-            bool onScreen = sx > -200f && sx < panelW + 200f;
-            bool any = false;
+            bool onScreen = sx + inst.half > -100f && sx - inst.half < panelW + 100f;
             for (int i = 0; i < Defs.Length; i++)
             {
                 if (defSlot[i] != inst.slot) continue;
@@ -207,15 +223,12 @@ public class TownProps
                     Object.Destroy(inst.byDef[i].rt.gameObject);
                     inst.byDef[i] = null;
                 }
-
-                any |= inst.byDef[i] != null;
             }
 
-            // The sign stands while the slot is unowned (and the town exists at all); it goes away once the building is bought.
-            bool wantSign = inst.slot == saleSlot && !slotOwned[inst.slot] && ownedCount > 0;
+            bool wantSign = !slotOwned[inst.slot];
             if (wantSign && inst.sign == null)
             {
-                inst.sign = SpawnSign(false);
+                inst.sign = SpawnSign(onScreen);
                 dirty = true;
             }
             else if (!wantSign && inst.sign != null)
@@ -223,58 +236,19 @@ public class TownProps
                 Object.Destroy(inst.sign.rt.gameObject);
                 inst.sign = null;
             }
-
-            if (!any && inst.sign == null) insts.RemoveAt(k);
         }
 
-        // Build ahead of the dog, so the town is there before he is.
-        double limit = worldX + panelW + Ahead;
-        if (ownedCount == 0)
+        // Build every slot that falls inside the window, so the town is there before the dog is.
+        double from = worldX - EdgeMargin, limit = worldX + panelW + EdgeMargin;
+        long lap0 = (long)System.Math.Floor((from - lapPx) / lapPx);
+        long lap1 = (long)System.Math.Floor(limit / lapPx);
+        for (long lap = lap0; lap <= lap1; lap++)
         {
-            queue.Clear();
-            cursor = -1;
-            nextSpawnX = lapStart = worldX - Behind;
-        }
-        else
-        {
-            // Slots bought this run go up right away: on screen with a pop when nothing is around, else just past the right edge.
-            while (queue.Count > 0)
+            for (int sl = 0; sl < slotCount; sl++)
             {
-                int q = queue.Dequeue();
-                if (!slotOwned[q] || HasInst(q)) continue;
-
-                double x = limit;
-                bool popIn = false;
-                if (insts.Count == 0)
-                {
-                    x = worldX + 0.78f * panelW;
-                    popIn = true;
-                    lapStart = x;
-                    nextSpawnX = x + SlotSpacing;
-                    cursor = q;
-                }
-                else
-                {
-                    while (NearInst(x)) x += SlotSpacing;
-                }
-
-                AddInst(q, x, popIn, owned);
-                dirty = true;
-            }
-
-            // The rest of the lap, in shop order; after the last slot comes open country until the next lap starts.
-            while (true)
-            {
-                int slot = PeekSlot(out bool wrapped);
-                if (slot < 0) break;
-
-                double x = wrapped ? lapStart + LapPx : nextSpawnX;
-                if (x >= limit) break;
-
-                if (wrapped) lapStart = x;
-                cursor = slot;
-                AddInst(slot, x, false, owned);
-                nextSpawnX = x + SlotSpacing;
+                double x = lap * lapPx + slotX[sl];
+                if (x + slotHalf[sl] < from || x - slotHalf[sl] >= limit || HasInst(sl, x)) continue;
+                AddInst(sl, x, false, owned);
                 dirty = true;
             }
         }
@@ -383,44 +357,19 @@ public class TownProps
         rt.SetAsLastSibling();
     }
 
-    bool HasInst(int slot)
+    bool HasInst(int slot, double x)
     {
         foreach (var inst in insts)
-            if (inst.slot == slot) return true;
+            if (inst.slot == slot && System.Math.Abs(inst.x - x) < 1.0) return true;
         return false;
-    }
-
-    bool NearInst(double x)
-    {
-        foreach (var inst in insts)
-            if (System.Math.Abs(inst.x - x) < SlotSpacing) return true;
-        return false;
-    }
-
-    // The next owned slot after the cursor in shop order (skipping ones already standing); wrapped = it starts a new lap.
-    int PeekSlot(out bool wrapped)
-    {
-        wrapped = false;
-        for (int n = 1; n <= slotCount; n++)
-        {
-            int idx = cursor + n;
-            int sl = idx % slotCount;
-            if ((slotOwned[sl] || sl == saleSlot) && !HasInst(sl))
-            {
-                wrapped = idx >= slotCount;
-                return sl;
-            }
-        }
-
-        return -1;
     }
 
     void AddInst(int slot, double x, bool popIn, int[] owned)
     {
-        var inst = new Inst { slot = slot, x = x };
+        var inst = new Inst { slot = slot, x = x, half = slotHalf[slot] };
         for (int i = 0; i < Defs.Length; i++)
             if (defSlot[i] == slot && Has(i, owned)) inst.byDef[i] = Spawn(Defs[i], popIn);
-        if (slot == saleSlot && !slotOwned[slot]) inst.sign = SpawnSign(popIn);
+        if (!slotOwned[slot]) inst.sign = SpawnSign(popIn);
         insts.Add(inst);
     }
 
