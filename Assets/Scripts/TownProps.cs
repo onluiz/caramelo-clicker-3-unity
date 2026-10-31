@@ -51,9 +51,9 @@ public class TownProps
     const float SizeScale = 3.7f;    // all prop heights are multiplied by this, so buildings tower over the dog as he runs past
     const float PxPerMeter = 100f;
     const float SlotGap = 4f * PxPerMeter;           // empty road between the edges of two neighbouring slots, whatever their sizes
-    const float FactoryGap = 20f * PxPerMeter;       // same, between the last town slot and the first factory
+    const float FactoryGap = 100f * PxPerMeter;       // same, between the last town slot and the first factory
     const float StartX = 9f * PxPerMeter;            // world x of the first slot's left edge
-    const float OpenCountry = 30f * PxPerMeter;      // empty road after the last slot before the loop starts again
+    const float MapMeters = 1000f;                   // the road is a loop this long; whatever the layout leaves over is open country
     const float EdgeMargin = 150f;    // a slot is built once its left edge is this far past the screen's right edge, and destroyed once its right edge is this far past the left edge
     const float Behind = 950f;        // bonus cans are destroyed this far past the left edge
     const float PopSeconds = 0.45f;
@@ -173,7 +173,8 @@ public class TownProps
             firstOfGroup = true;
         }
 
-        lapPx = edge + OpenCountry;
+        lapPx = MapMeters * PxPerMeter;
+        if (edge > lapPx) Debug.LogError("TownProps: layout (" + edge / PxPerMeter + " m) is longer than the map (" + MapMeters + " m)");
     }
 
     bool Has(int def, int[] owned)
@@ -188,6 +189,13 @@ public class TownProps
         if (panelW <= 1f) return; // layout not ready yet
 
         TickCans(dt, worldX, panelW);
+
+        releaseTimer -= dt;
+        if (releaseTimer <= 0f)
+        {
+            releaseTimer = 3f;
+            ReleaseUnused();
+        }
 
         System.Array.Clear(slotOwned, 0, slotCount);
         for (int i = 0; i < Defs.Length; i++)
@@ -371,6 +379,33 @@ public class TownProps
             if (defSlot[i] == slot && Has(i, owned)) inst.byDef[i] = Spawn(Defs[i], popIn);
         if (!slotOwned[slot]) inst.sign = SpawnSign(popIn);
         insts.Add(inst);
+    }
+
+    float releaseTimer;
+
+    // Frees the sprites and textures of every prop that has no instance alive anymore, so only what is near the
+    // dog stays in memory (they are loaded again on demand by Frames).
+    void ReleaseUnused()
+    {
+        var used = new HashSet<string> { "trash-can", "explosion" };
+        foreach (var inst in insts)
+            foreach (var p in inst.byDef)
+                if (p != null) used.Add(p.def.File);
+
+        var drop = new List<string>();
+        foreach (var kv in Cache)
+            if (!used.Contains(kv.Key)) drop.Add(kv.Key);
+
+        foreach (var key in drop)
+        {
+            var frames = Cache[key];
+            Cache.Remove(key);
+            if (frames == null || frames.Length == 0) continue;
+            var tex = frames[0] != null ? frames[0].texture : null;
+            foreach (var f in frames)
+                if (f != null) Object.Destroy(f);
+            if (tex != null) Resources.UnloadAsset(tex);
+        }
     }
 
     static void DestroyInst(Inst inst)
