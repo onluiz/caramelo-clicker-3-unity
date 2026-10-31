@@ -62,7 +62,7 @@ public class DogRig
     bool standing;
     float frameTime;
     float fps = SeatedFps;
-    float clickEnergy, punch;
+    float clickEnergy;
     float movingBlend;
     float effortSmooth;
     int gait;
@@ -151,7 +151,6 @@ public class DogRig
     public void Poke()
     {
         clickEnergy += 1f;
-        punch = 1f;
     }
 
     public void Tick(float dt, double cps)
@@ -225,10 +224,7 @@ public class DogRig
         movingBlend = Mathf.MoveTowards(movingBlend, IsMoving(clip) ? 1f : 0f, dt * 3f);
         StrideSpeed = IsMoving(clip) ? fps * StridePixelsPerFrame : 0f;
 
-        // Click feedback: a small pop and hop.
-        punch = Mathf.Max(0f, punch - dt * 5f);
-        rootRt.localScale = Vector3.one * (1f + 0.05f * punch);
-        spriteRt.anchoredPosition = new Vector2(0f, GroundY + FeetBelowCentre + 18f * punch);
+        spriteRt.anchoredPosition = new Vector2(0f, GroundY + FeetBelowCentre);
 
         UpdateSpeedLines(dt, gait == 2 && standing ? Mathf.InverseLerp(0f, 0.5f, t + 0.3f) * movingBlend : 0f);
     }

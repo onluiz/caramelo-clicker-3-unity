@@ -576,8 +576,6 @@ public class GameUI
         ossosRow.name.color = InfoText;
         ossosRow.desc.color = InfoText;
         ossosRow.cost.color = InfoText;
-        ossosRow.go.GetComponent<LayoutElement>().preferredHeight = 120f;
-        ossosRow.go.GetComponent<LayoutElement>().minHeight = 120f;
 
         // The ascend action is the important one: own icon, bigger title, pulses when ready.
         ascendRow = MakeRow(ceuContent.transform, "Ascend", IconLoader.For("ceu-ascender", GameDefs.PawIcon));
@@ -728,6 +726,10 @@ public class GameUI
         Box(row.desc.rectTransform, Vector2.zero, Vector2.one, new Vector2(120f, 40f), new Vector2(-112f, -46f));
 
         row.cost = NewText(row.go.transform, "Cost", "", 28, Good, TextAlignmentOptions.MidlineLeft, FontStyles.Bold);
+        // The cost line can carry an effect suffix: shrink to fit instead of cutting it off.
+        row.cost.enableAutoSizing = true;
+        row.cost.fontSizeMin = 16f;
+        row.cost.fontSizeMax = 28f;
         Box(row.cost.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(120f, 4f), new Vector2(-112f, 40f));
 
         row.count = NewText(row.go.transform, "Count", "", 62, new Color(Ink.r, Ink.g, Ink.b, 0.4f),
