@@ -25,8 +25,6 @@ public class TownProps
     // In shop order: the slots repeat in this order along the road, so the town fills up as the game progresses.
     static readonly Def[] Defs =
     {
-        new Def { Building = "vira-lata", File = "trash-can", Height = 40f, Offset = 90f },
-        new Def { Building = "vira-lata", File = "tiny_dog", Height = 50f, Offset = -70f },
         new Def { Building = "o-inicio", File = "dog-stall", Height = 120f },
         new Def { Building = "venda-petiscos", Slot = "o-inicio", File = "stall-treats", Height = 21f, Offset = -26f, Lift = 39f }, // on the stall counter, left
         new Def { Building = "cachorro-entregador", File = "cachorro-entregador", Cols = 5, Frames = 17, FrameW = 68, FrameH = 60, Height = 78f, Patrol = true },
@@ -51,9 +49,9 @@ public class TownProps
     static readonly Def SignDef = new Def { Building = SaleBuilding, File = "sale-sign" };
 
     const float SizeScale = 3.7f;    // all prop heights are multiplied by this, so buildings tower over the dog as he runs past
-    const float PxPerMeter = 10f;
+    const float PxPerMeter = 100f;
     const float SlotSpacing = 540f;   // world px between building slots
-    const float LapPx = 2000f * PxPerMeter; // the road is a loop of 2000 "meters": the town, then open country, then the town again
+    const float LapPx = 100f * PxPerMeter; // the road is a loop of 100 "meters": the town, then open country, then the town again
     const float Ahead = 450f;         // town is built this far past the right edge (a prop reaches at most ~425 px to either side of its slot)
     const float Behind = 500f;        // and destroyed once its slot is this far past the left edge
     const float PopSeconds = 0.45f;
@@ -78,6 +76,32 @@ public class TownProps
         public readonly Prop[] byDef = new Prop[Defs.Length];
         public Prop sign;
     }
+
+    // Bonus trash cans: appear at random spots ahead of the dog, stay in the world and can be tapped for a reward.
+    class Can
+    {
+        public double x;
+        public RectTransform rt;
+        public float phase, pop;
+    }
+
+    const float CanHeight = 75f;
+    const int MaxCans = 1;
+    readonly List<Can> cans = new List<Can>();
+    float canTimer = Random.Range(8f, 20f);
+    public System.Action<Vector2> OnCanClicked; // screen position of the can, for the floating reward
+
+    class Boom
+    {
+        public double x;
+        public RectTransform rt;
+        public Image img;
+        public float t;
+    }
+
+    static readonly Def BoomDef = new Def { File = "explosion", Cols = 4, Frames = 13, FrameW = 64, FrameH = 64 };
+    const float BoomSize = 420f, BoomFps = 18f;
+    readonly List<Boom> booms = new List<Boom>();
 
     static readonly Dictionary<string, Sprite[]> Cache = new Dictionary<string, Sprite[]>();
 
@@ -133,6 +157,8 @@ public class TownProps
     {
         float panelW = layer.rect.width;
         if (panelW <= 1f) return; // layout not ready yet
+
+        TickCans(dt, worldX, panelW);
 
         bool initial = !started;
         started = true;
@@ -264,6 +290,99 @@ public class TownProps
         }
     }
 
+    void Explode(double x, float canH)
+    {
+        var frames = Frames(BoomDef);
+        if (frames == null) return;
+
+        var go = new GameObject("explosion", typeof(RectTransform));
+        var rt = go.GetComponent<RectTransform>();
+        rt.SetParent(layer, false);
+        rt.anchorMin = rt.anchorMax = Vector2.zero;
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = new Vector2(BoomSize, BoomSize);
+        var img = go.AddComponent<Image>();
+        img.raycastTarget = false;
+        img.sprite = frames[0];
+        rt.SetAsLastSibling();
+        booms.Add(new Boom { x = x, rt = rt, img = img, t = 0f });
+        boomY = canH * 0.5f;
+    }
+
+    float boomY;
+
+    void TickCans(float dt, double worldX, float panelW)
+    {
+        for (int i = booms.Count - 1; i >= 0; i--)
+        {
+            var b = booms[i];
+            b.t += dt * BoomFps;
+            int f = (int)b.t;
+            var bf = Frames(BoomDef);
+            if (bf == null || f >= bf.Length)
+            {
+                Object.Destroy(b.rt.gameObject);
+                booms.RemoveAt(i);
+                continue;
+            }
+
+            b.img.sprite = bf[f];
+            b.rt.anchoredPosition = new Vector2((float)(b.x - worldX), boomY);
+        }
+
+        for (int i = cans.Count - 1; i >= 0; i--)
+        {
+            var c = cans[i];
+            if (c.x < worldX - Behind)
+            {
+                Object.Destroy(c.rt.gameObject);
+                cans.RemoveAt(i);
+                continue;
+            }
+
+            c.pop = Mathf.Min(1f, c.pop + dt / PopSeconds);
+            float t = c.pop - 1f;
+            float grow = c.pop >= 1f ? 1f : 1f + 2.70158f * t * t * t + 1.70158f * t * t;
+            c.rt.anchoredPosition = new Vector2((float)(c.x - worldX), 0f);
+            c.rt.localScale = new Vector3(grow, grow, 1f);
+        }
+
+        canTimer -= dt;
+        if (canTimer > 0f) return;
+        canTimer = Random.Range(25f, 70f);
+        if (cans.Count >= MaxCans) return;
+
+        var frames = Frames(new Def { File = "trash-can" });
+        if (frames == null) return;
+
+        var go = new GameObject("bonus-trash-can", typeof(RectTransform));
+        var rt = go.GetComponent<RectTransform>();
+        rt.SetParent(layer, false);
+        rt.anchorMin = rt.anchorMax = Vector2.zero;
+        rt.pivot = new Vector2(0.5f, 0f);
+        var img = go.AddComponent<Image>();
+        img.sprite = frames[0];
+        float h = CanHeight * SizeScale;
+        rt.sizeDelta = new Vector2(h * frames[0].rect.width / frames[0].rect.height, h);
+
+        var btn = go.AddComponent<Button>();
+        btn.targetGraphic = img;
+        btn.transition = Selectable.Transition.None;
+        btn.navigation = new Navigation { mode = Navigation.Mode.None };
+
+        var can = new Can { x = worldX + panelW + Random.Range(120f, 1800f), rt = rt, phase = Random.value * 6f };
+        btn.onClick.AddListener(() =>
+        {
+            cans.Remove(can);
+            Vector2 screen = RectTransformUtility.WorldToScreenPoint(null, rt.TransformPoint(new Vector3(0f, rt.rect.height * 0.5f, 0f)));
+            Explode(can.x, rt.sizeDelta.y);
+            Object.Destroy(go);
+            OnCanClicked?.Invoke(screen);
+        });
+        cans.Add(can);
+        rt.SetAsLastSibling();
+    }
+
     bool HasInst(int slot)
     {
         foreach (var inst in insts)
@@ -376,6 +495,7 @@ public class TownProps
                 if (inst.byDef[i] != null) inst.byDef[i].rt.SetAsLastSibling();
         foreach (var inst in insts)
             if (inst.sign != null) inst.sign.rt.SetAsLastSibling();
+        foreach (var c in cans) c.rt.SetAsLastSibling(); // bonus cans stay in front of every building
     }
 
     Prop Spawn(Def def, bool popIn)

@@ -227,6 +227,15 @@ public class GameState
         return Loc.F("Frenesi! Produção x{0} por 30s!", FrenzyMultiplier);
     }
 
+    // Reward for tapping a bonus trash can: a chunk of income, with a small floor for the first minutes.
+    public string ApplyTrashCan(out double gain)
+    {
+        gain = BaseCps * UnityEngine.Random.Range(60f, 180f) + 13;
+        Petiscos += gain;
+        TotalEarned += gain;
+        return Loc.F("Achado na lixeira! +{0} petiscos!", NumberFormat.Format(gain));
+    }
+
     public bool IsBlessed(BlessingDef b) { return Blessings.Contains(b.Id); }
 
     public bool TryBuyBlessing(BlessingDef b)

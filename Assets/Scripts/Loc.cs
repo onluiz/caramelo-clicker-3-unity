@@ -104,6 +104,7 @@ public static class Loc
         { "Pata Furiosa! Cliques x{0} ({1}s)", "Furious Paw! Clicks x{0} ({1}s)" },
         { "Frenesi! Produção x{0} ({1}s)", "Frenzy! Production x{0} ({1}s)" },
         { "Pata Furiosa! Seus cliques valem x{0} por 13s!", "Furious Paw! Your clicks are worth x{0} for 13s!" },
+        { "Achado na lixeira! +{0} petiscos!", "Trash can find! +{0} treats!" },
         { "Sorte! +{0} petiscos!", "Lucky! +{0} treats!" },
         { "Frenesi! Produção x{0} por 30s!", "Frenzy! Production x{0} for 30s!" },
         { "Bem-vindo de volta! Enquanto você estava fora, o Caramelo juntou {0} petiscos.", "Welcome back! While you were away, Caramelo collected {0} treats." },

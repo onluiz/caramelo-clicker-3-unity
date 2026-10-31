@@ -352,6 +352,7 @@ public class GameUI
 
         BuildGround(left);
         town = new TownProps(left, -GroundTop);
+        town.OnCanClicked = OnTrashCanClicked;
 
         rig = new DogRig(left, new Vector2(0.5f, 0.4f));
 
@@ -861,6 +862,15 @@ public class GameUI
         RefreshAll();
     }
 
+    void OnTrashCanClicked(Vector2 screenPos)
+    {
+        sfx.PlayGolden();
+        string msg = s.ApplyTrashCan(out double gain);
+        SpawnFloat(screenPos, "+" + NumberFormat.Format(gain, true), new Color(1f, 0.85f, 0.2f), 2f, 1.8f);
+        ShowToast(msg, 6f);
+        RefreshAll();
+    }
+
     void OnResetClicked()
     {
         if (resetConfirmTimer <= 0f)
@@ -1285,14 +1295,16 @@ public class GameUI
         toastText.alpha = Mathf.Clamp01(toastTimer);
     }
 
-    void SpawnFloat(Vector2 screenPos, string text, Color color)
+    void SpawnFloat(Vector2 screenPos, string text, Color color, float size = 1f, float life = 1f)
     {
         foreach (var f in floats)
         {
             if (f.active) continue;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(floatLayer, screenPos, null, out var local);
             f.active = true;
-            f.maxLife = f.life = 1f;
+            f.maxLife = f.life = life;
+            f.text.fontSize = 52f * size;
+            f.rt.sizeDelta = new Vector2(400f, 80f) * size;
             f.text.text = text;
             f.text.color = color;
             f.rt.anchoredPosition = local + new Vector2(Random.Range(-30f, 30f), 20f);
