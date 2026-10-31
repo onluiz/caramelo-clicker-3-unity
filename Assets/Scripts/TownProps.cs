@@ -44,7 +44,11 @@ public class TownProps
         new Def { Building = "fabrica-de-pudim-lunar", File = "fabrica-pudim-lunar", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f },
     };
 
-    const float SizeScale = 3.7f;     // all prop heights are multiplied by this, so buildings tower over the dog as he runs past
+    // A "for sale" sign stands where this building will be, until it is bought.
+    const string SaleBuilding = "petshop";
+    static readonly Def SignDef = new Def { Building = SaleBuilding, File = "sale-sign" };
+
+    const float SizeScale = 3.7f;    // all prop heights are multiplied by this, so buildings tower over the dog as he runs past
     const float PxPerMeter = 10f;
     const float SlotSpacing = 340f;   // world px between building slots
     const float LapPx = 1000f * PxPerMeter; // the road is a loop of 1000 "meters": the town, then open country, then the town again
@@ -70,6 +74,7 @@ public class TownProps
         public int slot;
         public double x;
         public readonly Prop[] byDef = new Prop[Defs.Length];
+        public Prop sign;
     }
 
     static readonly Dictionary<string, Sprite[]> Cache = new Dictionary<string, Sprite[]>();
@@ -81,6 +86,7 @@ public class TownProps
     readonly List<Inst> insts = new List<Inst>();
     readonly Queue<int> queue = new Queue<int>(); // slots bought mid-run: built before the regular cycle goes on
     readonly int slotCount;
+    readonly int saleSlot;
     int cursor = -1;
     double nextSpawnX;  // where the next slot of the current lap goes
     double lapStart;    // world x of the current lap's first slot
@@ -110,6 +116,7 @@ public class TownProps
         }
 
         slotCount = slots.Count;
+        saleSlot = slots.TryGetValue(SaleBuilding, out int ss) ? ss : -1;
         slotOwned = new bool[slotCount];
         slotWasOwned = new bool[slotCount];
     }
@@ -176,7 +183,20 @@ public class TownProps
                 any |= inst.byDef[i] != null;
             }
 
-            if (!any) insts.RemoveAt(k);
+            // The sign stands while the slot is unowned (and the town exists at all); it goes away once the building is bought.
+            bool wantSign = inst.slot == saleSlot && !slotOwned[inst.slot] && ownedCount > 0;
+            if (wantSign && inst.sign == null)
+            {
+                inst.sign = SpawnSign(false);
+                dirty = true;
+            }
+            else if (!wantSign && inst.sign != null)
+            {
+                Object.Destroy(inst.sign.rt.gameObject);
+                inst.sign = null;
+            }
+
+            if (!any && inst.sign == null) insts.RemoveAt(k);
         }
 
         // Build ahead of the dog, so the town is there before he is.
@@ -238,6 +258,7 @@ public class TownProps
             float baseX = (float)(inst.x - worldX);
             for (int i = 0; i < Defs.Length; i++)
                 if (inst.byDef[i] != null) Place(inst.byDef[i], baseX, dt);
+            if (inst.sign != null) Place(inst.sign, baseX, dt);
         }
     }
 
@@ -263,7 +284,7 @@ public class TownProps
         {
             int idx = cursor + n;
             int sl = idx % slotCount;
-            if (slotOwned[sl] && !HasInst(sl))
+            if ((slotOwned[sl] || sl == saleSlot) && !HasInst(sl))
             {
                 wrapped = idx >= slotCount;
                 return sl;
@@ -278,6 +299,7 @@ public class TownProps
         var inst = new Inst { slot = slot, x = x };
         for (int i = 0; i < Defs.Length; i++)
             if (defSlot[i] == slot && Has(i, owned)) inst.byDef[i] = Spawn(Defs[i], popIn);
+        if (slot == saleSlot && !slotOwned[slot]) inst.sign = SpawnSign(popIn);
         insts.Add(inst);
     }
 
@@ -285,6 +307,63 @@ public class TownProps
     {
         foreach (var p in inst.byDef)
             if (p != null) Object.Destroy(p.rt.gameObject);
+        if (inst.sign != null) Object.Destroy(inst.sign.rt.gameObject);
+    }
+
+    // A wooden post with a red "VENDA" board, drawn from uGUI pieces instead of a sheet.
+    Prop SpawnSign(bool popIn)
+    {
+        var go = new GameObject("sale-sign", typeof(RectTransform));
+        var rt = go.GetComponent<RectTransform>();
+        rt.SetParent(layer, false);
+        rt.anchorMin = rt.anchorMax = Vector2.zero;
+        rt.pivot = new Vector2(0.5f, 0f);
+        rt.sizeDelta = new Vector2(360f, 330f);
+
+        var wood = new Color(0.45f, 0.27f, 0.12f);
+        var post = Piece(rt, "Post", new Vector2(0.5f, 0f), new Vector2(36f, 210f), Vector2.zero, wood);
+        var board = Piece(rt, "Board", new Vector2(0.5f, 1f), new Vector2(360f, 150f), Vector2.zero, new Color(0.97f, 0.93f, 0.82f));
+        var trim = Piece(board.rectTransform, "Trim", new Vector2(0.5f, 0.5f), new Vector2(336f, 126f), Vector2.zero, new Color(0.78f, 0.15f, 0.12f));
+        var inner = Piece(trim.rectTransform, "Inner", new Vector2(0.5f, 0.5f), new Vector2(318f, 108f), Vector2.zero, new Color(0.97f, 0.93f, 0.82f));
+
+        var tgo = new GameObject("Text", typeof(RectTransform));
+        var trt = tgo.GetComponent<RectTransform>();
+        trt.SetParent(inner.rectTransform, false);
+        trt.anchorMin = Vector2.zero;
+        trt.anchorMax = Vector2.one;
+        trt.offsetMin = trt.offsetMax = Vector2.zero;
+        var text = tgo.AddComponent<TMPro.TextMeshProUGUI>();
+        text.text = Loc.T("VENDA");
+        text.fontSize = 78f;
+        text.fontStyle = TMPro.FontStyles.Bold;
+        text.alignment = TMPro.TextAlignmentOptions.Center;
+        text.color = new Color(0.78f, 0.15f, 0.12f);
+        text.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
+        text.raycastTarget = false;
+        post.transform.SetAsFirstSibling();
+
+        return new Prop
+        {
+            def = SignDef, rt = rt, frames = new Sprite[1],
+            pop = popIn ? 0f : 1f,
+        };
+    }
+
+    static Image Piece(RectTransform parent, string name, Vector2 anchor, Vector2 size, Vector2 pos, Color color)
+    {
+        var go = new GameObject(name, typeof(RectTransform));
+        var r = go.GetComponent<RectTransform>();
+        r.SetParent(parent, false);
+        r.anchorMin = r.anchorMax = anchor;
+        r.pivot = anchor;
+        r.sizeDelta = size;
+        r.anchoredPosition = pos;
+        var img = go.AddComponent<Image>();
+        img.sprite = ProceduralArt.RoundedRect();
+        img.type = Image.Type.Sliced;
+        img.color = color;
+        img.raycastTarget = false;
+        return img;
     }
 
     // Later defs are drawn in front, so goods end up on top of the stall whichever was built first.
@@ -293,6 +372,8 @@ public class TownProps
         for (int i = 0; i < Defs.Length; i++)
             foreach (var inst in insts)
                 if (inst.byDef[i] != null) inst.byDef[i].rt.SetAsLastSibling();
+        foreach (var inst in insts)
+            if (inst.sign != null) inst.sign.rt.SetAsLastSibling();
     }
 
     Prop Spawn(Def def, bool popIn)
