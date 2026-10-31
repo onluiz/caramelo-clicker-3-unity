@@ -20,7 +20,7 @@ public class SaveData
 
 public class GameState
 {
-    const string SaveKey = "caramelo_clicker_save_v3";
+    const string SaveKey = "caramelo_clicker_save_v4";
     public const double FrenzyMultiplier = 7;
     public const double ClickFrenzyMultiplier = 777;
 
@@ -70,6 +70,15 @@ public class GameState
             double v = clickMult + baseCps * clickPercent;
             return v * (ClickFrenzyActive ? ClickFrenzyMultiplier : 1);
         }
+    }
+
+    // How many upgrades of one building have been bought.
+    public int TierOf(int building)
+    {
+        int n = 0;
+        foreach (var id in Upgrades)
+            if (GameDefs.ById.TryGetValue(id, out var u) && u.Kind == UpgradeKind.Building && u.Building == building) n++;
+        return n;
     }
 
     public double CpsEach(int building)

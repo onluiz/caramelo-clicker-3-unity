@@ -1284,6 +1284,7 @@ public class GameUI
         rig.Tick(dt, s.Cps);
         minis.Tick(dt);
         worldX += rig.StrideSpeed * dt; // the dog is the one who moves; everything else sits at fixed world positions
+        town.StallTier = s.TierOf(0);
         town.Tick(dt, worldX, s.Owned, sky.Darkness);
         if (town.PassedCreche) OnCrechePassed();
         nightShade.color = new Color(0.02f, 0.04f, 0.16f, NightShadeMax * sky.Darkness);

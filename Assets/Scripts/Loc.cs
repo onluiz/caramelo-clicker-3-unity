@@ -194,6 +194,7 @@ public static class Loc
         { "planta-lunar", ("Moon Plant", "A mysterious plant found on the Moon. The best dog puddings come from it.") },
         { "pudim-lunar", ("Homemade Moon Pudding", "Made with the moon plant. Every dog lines up for a spoonful.") },
         { "fabrica-de-pudim-lunar", ("Moon Pudding Factory", "The dogs liked Caramelo's nutritious pudding so much that he built his own factory on the Moon.") },
+        { "loja-pudim-lunar", ("Moon Pudding Shop", "Display case, a line out the door and a pudding with a moon on top. Caramelo's franchise reached the Moon.") },
         { "cometa-caramelo", ("Caramelo Comet", "Grazes past and leaves a shower of bones and coins.") },
         { "sol-caramelo", ("Caramelo Sun", "For unknown reasons, the Sun took the shape of a caramelo dog. Every dog touched by its light reports having energy to spare.") },
     };
@@ -276,6 +277,10 @@ public static class Loc
         { "fabrica-de-pudim-lunar:1", ("Industrial Cauldron", "Stirs ten thousand puddings at once with a giant spoon.") },
         { "fabrica-de-pudim-lunar:2", ("Factory Uniform", "Hat, boots and a tail sticking out through the little hole.") },
         { "fabrica-de-pudim-lunar:3", ("Quality Control", "Every pudding is tasted by a dog. All of them are approved.") },
+        { "loja-pudim-lunar:0", ("Starry Window", "Every pudding on display shines like a constellation.") },
+        { "loja-pudim-lunar:1", ("Loyalty Card", "Every tenth spoonful, the next one is on the house.") },
+        { "loja-pudim-lunar:2", ("Interplanetary Delivery", "The delivery dog reaches the Moon before the pudding gets cold.") },
+        { "loja-pudim-lunar:3", ("Line Around the Block", "There's been a dog in line since the last full moon.") },
         { "cometa-caramelo:0", ("Shining Tail", "Every little piece that falls becomes a bone, and every bone becomes a coin.") },
         { "cometa-caramelo:1", ("Orbital Route", "Passes twice a year. Caramelo marks it on the calendar.") },
         { "cometa-caramelo:2", ("Caramelo Core", "There's a huge bone inside. Nobody knows whose it was.") },

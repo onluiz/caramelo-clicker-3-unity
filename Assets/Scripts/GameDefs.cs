@@ -75,6 +75,7 @@ public static class GameDefs
         new BuildingDef { Key = "planta-lunar", Name = "Planta Lunar", Description = "Uma planta misteriosa descoberta na Lua. Dela saem os melhores pudins caninos.", BaseCost = 6000000000000.0, BaseCps = 6090000000.0, IconFile = "planta-lunar" },
         new BuildingDef { Key = "pudim-lunar", Name = "Pudim Lunar Caseiro", Description = "Feito com a planta lunar. Todo cachorro entra na fila por uma colherada.", BaseCost = 40000000000000.0, BaseCps = 36900000000.0, IconFile = "pudim-lunar" },
         new BuildingDef { Key = "fabrica-de-pudim-lunar", Name = "Fábrica de Pudim Lunar", Description = "Os cachorros gostaram tanto do nutritivo pudim do Caramelo que ele montou a própria fábrica na Lua.", BaseCost = 250000000000000.0, BaseCps = 210000000000.0, IconFile = "fabrica-de-pudim-lunar" },
+        new BuildingDef { Key = "loja-pudim-lunar", Name = "Loja de Pudim Lunar", Description = "Vitrine, fila na porta e um pudim com lua em cima. A franquia do Caramelo chegou na Lua.", BaseCost = 600000000000000.0, BaseCps = 460000000000.0, IconFile = "loja-pudim-lunar" },
         new BuildingDef { Key = "cometa-caramelo", Name = "Cometa Caramelo", Description = "Passa raspando e deixa uma chuva de ossos e moedas.", BaseCost = 1600000000000000.0, BaseCps = 1220000000000.0, IconFile = "cometa-caramelo" },
         new BuildingDef { Key = "sol-caramelo", Name = "Sol Caramelo", Description = "Por motivos desconhecidos, o Sol tomou a forma de um cachorro caramelo. Todos os cachorros que recebem a luz dele relatam ter energia de sobra.", BaseCost = 1000000000000000000.0, BaseCps = 720000000000000.0, IconFile = "sol-caramelo" },
     };
@@ -161,6 +162,10 @@ public static class GameDefs
         new TierText { Building = "fabrica-de-pudim-lunar", Tier = 1, Name = "Caldeirão Industrial", Description = "Mexe dez mil pudins de uma vez, com uma colher gigante.", IconFile = "fabrica-de-pudim-lunar" },
         new TierText { Building = "fabrica-de-pudim-lunar", Tier = 2, Name = "Uniforme de Fábrica", Description = "Touca, bota e rabo para fora pelo buraquinho.", IconFile = "fabrica-de-pudim-lunar" },
         new TierText { Building = "fabrica-de-pudim-lunar", Tier = 3, Name = "Controle de Qualidade", Description = "Cada pudim é provado por um cachorro. Todos são aprovados.", IconFile = "fabrica-de-pudim-lunar" },
+        new TierText { Building = "loja-pudim-lunar", Tier = 0, Name = "Vitrine Estrelada", Description = "Cada pudim exposto brilha como uma constelação.", IconFile = "loja-pudim-lunar" },
+        new TierText { Building = "loja-pudim-lunar", Tier = 1, Name = "Cartão Fidelidade", Description = "A cada dez colheradas, a próxima é por conta da casa.", IconFile = "loja-pudim-lunar" },
+        new TierText { Building = "loja-pudim-lunar", Tier = 2, Name = "Entrega Interplanetária", Description = "O Caramelo Entregador chega na Lua antes de o pudim esfriar.", IconFile = "loja-pudim-lunar" },
+        new TierText { Building = "loja-pudim-lunar", Tier = 3, Name = "Fila Dobrando o Quarteirão", Description = "Tem cachorro na fila desde a última lua cheia.", IconFile = "loja-pudim-lunar" },
         new TierText { Building = "cometa-caramelo", Tier = 0, Name = "Cauda Brilhante", Description = "Cada pedacinho que cai vira osso, e cada osso vira moeda.", IconFile = "cometa-caramelo" },
         new TierText { Building = "cometa-caramelo", Tier = 1, Name = "Rota Orbital", Description = "Passa duas vezes por ano. O Caramelo marca no calendário.", IconFile = "cometa-caramelo" },
         new TierText { Building = "cometa-caramelo", Tier = 2, Name = "Núcleo Caramelo", Description = "Dentro tem um osso enorme. Ninguém sabe de quem era.", IconFile = "cometa-caramelo" },

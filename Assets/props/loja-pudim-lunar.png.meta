@@ -1,0 +1,637 @@
+fileFormatVersion: 2
+guid: 524dbbf37bab0e147b9830ed10ad492e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 219434518772706568
+    second: loja-pudim-lunar_0
+  - first:
+      213: -7905718808725163249
+    second: loja-pudim-lunar_1
+  - first:
+      213: -826688780016960328
+    second: loja-pudim-lunar_2
+  - first:
+      213: -507268672012586958
+    second: loja-pudim-lunar_3
+  - first:
+      213: 5430888511173502751
+    second: loja-pudim-lunar_4
+  - first:
+      213: 5443808510131525069
+    second: loja-pudim-lunar_5
+  - first:
+      213: -5743442141992573875
+    second: loja-pudim-lunar_6
+  - first:
+      213: 8261855427880117322
+    second: loja-pudim-lunar_7
+  - first:
+      213: -7683271835087781998
+    second: loja-pudim-lunar_8
+  - first:
+      213: 1195228114444035796
+    second: loja-pudim-lunar_9
+  - first:
+      213: 8956529150873167025
+    second: loja-pudim-lunar_10
+  - first:
+      213: 1906068741177936960
+    second: loja-pudim-lunar_11
+  - first:
+      213: -8815132721013757875
+    second: loja-pudim-lunar_12
+  - first:
+      213: -2246553489896932083
+    second: loja-pudim-lunar_13
+  - first:
+      213: 6638396963877067686
+    second: loja-pudim-lunar_14
+  - first:
+      213: 4375438802959696693
+    second: loja-pudim-lunar_15
+  - first:
+      213: -5088980380840669933
+    second: loja-pudim-lunar_16
+  - first:
+      213: -3268874401746406950
+    second: loja-pudim-lunar_17
+  - first:
+      213: -5817174310336467751
+    second: loja-pudim-lunar_18
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: loja-pudim-lunar_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 23
+        width: 1239
+        height: 1213
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80de7ee38869b0300800000000000000
+      internalID: 219434518772706568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_1
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 594
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f03ffc731ae394290800000000000000
+      internalID: -7905718808725163249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_2
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 572
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bcb94f3fe20784f0800000000000000
+      internalID: -826688780016960328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_3
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 537
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 230710794d1d5f8f0800000000000000
+      internalID: -507268672012586958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_4
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 515
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f172f3ba3546e5b40800000000000000
+      internalID: 5430888511173502751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_5
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 519
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc553a75ffa4c8b40800000000000000
+      internalID: 5443808510131525069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_6
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 515
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d44268a4dc13b40b0800000000000000
+      internalID: -5743442141992573875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_7
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 427
+        width: 7
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a446d6c0db108a270800000000000000
+      internalID: 8261855427880117322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_8
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 431
+        width: 7
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29f34d449f88f5590800000000000000
+      internalID: -7683271835087781998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_9
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 393
+        width: 10
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d62ff233ad469010800000000000000
+      internalID: 1195228114444035796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_10
+      rect:
+        serializedVersion: 2
+        x: 1198
+        y: 371
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b4e93a1fcbfb4c70800000000000000
+      internalID: 8956529150873167025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_11
+      rect:
+        serializedVersion: 2
+        x: 1214
+        y: 345
+        width: 21
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04c036bdb67b37a10800000000000000
+      internalID: 1906068741177936960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_12
+      rect:
+        serializedVersion: 2
+        x: 1214
+        y: 288
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d486d0cae7b5aa580800000000000000
+      internalID: -8815132721013757875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_13
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 224
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0d77c1f083a2d0e0800000000000000
+      internalID: -2246553489896932083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_14
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 175
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ab9cededd2502c50800000000000000
+      internalID: 6638396963877067686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_15
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 146
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5338fd2c86ea8bc30800000000000000
+      internalID: 4375438802959696693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_16
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 128
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31d4f036e4f4069b0800000000000000
+      internalID: -5088980380840669933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_17
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 58
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad1b9840d00a2a2d0800000000000000
+      internalID: -3268874401746406950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: loja-pudim-lunar_18
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 27
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9dcedd319ce354fa0800000000000000
+      internalID: -5817174310336467751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      loja-pudim-lunar_0: 219434518772706568
+      loja-pudim-lunar_1: -7905718808725163249
+      loja-pudim-lunar_10: 8956529150873167025
+      loja-pudim-lunar_11: 1906068741177936960
+      loja-pudim-lunar_12: -8815132721013757875
+      loja-pudim-lunar_13: -2246553489896932083
+      loja-pudim-lunar_14: 6638396963877067686
+      loja-pudim-lunar_15: 4375438802959696693
+      loja-pudim-lunar_16: -5088980380840669933
+      loja-pudim-lunar_17: -3268874401746406950
+      loja-pudim-lunar_18: -5817174310336467751
+      loja-pudim-lunar_2: -826688780016960328
+      loja-pudim-lunar_3: -507268672012586958
+      loja-pudim-lunar_4: 5430888511173502751
+      loja-pudim-lunar_5: 5443808510131525069
+      loja-pudim-lunar_6: -5743442141992573875
+      loja-pudim-lunar_7: 8261855427880117322
+      loja-pudim-lunar_8: -7683271835087781998
+      loja-pudim-lunar_9: 1195228114444035796
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
