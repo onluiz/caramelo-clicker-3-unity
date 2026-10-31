@@ -1,0 +1,1027 @@
+fileFormatVersion: 2
+guid: 0ef51218d9e0f1e47872e20e4cb334ca
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4806754682298042296
+    second: red-drone_0
+  - first:
+      213: 3302629487056983530
+    second: red-drone_1
+  - first:
+      213: -1916660840907339584
+    second: red-drone_2
+  - first:
+      213: -7461952270575504000
+    second: red-drone_3
+  - first:
+      213: 8156033987993412398
+    second: red-drone_4
+  - first:
+      213: -434966519076271664
+    second: red-drone_5
+  - first:
+      213: 22055443617847656
+    second: red-drone_6
+  - first:
+      213: 2468994365430679347
+    second: red-drone_7
+  - first:
+      213: -6609920834715270097
+    second: red-drone_8
+  - first:
+      213: 255376158972624339
+    second: red-drone_9
+  - first:
+      213: -5534677523734861970
+    second: red-drone_10
+  - first:
+      213: 2961781010061414665
+    second: red-drone_11
+  - first:
+      213: -3941783050583727940
+    second: red-drone_12
+  - first:
+      213: 5452467099617270481
+    second: red-drone_13
+  - first:
+      213: -1479041901505951319
+    second: red-drone_14
+  - first:
+      213: 554157134133562461
+    second: red-drone_15
+  - first:
+      213: -7768869131292167969
+    second: red-drone_16
+  - first:
+      213: -2506146043828518083
+    second: red-drone_17
+  - first:
+      213: 6831617332266638830
+    second: red-drone_18
+  - first:
+      213: 7121256773577026131
+    second: red-drone_19
+  - first:
+      213: 7480715686279500257
+    second: red-drone_20
+  - first:
+      213: 6790665546076163295
+    second: red-drone_21
+  - first:
+      213: -5205675263982390611
+    second: red-drone_22
+  - first:
+      213: 2984389862215434047
+    second: red-drone_23
+  - first:
+      213: 8749012807793664162
+    second: red-drone_24
+  - first:
+      213: 122557335251833600
+    second: red-drone_25
+  - first:
+      213: 4573251116124043119
+    second: red-drone_26
+  - first:
+      213: 8684153978766821157
+    second: red-drone_27
+  - first:
+      213: 3006157971906903709
+    second: red-drone_28
+  - first:
+      213: -8668722260731644110
+    second: red-drone_29
+  - first:
+      213: -5204586259948276813
+    second: red-drone_30
+  - first:
+      213: -3851274180093686143
+    second: red-drone_31
+  - first:
+      213: 2486738694671000236
+    second: red-drone_32
+  - first:
+      213: -4273302312250298118
+    second: red-drone_33
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: red-drone_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 869
+        width: 356
+        height: 257
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b702d09ae505b240800000000000000
+      internalID: 4806754682298042296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_1
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 872
+        width: 302
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae513c8350c45dd20800000000000000
+      internalID: 3302629487056983530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_2
+      rect:
+        serializedVersion: 2
+        x: 740
+        y: 875
+        width: 302
+        height: 253
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c801debe17a665e0800000000000000
+      internalID: -1916660840907339584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_3
+      rect:
+        serializedVersion: 2
+        x: 1106
+        y: 938
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0857d6de1f1d17890800000000000000
+      internalID: -7461952270575504000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_4
+      rect:
+        serializedVersion: 2
+        x: 1109
+        y: 878
+        width: 281
+        height: 250
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e232c5613bd003170800000000000000
+      internalID: 8156033987993412398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_5
+      rect:
+        serializedVersion: 2
+        x: 1379
+        y: 935
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d945456140b6f9f0800000000000000
+      internalID: -434966519076271664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_6
+      rect:
+        serializedVersion: 2
+        x: 1427
+        y: 878
+        width: 358
+        height: 248
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86994322f4b5e4000800000000000000
+      internalID: 22055443617847656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_7
+      rect:
+        serializedVersion: 2
+        x: 1526
+        y: 872
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 337cfe74b41a34220800000000000000
+      internalID: 2468994365430679347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_8
+      rect:
+        serializedVersion: 2
+        x: 1673
+        y: 872
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f24c75d8508d444a0800000000000000
+      internalID: -6609920834715270097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 593
+        width: 358
+        height: 248
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ddbaa773474b8300800000000000000
+      internalID: 255376158972624339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_10
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 590
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e67e17bbd10e033b0800000000000000
+      internalID: -5534677523734861970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_11
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 590
+        width: 17
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 901553fe22c5a1920800000000000000
+      internalID: 2961781010061414665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_12
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 590
+        width: 17
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb02d403339fb49c0800000000000000
+      internalID: -3941783050583727940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_13
+      rect:
+        serializedVersion: 2
+        x: 299
+        y: 590
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1da113e40fd0bab40800000000000000
+      internalID: 5452467099617270481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_14
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 587
+        width: 332
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a9c1d41a33697be0800000000000000
+      internalID: -1479041901505951319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_15
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 575
+        width: 56
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5c87c93af2c0b700800000000000000
+      internalID: 554157134133562461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_16
+      rect:
+        serializedVersion: 2
+        x: 596
+        y: 575
+        width: 35
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd035d2bfae6f2490800000000000000
+      internalID: -7768869131292167969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_17
+      rect:
+        serializedVersion: 2
+        x: 752
+        y: 587
+        width: 284
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d33c9568371683dd0800000000000000
+      internalID: -2506146043828518083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_18
+      rect:
+        serializedVersion: 2
+        x: 1109
+        y: 572
+        width: 35
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eed972ba4c7cece50800000000000000
+      internalID: 6831617332266638830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_19
+      rect:
+        serializedVersion: 2
+        x: 1112
+        y: 584
+        width: 278
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35a27673e49c3d260800000000000000
+      internalID: 7121256773577026131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_20
+      rect:
+        serializedVersion: 2
+        x: 1151
+        y: 572
+        width: 35
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e1d16a3847d0d760800000000000000
+      internalID: 7480715686279500257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_21
+      rect:
+        serializedVersion: 2
+        x: 1346
+        y: 572
+        width: 20
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdc8a5ee55a4d3e50800000000000000
+      internalID: 6790665546076163295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_22
+      rect:
+        serializedVersion: 2
+        x: 1442
+        y: 581
+        width: 332
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da2ba42ade9b1c7b0800000000000000
+      internalID: -5205675263982390611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_23
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 581
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3fb0a884ceaa6920800000000000000
+      internalID: 2984389862215434047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_24
+      rect:
+        serializedVersion: 2
+        x: 257
+        y: 581
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a062ef5bccba6970800000000000000
+      internalID: 8749012807793664162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_25
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 293
+        width: 358
+        height: 257
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 003dd404f3963b100800000000000000
+      internalID: 122557335251833600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_26
+      rect:
+        serializedVersion: 2
+        x: 374
+        y: 296
+        width: 326
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f677b35f8a3777f30800000000000000
+      internalID: 4573251116124043119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_27
+      rect:
+        serializedVersion: 2
+        x: 713
+        y: 296
+        width: 359
+        height: 257
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52701377800548870800000000000000
+      internalID: 8684153978766821157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_28
+      rect:
+        serializedVersion: 2
+        x: 1106
+        y: 296
+        width: 293
+        height: 260
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9e38368fb408b920800000000000000
+      internalID: 3006157971906903709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_29
+      rect:
+        serializedVersion: 2
+        x: 1430
+        y: 299
+        width: 355
+        height: 257
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 237b190680382b780800000000000000
+      internalID: -8668722260731644110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_30
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 281
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b377e42f5895c7b0800000000000000
+      internalID: -5204586259948276813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_31
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 281
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18ec1e2c9868d8ac0800000000000000
+      internalID: -3851274180093686143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_32
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 20
+        width: 290
+        height: 257
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca26511eaaba28220800000000000000
+      internalID: 2486738694671000236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: red-drone_33
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 23
+        width: 359
+        height: 254
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af0377c103e22b4c0800000000000000
+      internalID: -4273302312250298118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      red-drone_0: 4806754682298042296
+      red-drone_1: 3302629487056983530
+      red-drone_10: -5534677523734861970
+      red-drone_11: 2961781010061414665
+      red-drone_12: -3941783050583727940
+      red-drone_13: 5452467099617270481
+      red-drone_14: -1479041901505951319
+      red-drone_15: 554157134133562461
+      red-drone_16: -7768869131292167969
+      red-drone_17: -2506146043828518083
+      red-drone_18: 6831617332266638830
+      red-drone_19: 7121256773577026131
+      red-drone_2: -1916660840907339584
+      red-drone_20: 7480715686279500257
+      red-drone_21: 6790665546076163295
+      red-drone_22: -5205675263982390611
+      red-drone_23: 2984389862215434047
+      red-drone_24: 8749012807793664162
+      red-drone_25: 122557335251833600
+      red-drone_26: 4573251116124043119
+      red-drone_27: 8684153978766821157
+      red-drone_28: 3006157971906903709
+      red-drone_29: -8668722260731644110
+      red-drone_3: -7461952270575504000
+      red-drone_30: -5204586259948276813
+      red-drone_31: -3851274180093686143
+      red-drone_32: 2486738694671000236
+      red-drone_33: -4273302312250298118
+      red-drone_4: 8156033987993412398
+      red-drone_5: -434966519076271664
+      red-drone_6: 22055443617847656
+      red-drone_7: 2468994365430679347
+      red-drone_8: -6609920834715270097
+      red-drone_9: 255376158972624339
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

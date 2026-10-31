@@ -53,7 +53,7 @@ public class TownProps
     const float SizeScale = 3.7f;    // all prop heights are multiplied by this, so buildings tower over the dog as he runs past
     const float PxPerMeter = 10f;
     const float SlotSpacing = 540f;   // world px between building slots
-    const float LapPx = 1000f * PxPerMeter; // the road is a loop of 1000 "meters": the town, then open country, then the town again
+    const float LapPx = 2000f * PxPerMeter; // the road is a loop of 2000 "meters": the town, then open country, then the town again
     const float Ahead = 450f;         // town is built this far past the right edge (a prop reaches at most ~425 px to either side of its slot)
     const float Behind = 500f;        // and destroyed once its slot is this far past the left edge
     const float PopSeconds = 0.45f;
