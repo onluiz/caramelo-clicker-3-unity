@@ -1,0 +1,585 @@
+fileFormatVersion: 2
+guid: c63392d078bfe154e984b73364868de7
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5992302656248535270
+    second: evolved-drone_0
+  - first:
+      213: 5580889009632616569
+    second: evolved-drone_1
+  - first:
+      213: 6829398426891239973
+    second: evolved-drone_2
+  - first:
+      213: -2008570509178307910
+    second: evolved-drone_3
+  - first:
+      213: -6954768547661504540
+    second: evolved-drone_4
+  - first:
+      213: 7791459448938932410
+    second: evolved-drone_5
+  - first:
+      213: 5038837856668605251
+    second: evolved-drone_6
+  - first:
+      213: -7124810199303977321
+    second: evolved-drone_7
+  - first:
+      213: 6607268412334307772
+    second: evolved-drone_8
+  - first:
+      213: 7885378549800139384
+    second: evolved-drone_9
+  - first:
+      213: 5840783246113523261
+    second: evolved-drone_10
+  - first:
+      213: -3354128407639112581
+    second: evolved-drone_11
+  - first:
+      213: 4881042398673035884
+    second: evolved-drone_12
+  - first:
+      213: -4486863315191705400
+    second: evolved-drone_13
+  - first:
+      213: -2465589341993279830
+    second: evolved-drone_14
+  - first:
+      213: -612053913242936156
+    second: evolved-drone_15
+  - first:
+      213: -3379548296044196703
+    second: evolved-drone_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 0
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: evolved-drone_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 9
+        width: 164
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a172da39b7017dca0800000000000000
+      internalID: -5992302656248535270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_1
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 10
+        width: 145
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 970a8064cfc437d40800000000000000
+      internalID: 5580889009632616569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_2
+      rect:
+        serializedVersion: 2
+        x: 343
+        y: 10
+        width: 134
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 522c6708fa5e6ce50800000000000000
+      internalID: 6829398426891239973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_3
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 11
+        width: 148
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: abaf91683cf1024e0800000000000000
+      internalID: -2008570509178307910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_4
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 11
+        width: 135
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ef93959ad2bb7f90800000000000000
+      internalID: -6954768547661504540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_5
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 11
+        width: 135
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab8addf7613d02c60800000000000000
+      internalID: 7791459448938932410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_6
+      rect:
+        serializedVersion: 2
+        x: 988
+        y: 12
+        width: 157
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34bd58f655c8de540800000000000000
+      internalID: 5038837856668605251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_7
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 13
+        width: 134
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79608626fd69f1d90800000000000000
+      internalID: -7124810199303977321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_8
+      rect:
+        serializedVersion: 2
+        x: 1323
+        y: 14
+        width: 138
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb978dc3d9bb1bb50800000000000000
+      internalID: 6607268412334307772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_9
+      rect:
+        serializedVersion: 2
+        x: 1491
+        y: 14
+        width: 139
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87a7254330e7e6d60800000000000000
+      internalID: 7885378549800139384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_10
+      rect:
+        serializedVersion: 2
+        x: 1645
+        y: 13
+        width: 156
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3646a2aa61ae0150800000000000000
+      internalID: 5840783246113523261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_11
+      rect:
+        serializedVersion: 2
+        x: 1819
+        y: 12
+        width: 134
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b74cf93fbfdb371d0800000000000000
+      internalID: -3354128407639112581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_12
+      rect:
+        serializedVersion: 2
+        x: 1983
+        y: 12
+        width: 134
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c62e6826332fcb340800000000000000
+      internalID: 4881042398673035884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_13
+      rect:
+        serializedVersion: 2
+        x: 2145
+        y: 11
+        width: 140
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c0544656957bb1c0800000000000000
+      internalID: -4486863315191705400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_14
+      rect:
+        serializedVersion: 2
+        x: 2300
+        y: 11
+        width: 158
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aae50848e8778cdd0800000000000000
+      internalID: -2465589341993279830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_15
+      rect:
+        serializedVersion: 2
+        x: 2469
+        y: 10
+        width: 145
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ac54cd653c8187f0800000000000000
+      internalID: -612053913242936156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: evolved-drone_16
+      rect:
+        serializedVersion: 2
+        x: 2632
+        y: 10
+        width: 148
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ac4209fabe6911d0800000000000000
+      internalID: -3379548296044196703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      evolved-drone_0: -5992302656248535270
+      evolved-drone_1: 5580889009632616569
+      evolved-drone_10: 5840783246113523261
+      evolved-drone_11: -3354128407639112581
+      evolved-drone_12: 4881042398673035884
+      evolved-drone_13: -4486863315191705400
+      evolved-drone_14: -2465589341993279830
+      evolved-drone_15: -612053913242936156
+      evolved-drone_16: -3379548296044196703
+      evolved-drone_2: 6829398426891239973
+      evolved-drone_3: -2008570509178307910
+      evolved-drone_4: -6954768547661504540
+      evolved-drone_5: 7791459448938932410
+      evolved-drone_6: 5038837856668605251
+      evolved-drone_7: -7124810199303977321
+      evolved-drone_8: 6607268412334307772
+      evolved-drone_9: 7885378549800139384
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,585 @@
+fileFormatVersion: 2
+guid: fee636e3307245e409d7d5ff9c2c6240
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4353190450537691496
+    second: cachorro-entregador_0
+  - first:
+      213: -6869999385738017098
+    second: cachorro-entregador_1
+  - first:
+      213: 1859987654192362863
+    second: cachorro-entregador_2
+  - first:
+      213: -6965194557549556206
+    second: cachorro-entregador_3
+  - first:
+      213: -8515536721684333365
+    second: cachorro-entregador_4
+  - first:
+      213: 3820775935986714967
+    second: cachorro-entregador_5
+  - first:
+      213: 2018708428085591603
+    second: cachorro-entregador_6
+  - first:
+      213: -3767069456485874508
+    second: cachorro-entregador_7
+  - first:
+      213: 2269943934431235107
+    second: cachorro-entregador_8
+  - first:
+      213: 7752713307061133696
+    second: cachorro-entregador_9
+  - first:
+      213: -7197348165181788965
+    second: cachorro-entregador_10
+  - first:
+      213: 2740583397985710765
+    second: cachorro-entregador_11
+  - first:
+      213: -8675230186500948308
+    second: cachorro-entregador_12
+  - first:
+      213: 134535563903178629
+    second: cachorro-entregador_13
+  - first:
+      213: 6745227459811353400
+    second: cachorro-entregador_14
+  - first:
+      213: -4976899053873039635
+    second: cachorro-entregador_15
+  - first:
+      213: -5119731193882235885
+    second: cachorro-entregador_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 0
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: cachorro-entregador_0
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 179
+        width: 58
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 869fbeb86a3a96c30800000000000000
+      internalID: 4353190450537691496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_1
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 179
+        width: 61
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b60fed15fbd8a0a0800000000000000
+      internalID: -6869999385738017098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_2
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 180
+        width: 64
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f657fb6bae000d910800000000000000
+      internalID: 1859987654192362863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_3
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 185
+        width: 66
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21e46cdf378a65f90800000000000000
+      internalID: -6965194557549556206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_4
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 184
+        width: 66
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bccf538087cb2d980800000000000000
+      internalID: -8515536721684333365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_5
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 119
+        width: 68
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75949de687f160530800000000000000
+      internalID: 3820775935986714967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_6
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 119
+        width: 69
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33ef029ae94e30c10800000000000000
+      internalID: 2018708428085591603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_7
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 119
+        width: 68
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b48fe1c94ea8bbc0800000000000000
+      internalID: -3767069456485874508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_8
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 123
+        width: 68
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32c83df4bf5708f10800000000000000
+      internalID: 2269943934431235107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_9
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 126
+        width: 67
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 081a2d85dab279b60800000000000000
+      internalID: 7752713307061133696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 69
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdca7891af1ed1c90800000000000000
+      internalID: -7197348165181788965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_11
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 59
+        width: 69
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da2754a8412880620800000000000000
+      internalID: 2740583397985710765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_12
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 59
+        width: 69
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cae7dd4db146b9780800000000000000
+      internalID: -8675230186500948308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_13
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 59
+        width: 68
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5871b10f167fdd100800000000000000
+      internalID: 134535563903178629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_14
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 63
+        width: 68
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 833244f03acdb9d50800000000000000
+      internalID: 6745227459811353400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_15
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 6
+        width: 68
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de67be2eda08eeab0800000000000000
+      internalID: -4976899053873039635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cachorro-entregador_16
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 3
+        width: 70
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31ca92bca9f03f8b0800000000000000
+      internalID: -5119731193882235885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      cachorro-entregador_0: 4353190450537691496
+      cachorro-entregador_1: -6869999385738017098
+      cachorro-entregador_10: -7197348165181788965
+      cachorro-entregador_11: 2740583397985710765
+      cachorro-entregador_12: -8675230186500948308
+      cachorro-entregador_13: 134535563903178629
+      cachorro-entregador_14: 6745227459811353400
+      cachorro-entregador_15: -4976899053873039635
+      cachorro-entregador_16: -5119731193882235885
+      cachorro-entregador_2: 1859987654192362863
+      cachorro-entregador_3: -6965194557549556206
+      cachorro-entregador_4: -8515536721684333365
+      cachorro-entregador_5: 3820775935986714967
+      cachorro-entregador_6: 2018708428085591603
+      cachorro-entregador_7: -3767069456485874508
+      cachorro-entregador_8: 2269943934431235107
+      cachorro-entregador_9: 7752713307061133696
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

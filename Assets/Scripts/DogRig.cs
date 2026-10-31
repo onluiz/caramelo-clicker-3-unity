@@ -18,6 +18,9 @@ public class DogRig
     // The feet sit on row 88 (from the top) of each 120px cell, i.e. 28 rows below the cell centre.
     const float FeetBelowCentre = 28f * Scale;
     public const float GroundY = -280f; // paws offset from the anchor (the ground strip top is at -215)
+    // Speed lines trail behind the dog's body (he faces right): from his rump out to LineEndX.
+    const float LineStartX = -90f, LineEndX = -330f;
+    static float RandomLineY() { return GroundY + Random.Range(40f, 150f); }
 
     struct Clip
     {
@@ -46,7 +49,7 @@ public class DogRig
     const float SitFps = 14f;
     const float ClickDecay = 1.2f;
     const float GaitHysteresis = 0.35f;
-    const float StridePixelsPerFrame = 36f;
+    const float StridePixelsPerFrame = 15.5f;
 
     readonly RectTransform rootRt, spriteRt;
     readonly Image spriteImage;
@@ -88,7 +91,7 @@ public class DogRig
         for (int i = 0; i < speedLines.Length; i++)
         {
             var rt = NewRect("SpeedLine", rootRt);
-            rt.sizeDelta = new Vector2(Random.Range(120f, 220f), 6f);
+            rt.sizeDelta = new Vector2(Random.Range(60f, 110f), 4f);
             var img = rt.gameObject.AddComponent<Image>();
             img.sprite = ProceduralArt.RoundedRect();
             img.type = Image.Type.Sliced;
@@ -96,8 +99,8 @@ public class DogRig
             img.raycastTarget = false;
             speedLines[i] = rt;
             speedLineImages[i] = img;
-            speedLineY[i] = Random.Range(-120f, 160f);
-            rt.anchoredPosition = new Vector2(Random.Range(-500f, -150f), speedLineY[i]);
+            speedLineY[i] = RandomLineY();
+            rt.anchoredPosition = new Vector2(Random.Range(LineEndX, LineStartX), speedLineY[i]);
         }
 
         LoadFrames();
@@ -241,15 +244,16 @@ public class DogRig
         {
             var rt = speedLines[i];
             var p = rt.anchoredPosition;
-            p.x -= (900f + 1000f * amount) * dt;
-            if (p.x < -520f)
+            p.x -= (500f + 600f * amount) * dt;
+            if (p.x < LineEndX)
             {
-                p.x = Random.Range(-200f, -120f);
-                speedLineY[i] = Random.Range(-120f, 160f);
+                p.x = Random.Range(LineStartX - 30f, LineStartX);
+                speedLineY[i] = RandomLineY();
             }
             p.y = speedLineY[i];
             rt.anchoredPosition = p;
-            speedLineImages[i].color = new Color(1f, 1f, 1f, 0.55f * Mathf.Clamp01(amount));
+            float fade = Mathf.Clamp01((p.x - LineEndX) / 120f);
+            speedLineImages[i].color = new Color(1f, 1f, 1f, 0.55f * Mathf.Clamp01(amount) * fade);
         }
     }
 }

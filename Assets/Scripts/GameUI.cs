@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 // Builds and drives the whole uGUI hierarchy. Layout is anchor-based against a 1600x900 (landscape) or 1080x1920 (portrait) reference.
 public class GameUI
 {
+    const float GroundTop = 215f;         // the ground strip's top edge, this far below the dog's anchor
     const float LeftWidth = 0.58f;        // landscape: share of the width used by the game area
     const float GameScale = 0.85f;        // the whole game area (HUD, ground, dog) is drawn a bit smaller than the panel
     const float GameScaleMin = 0.6f;      // ...and shrinks further on big screens, but never below this
@@ -71,6 +72,8 @@ public class GameUI
     Vector2Int lastScreen;
     Rect lastSafe;
     DogRig rig;
+    TownProps town;
+    float worldSpeed; // px/s the ground and sky scroll: the dog's stride plus any pan to a new building
     RectTransform groundBand;
     readonly List<RectTransform> groundMarks = new List<RectTransform>();
     float clock;
@@ -330,6 +333,7 @@ public class GameUI
         buffChip.gameObject.SetActive(false);
 
         BuildGround(left);
+        town = new TownProps(left, -GroundTop);
 
         rig = new DogRig(left, new Vector2(0.5f, 0.4f));
 
@@ -749,7 +753,7 @@ public class GameUI
 
         goldenImage = NewImage(overlayLayer, "GoldenBone", ProceduralArt.GoldenBone(), Color.white, false, true);
         goldenRect = goldenImage.rectTransform;
-        goldenRect.sizeDelta = new Vector2(170f, 170f);
+        goldenRect.sizeDelta = new Vector2(100f, 100f);
         var btn = goldenImage.gameObject.AddComponent<Button>();
         btn.targetGraphic = goldenImage;
         btn.transition = Selectable.Transition.None;
@@ -1133,7 +1137,9 @@ public class GameUI
     void UpdateDog(float dt)
     {
         rig.Tick(dt, s.Cps);
-        sky.Update(dt, rig.StrideSpeed);
+        town.Tick(dt, rig.StrideSpeed, s.Owned);
+        worldSpeed = rig.StrideSpeed + town.PanSpeed;
+        sky.Update(dt, worldSpeed);
         UpdateGround(dt);
     }
 
@@ -1147,7 +1153,7 @@ public class GameUI
         groundBand.anchorMin = Vector2.zero;
         groundBand.anchorMax = new Vector2(1f, 0.4f);
         groundBand.offsetMin = Vector2.zero;
-        groundBand.offsetMax = new Vector2(0f, -215f);
+        groundBand.offsetMax = new Vector2(0f, -GroundTop);
 
         var edge = NewImage(groundBand, "Edge", null, new Color(0.72f, 0.4f, 0.16f, 0.6f));
         edge.rectTransform.anchorMin = new Vector2(0f, 1f);
@@ -1160,7 +1166,7 @@ public class GameUI
             var mark = NewImage(groundBand, "Mark", ProceduralArt.RoundedRect(), new Color(0.72f, 0.4f, 0.16f, 0.45f), true);
             var rt = mark.rectTransform;
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f); // x from the left edge, y down from the top
-            rt.sizeDelta = new Vector2(Random.Range(40f, 110f), Random.Range(7f, 12f));
+            rt.sizeDelta = new Vector2(Random.Range(18f, 48f), Random.Range(4f, 6f));
             groundMarks.Add(rt);
         }
     }
@@ -1182,7 +1188,7 @@ public class GameUI
         if (width <= 1f || height <= 1f) return;
         if (!groundScattered) ScatterGroundMarks(width, height);
 
-        float move = rig.StrideSpeed * dt;
+        float move = worldSpeed * dt;
         foreach (var mark in groundMarks)
         {
             var p = mark.anchoredPosition;
@@ -1310,8 +1316,8 @@ public class GameUI
     void SpawnGolden()
     {
         var area = LeftPanelInCanvas();
-        float x = area.width > 280f ? Random.Range(area.xMin + 140f, area.xMax - 140f) : area.center.x;
-        float y = area.height > 320f ? Random.Range(area.yMin + 160f, area.yMax - 160f) : area.center.y;
+        float x = area.width > 280f ? Random.Range(area.xMin + 80f, area.xMax - 80f) : area.center.x;
+        float y = area.height > 320f ? Random.Range(area.yMin + 90f, area.yMax - 90f) : area.center.y;
         goldenRect.anchorMin = goldenRect.anchorMax = new Vector2(0.5f, 0.5f);
         goldenRect.anchoredPosition = new Vector2(x, y);
         goldenImage.color = Color.white;
