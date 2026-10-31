@@ -40,6 +40,8 @@ public class TownProps
         new Def { Building = "estatua-caramelo", File = "dog_statue", Height = 115f },
         new Def { Building = "templo-caramelo", File = "templo-caramelo", Height = 185f },
         new Def { Building = "banco-canino", File = "banco-canino", Height = 170f },
+        new Def { Building = "veterinaria-caramelo", File = "veterinaria-caramelo", Height = 190f },
+        new Def { Building = "base-lunar-caramelo", File = "base-lunar-caramelo", Height = 105f }, // wide: ~900 px on screen, fits the Ahead margin
         new Def { Building = "planta-lunar", File = "lunar-flower", Cols = 3, Frames = 9, FrameW = 246, FrameH = 256, Height = 180f },
         new Def { Building = "fabrica-de-pudim-lunar", File = "fabrica-pudim-lunar", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f },
     };
