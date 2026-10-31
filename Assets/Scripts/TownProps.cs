@@ -28,7 +28,7 @@ public class TownProps
         new Def { Building = "o-inicio", File = "dog-stall", Height = 120f },
         new Def { Building = "venda-petiscos", Slot = "o-inicio", File = "stall-treats", Height = 21f, Offset = -26f, Lift = 39f }, // on the stall counter, left
         new Def { Building = "racao-caramelo", Slot = "o-inicio", File = "stall-feed", Height = 31f, Offset = 26f, Lift = 39f }, // same stall, right
-        new Def { Building = "petshop", File = "petshop", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
+        new Def { Building = "creche-caramelo", File = "creche-caramelo", Height = 190f }, // right after the stall
         // hidden for now: new Def { Building = "drone-entregas", File = "red-drone", Cols = 5, Frames = 17, FrameW = 357, FrameH = 282, Height = 100f, Air = 190f, Bob = true },
         new Def { Building = "faro-minerador", File = "mina-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f, Lift = -26f },
         new Def { Building = "fabrica-de-petiscos", File = "fabrica-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f, Lift = -20f },
@@ -36,6 +36,7 @@ public class TownProps
         new Def { Building = "estatua-caramelo", File = "dog_statue", Height = 115f },
         new Def { Building = "templo-caramelo", File = "templo-caramelo", Height = 185f },
         new Def { Building = "banco-canino", File = "banco-canino", Height = 170f },
+        new Def { Building = "pet-shop-caramelo", File = "petshop", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
         new Def { Building = "veterinaria-caramelo", File = "veterinaria-caramelo", Height = 190f },
         new Def { Building = "base-lunar-caramelo", File = "base-lunar-caramelo", Height = 200f }, // wide: ~1710 px on screen, fits the Ahead margin
         // hidden for now: new Def { Building = "planta-lunar", File = "lunar-flower", Cols = 3, Frames = 9, FrameW = 246, FrameH = 256, Height = 180f },
@@ -258,6 +259,24 @@ public class TownProps
         if (edge > lapPx) Debug.LogError("TownProps: layout (" + edge / PxPerMeter + " m) is longer than the map (" + MapMeters + " m)");
     }
 
+    // True for one tick each time the dog runs past the middle of the daycare (once per lap) while it is owned.
+    public bool PassedCreche;
+    const string CrecheBuilding = "creche-caramelo";
+    double crechePrevX = double.NaN;
+
+    void CheckCrechePass(double worldX, int[] owned)
+    {
+        PassedCreche = false;
+        int def = System.Array.FindIndex(Defs, d => d.Building == CrecheBuilding);
+        if (def < 0 || !Has(def, owned)) { crechePrevX = double.NaN; return; }
+        if (!double.IsNaN(crechePrevX))
+        {
+            double c = slotX[defSlot[def]];
+            PassedCreche = System.Math.Floor((worldX - c) / lapPx) > System.Math.Floor((crechePrevX - c) / lapPx);
+        }
+        crechePrevX = worldX;
+    }
+
     bool Has(int def, int[] owned)
     {
         return buildingOf[def] >= 0 && owned[buildingOf[def]] > 0;
@@ -268,6 +287,8 @@ public class TownProps
     {
         float panelW = layer.rect.width;
         if (panelW <= 1f) return; // layout not ready yet
+
+        CheckCrechePass(worldX, owned);
 
         nightTint = Color.Lerp(Color.white, NightTint, darkness);
         TickCans(dt, worldX, panelW, canBuilding >= 0 && owned[canBuilding] > 0);

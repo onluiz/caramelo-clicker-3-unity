@@ -57,7 +57,7 @@ public static class GameDefs
         new BuildingDef { Key = "passeador", Name = "Passeador", Description = "Passeia com o Caramelo e acha petiscos pelo caminho.", BaseCost = 1100, BaseCps = 8, Icon = 2 },
         new BuildingDef { Key = "cachorro-entregador", Name = "Caramelo Entregador", Description = "Cachorros entregadores contratados pela Caramelo Corps.", BaseCost = 3500, BaseCps = 18.0, IconFile = "cachorro-entregador" },
         new BuildingDef { Key = "racao-caramelo", Name = "Ração Caramelo", Description = "Ração caseira misteriosa fabricada pelo Caramelo.", BaseCost = 7000, BaseCps = 32.7, IconFile = "racao-caramelo" },
-        new BuildingDef { Key = "petshop", Name = "Pet Shop", Description = "Vende petiscos para toda a vizinhança.", BaseCost = 12000, BaseCps = 47, Icon = 3 },
+        new BuildingDef { Key = "creche-caramelo", Name = "Creche Caramelo", Description = "Filhotes brincando, cochilando e rendendo petiscos para toda a vizinhança.", BaseCost = 12000, BaseCps = 47, IconFile = "creche-caramelo" },
         new BuildingDef { Key = "iluminacao-caramelo", Name = "Iluminação Caramelo", Description = "O Caramelo investe na iluminação da cidade para garantir a segurança de seus entregadores e drones durante a noite.", BaseCost = 22000, BaseCps = 85.0, IconFile = "iluminacao-caramelo" },
         new BuildingDef { Key = "drone-entregas", Name = "Drone de Entregas", Description = "Faz a entrega dos petiscos e rações fabricados pelo Caramelo.", BaseCost = 40000, BaseCps = 154.0, IconFile = "drone-entregas" },
         new BuildingDef { Key = "padaria", Name = "Padaria para Pets", Description = "Biscoitos e petiscos feitos na hora!", BaseCost = 130000, BaseCps = 260, Icon = 4 },

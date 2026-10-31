@@ -227,6 +227,16 @@ public class GameState
         return Loc.F("Frenesi! Produção x{0} por 30s!", FrenzyMultiplier);
     }
 
+    // Reward for dropping the puppies off at the daycare: the golden bone's "lucky" payout (15% of the stash, capped
+    // at 15 minutes of income, plus a floor), scaled by how full the pack was.
+    public string ApplyCreche(double fullness, out double gain)
+    {
+        gain = (Math.Min(Petiscos * 0.15, BaseCps * 900) + 13) * Math.Max(0.0, Math.Min(1.0, fullness));
+        Petiscos += gain;
+        TotalEarned += gain;
+        return Loc.F("Filhotes na creche! +{0} petiscos!", NumberFormat.Format(gain));
+    }
+
     // Reward for tapping a bonus trash can: a chunk of income, with a small floor for the first minutes.
     public string ApplyTrashCan(out double gain)
     {

@@ -77,6 +77,21 @@ public class DogRig
     public float StrideSpeed { get; private set; }
     public RectTransform Root => rootRt;
 
+    // What the mini dogs copy from him: whether he is moving, his current gait and animation speed, and his frames.
+    public bool Running => StrideSpeed > 1f;
+    public int Gait => gait;
+    public float AnimFps => fps;
+    public Sprite Frame(int index) { return frames[Mathf.Clamp(index, 0, FrameCount - 1)]; }
+    public static void GaitFrames(int g, out int start, out int count)
+    {
+        start = GaitClips[g].start;
+        count = GaitClips[g].count;
+    }
+    public const int SitFrames = 17;                  // lying-down animation: frames 0..16
+    public const int SeatedStart = 6, SeatedCount = 11; // looping seated pose
+    public const float CellPx = CellSize, FeetBelow = 28f; // sprite cell size and rows from its centre down to the paws
+    public const float FramesPerSecondSit = SitFps, FramesPerSecondSeated = SeatedFps;
+
     // The player made him sit: he stays seated, ignoring income and clicks, until this is turned off.
     public bool Sitting { get; set; }
 

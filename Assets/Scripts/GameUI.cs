@@ -78,6 +78,7 @@ public class GameUI
     Vector2Int lastScreen;
     Rect lastSafe;
     DogRig rig;
+    MiniDogs minis;
     TownProps town;
     double worldX; // how far the dog has run, in canvas px; the world is fixed and the camera follows him
     RectTransform groundBand;
@@ -362,6 +363,7 @@ public class GameUI
         town.OnCanClicked = OnTrashCanClicked;
 
         rig = new DogRig(left, new Vector2(0.5f, 0.4f));
+        minis = new MiniDogs(left, rig);
 
         // Night shade over the ground, town and dogs; lit lamps and their glow go above it, then the HUD.
         nightShade = NewImage(left, "NightShade", null, new Color(0.02f, 0.04f, 0.16f, 0f), false);
@@ -380,6 +382,7 @@ public class GameUI
             grt.anchoredPosition = new Vector2(0f, HeadGlowY);
         }
 
+        minis.Root.SetAsLastSibling(); // the mini dogs too, and Caramelo goes in front of them
         rig.Root.SetAsLastSibling(); // Caramelo is drawn above the night shade, so he stays as bright as by day
 
         if (headLightFrames != null)
@@ -881,6 +884,7 @@ public class GameUI
         double value = s.Click();
         sfx.PlayClick();
         rig.Poke();
+        minis.Spawn(e.position);
         SpawnFloat(e.position, "+" + NumberFormat.Format(value, true), Color.white);
     }
 
@@ -905,6 +909,18 @@ public class GameUI
         HideGolden();
         sfx.PlayGolden();
         ShowToast(s.ApplyGoldenBone(), 6f);
+        RefreshAll();
+    }
+
+    // Running past the daycare: the puppies that were following him stay there, and he earns a golden-bone style reward.
+    void OnCrechePassed()
+    {
+        int n = minis.DropOff();
+        if (n <= 0) return;
+        sfx.PlayGolden();
+        string msg = s.ApplyCreche((double)n / MiniDogs.MaxDogs, out double gain);
+        SpawnFloat(RectTransformUtility.WorldToScreenPoint(null, rig.Root.position), "+" + NumberFormat.Format(gain, true), new Color(1f, 0.85f, 0.2f), 2f, 1.8f);
+        ShowToast(msg, 6f);
         RefreshAll();
     }
 
@@ -1266,8 +1282,10 @@ public class GameUI
     void UpdateDog(float dt)
     {
         rig.Tick(dt, s.Cps);
+        minis.Tick(dt);
         worldX += rig.StrideSpeed * dt; // the dog is the one who moves; everything else sits at fixed world positions
         town.Tick(dt, worldX, s.Owned, sky.Darkness);
+        if (town.PassedCreche) OnCrechePassed();
         nightShade.color = new Color(0.02f, 0.04f, 0.16f, NightShadeMax * sky.Darkness);
         if (headLight != null)
         {
