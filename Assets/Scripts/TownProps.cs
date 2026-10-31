@@ -549,6 +549,8 @@ public class TownProps
         r.glowImg.color = new Color(1f, 0.82f, 0.45f, 0.22f * on);
     }
 
+    const float BubblePadX = 56f;   // left/right padding between the delivery dog's dialogue text and the box edge
+
     static void BuildBubble(Runner r)
     {
         var go = new GameObject("delivery-bubble", typeof(RectTransform), typeof(CanvasGroup));
@@ -569,8 +571,8 @@ public class TownProps
         trt.SetParent(inner.rectTransform, false);
         trt.anchorMin = Vector2.zero;
         trt.anchorMax = Vector2.one;
-        trt.offsetMin = new Vector2(24f, 0f);
-        trt.offsetMax = new Vector2(-24f, 0f);
+        trt.offsetMin = new Vector2(BubblePadX, 0f);
+        trt.offsetMax = new Vector2(-BubblePadX, 0f);
         var text = tgo.AddComponent<TMPro.TextMeshProUGUI>();
         text.text = Loc.T(RunnerLine);
         text.fontSize = 50f;
@@ -579,6 +581,12 @@ public class TownProps
         text.color = new Color(0.15f, 0.1f, 0.06f);
         text.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
         text.raycastTarget = false;
+
+        // The box hugs the line, with BubblePadX of air on the left and right of the text.
+        float width = Mathf.Ceil(text.GetPreferredValues(text.text).x) + 2f * BubblePadX;
+        rt.sizeDelta = new Vector2(width + 12f, 130f);
+        body.rectTransform.sizeDelta = new Vector2(width + 12f, 110f);
+        inner.rectTransform.sizeDelta = new Vector2(width, 98f);
 
         r.bubble = rt;
         r.bubbleGroup = go.GetComponent<CanvasGroup>();
