@@ -73,9 +73,18 @@ public class GameUI
     Rect lastSafe;
     DogRig rig;
     TownProps town;
-    float worldSpeed; // px/s the ground and sky scroll: the dog's stride plus any pan to a new building
+    double worldX; // how far the dog has run, in canvas px; the world is fixed and the camera follows him
     RectTransform groundBand;
-    readonly List<RectTransform> groundMarks = new List<RectTransform>();
+
+    class GroundMark
+    {
+        public RectTransform rt;
+        public double x;
+    }
+
+    readonly List<GroundMark> groundMarks = new List<GroundMark>();
+    double nextMarkX;
+    bool groundStarted;
     float clock;
 
     TextMeshProUGUI counterText, cpsText, buffText, toastText, statsText;
@@ -1147,14 +1156,14 @@ public class GameUI
     void UpdateDog(float dt)
     {
         rig.Tick(dt, s.Cps);
-        town.Tick(dt, rig.StrideSpeed, s.Owned);
-        worldSpeed = rig.StrideSpeed + town.PanSpeed;
-        sky.Update(dt, worldSpeed);
-        UpdateGround(dt);
+        worldX += rig.StrideSpeed * dt; // the dog is the one who moves; everything else sits at fixed world positions
+        town.Tick(dt, worldX, s.Owned);
+        sky.Update(dt, rig.StrideSpeed);
+        UpdateGround();
     }
 
-    // Ground under the dog's paws, filling the panel down to its bottom edge (behind the buttons);
-    // its marks scroll left to match the stride.
+    // Ground under the dog's paws, filling the panel down to its bottom edge (behind the buttons).
+    // Its marks sit at fixed world positions: built ahead of the dog and destroyed once he is past them.
     void BuildGround(Transform parent)
     {
         // Opaque, so the clouds behind the game area do not show through the ground.
@@ -1171,45 +1180,43 @@ public class GameUI
         edge.rectTransform.pivot = new Vector2(0.5f, 1f);
         edge.rectTransform.sizeDelta = new Vector2(0f, 5f);
 
-        for (int i = 0; i < 40; i++)
-        {
-            var mark = NewImage(groundBand, "Mark", ProceduralArt.RoundedRect(), new Color(0.72f, 0.4f, 0.16f, 0.45f), true);
-            var rt = mark.rectTransform;
-            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f); // x from the left edge, y down from the top
-            rt.sizeDelta = new Vector2(Random.Range(18f, 48f), Random.Range(4f, 6f));
-            groundMarks.Add(rt);
-        }
     }
 
-    bool groundScattered;
-
-    // The band's size depends on the screen, so the marks are spread over it on first use.
-    void ScatterGroundMarks(float width, float height)
-    {
-        foreach (var mark in groundMarks)
-            mark.anchoredPosition = new Vector2(Random.Range(-60f, width), -Random.Range(22f, Mathf.Max(30f, height - 12f)));
-        groundScattered = true;
-    }
-
-    void UpdateGround(float dt)
+    void UpdateGround()
     {
         float width = groundBand.rect.width;
         float height = groundBand.rect.height;
         if (width <= 1f || height <= 1f) return;
-        if (!groundScattered) ScatterGroundMarks(width, height);
 
-        float move = worldSpeed * dt;
-        foreach (var mark in groundMarks)
+        // The band's size depends on the screen, so the first marks are laid out on first use.
+        if (!groundStarted)
         {
-            var p = mark.anchoredPosition;
-            p.x -= move;
-            if (p.x < -60f)
-            {
-                p.x += width + 120f;
-                p.y = -Random.Range(22f, Mathf.Max(30f, height - 12f));
-            }
-            mark.anchoredPosition = p;
+            groundStarted = true;
+            nextMarkX = worldX - 60.0;
         }
+
+        // Destroy marks the dog has passed.
+        for (int i = groundMarks.Count - 1; i >= 0; i--)
+        {
+            if (groundMarks[i].x >= worldX - 60.0) continue;
+            UnityEngine.Object.Destroy(groundMarks[i].rt.gameObject);
+            groundMarks.RemoveAt(i);
+        }
+
+        // Build the ground ahead of him.
+        while (nextMarkX < worldX + width + 60.0)
+        {
+            var img = NewImage(groundBand, "Mark", ProceduralArt.RoundedRect(), new Color(0.72f, 0.4f, 0.16f, 0.45f), true);
+            var rt = img.rectTransform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f); // x from the left edge, y down from the top
+            rt.sizeDelta = new Vector2(Random.Range(18f, 48f), Random.Range(4f, 6f));
+            groundMarks.Add(new GroundMark { rt = rt, x = nextMarkX });
+            rt.anchoredPosition = new Vector2(0f, -Random.Range(22f, Mathf.Max(30f, height - 12f)));
+            nextMarkX += Random.Range(14f, 38f);
+        }
+
+        foreach (var mark in groundMarks)
+            mark.rt.anchoredPosition = new Vector2((float)(mark.x - worldX), mark.rt.anchoredPosition.y);
     }
 
     void UpdateToast(float dt)

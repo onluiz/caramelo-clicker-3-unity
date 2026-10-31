@@ -49,7 +49,10 @@ public class DogRig
     const float SitFps = 14f;
     const float ClickDecay = 1.2f;
     const float GaitHysteresis = 0.35f;
-    const float StridePixelsPerFrame = 15.5f;
+    // Ground covered per animation frame: sprinting strides are much longer than walking ones,
+    // so the world has to scroll faster than the frame rate alone suggests.
+    static readonly float[] StridePerFrame = { 15.5f, 30f, 44f };
+    float stridePx = 15.5f;
 
     readonly RectTransform rootRt, spriteRt;
     readonly Image spriteImage;
@@ -222,7 +225,8 @@ public class DogRig
         ShowFrame(clip.start + Mathf.Min((int)frameTime, clip.count - 1));
 
         movingBlend = Mathf.MoveTowards(movingBlend, IsMoving(clip) ? 1f : 0f, dt * 3f);
-        StrideSpeed = IsMoving(clip) ? fps * StridePixelsPerFrame : 0f;
+        stridePx = Mathf.Lerp(stridePx, StridePerFrame[gait], 1f - Mathf.Exp(-dt * 2f));
+        StrideSpeed = IsMoving(clip) ? fps * stridePx : 0f;
 
         spriteRt.anchoredPosition = new Vector2(0f, GroundY + FeetBelowCentre);
 

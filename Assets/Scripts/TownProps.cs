@@ -2,9 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// The town on the horizon behind the dog: the first time a building is bought, its prop (Resources/Props) pops up
-// in a fixed slot of a looping world that scrolls with the dog's stride. Props are derived from the owned counts, so
-// they come back with a loaded save and go away on a rebirth. When a new one would be off screen the world pans to it.
+// The town on the horizon: the dog runs through a world with fixed coordinates (worldX is how far he has run) and the
+// camera follows him. Town stretches ("slots", in shop order, repeating) are built just past the right edge before he
+// gets there and destroyed once he has left them behind. A building bought mid-run is built next, ahead of him, or pops
+// up on screen when nothing is around yet. Props come from the owned counts (Resources/Props), so a loaded save rebuilds
+// the town and a rebirth clears it.
 public class TownProps
 {
     class Def
@@ -20,7 +22,7 @@ public class TownProps
         public bool Patrol, Bob;
     }
 
-    // In shop order: the slots are laid out in this order, so the town fills up as the game progresses.
+    // In shop order: the slots repeat in this order along the road, so the town fills up as the game progresses.
     static readonly Def[] Defs =
     {
         new Def { Building = "vira-lata", File = "trash-can", Height = 40f, Offset = 90f },
@@ -43,37 +45,46 @@ public class TownProps
     };
 
     const float SizeScale = 3.7f;     // all prop heights are multiplied by this, so buildings tower over the dog as he runs past
+    const float PxPerMeter = 10f;
     const float SlotSpacing = 340f;   // world px between building slots
-    const float Margin = 220f;        // how far past the edges a prop is before it wraps around
+    const float LapPx = 1000f * PxPerMeter; // the road is a loop of 1000 "meters": the town, then open country, then the town again
+    const float Ahead = 450f;         // town is built this far past the right edge (a prop reaches at most ~425 px to either side of its slot)
+    const float Behind = 500f;        // and destroyed once its slot is this far past the left edge
     const float PopSeconds = 0.45f;
-    const float PanPxPerSecond = 1500f;
     const float PatrolSpeed = 40f, PatrolRange = 110f;
 
     class Prop
     {
         public Def def;
-        public int building;
-        public float slotX;
         public RectTransform rt;
         public Image img;
         public Sprite[] frames;
-        public float pop;        // 0..1 growing in, -1 while waiting for the pan to finish
+        public float pop;        // 0..1 growing in
         public float anim, bob, patrolX;
         public int dir = 1, frame = -1;
+    }
+
+    // One stretch of town: everything built around one slot position in the world.
+    class Inst
+    {
+        public int slot;
+        public double x;
+        public readonly Prop[] byDef = new Prop[Defs.Length];
     }
 
     static readonly Dictionary<string, Sprite[]> Cache = new Dictionary<string, Sprite[]>();
 
     readonly RectTransform layer;
     readonly int[] buildingOf = new int[Defs.Length];
-    readonly float[] slotOf = new float[Defs.Length];
-    readonly Prop[] props = new Prop[Defs.Length];
+    readonly int[] defSlot = new int[Defs.Length];
+    readonly bool[] slotOwned, slotWasOwned;
+    readonly List<Inst> insts = new List<Inst>();
+    readonly Queue<int> queue = new Queue<int>(); // slots bought mid-run: built before the regular cycle goes on
     readonly int slotCount;
-    float scroll, panLeft;
+    int cursor = -1;
+    double nextSpawnX;  // where the next slot of the current lap goes
+    double lapStart;    // world x of the current lap's first slot
     bool started;
-
-    // Extra world speed (px/s) while panning to a new building; the ground and sky follow it.
-    public float PanSpeed { get; private set; }
 
     // groundY is the top of the ground strip, in the parent's space (distance from its 40% height line).
     public TownProps(Transform parent, float groundY)
@@ -95,53 +106,196 @@ public class TownProps
             if (buildingOf[i] < 0) Debug.LogError("TownProps: unknown building " + key);
             string slot = Defs[i].Slot ?? key;
             if (!slots.ContainsKey(slot)) slots[slot] = slots.Count;
-            slotOf[i] = slots[slot] * SlotSpacing;
+            defSlot[i] = slots[slot];
         }
+
         slotCount = slots.Count;
+        slotOwned = new bool[slotCount];
+        slotWasOwned = new bool[slotCount];
     }
 
-    public void Tick(float dt, float stride, int[] owned)
+    bool Has(int def, int[] owned)
+    {
+        return buildingOf[def] >= 0 && owned[buildingOf[def]] > 0;
+    }
+
+    // worldX: how far the dog has run, in canvas px. A thing's screen x is its world x minus worldX.
+    public void Tick(float dt, double worldX, int[] owned)
     {
         float panelW = layer.rect.width;
         if (panelW <= 1f) return; // layout not ready yet
-        float worldW = Mathf.Max(slotCount * SlotSpacing, panelW + 2f * Margin + 80f);
 
         bool initial = !started;
         started = true;
-        Prop newest = null;
+        if (initial) nextSpawnX = lapStart = worldX - Behind;
+
+        System.Array.Clear(slotOwned, 0, slotCount);
         for (int i = 0; i < Defs.Length; i++)
+            if (Has(i, owned)) slotOwned[defSlot[i]] = true;
+
+        int ownedCount = 0;
+        for (int sl = 0; sl < slotCount; sl++)
         {
-            bool has = buildingOf[i] >= 0 && owned[buildingOf[i]] > 0;
-            if (has && props[i] == null)
+            if (slotOwned[sl]) ownedCount++;
+            if (slotOwned[sl] && !slotWasOwned[sl] && !initial && !HasInst(sl)) queue.Enqueue(sl);
+            slotWasOwned[sl] = slotOwned[sl];
+        }
+
+        bool dirty = false;
+
+        // Drop what the dog left behind, and keep the stretches still in front of him in line with what is owned
+        // (goods bought later land on a stall that is already built; a rebirth removes everything).
+        for (int k = insts.Count - 1; k >= 0; k--)
+        {
+            var inst = insts[k];
+            if (inst.x < worldX - Behind)
             {
-                props[i] = Spawn(Defs[i], buildingOf[i], slotOf[i], initial);
-                if (props[i] != null) newest = props[i];
+                DestroyInst(inst);
+                insts.RemoveAt(k);
+                continue;
             }
-            else if (!has && props[i] != null)
+
+            float sx = (float)(inst.x - worldX);
+            bool onScreen = sx > -200f && sx < panelW + 200f;
+            bool any = false;
+            for (int i = 0; i < Defs.Length; i++)
             {
-                Object.Destroy(props[i].rt.gameObject);
-                props[i] = null;
+                if (defSlot[i] != inst.slot) continue;
+                bool has = Has(i, owned);
+                if (has && inst.byDef[i] == null)
+                {
+                    inst.byDef[i] = Spawn(Defs[i], onScreen);
+                    dirty |= inst.byDef[i] != null;
+                }
+                else if (!has && inst.byDef[i] != null)
+                {
+                    Object.Destroy(inst.byDef[i].rt.gameObject);
+                    inst.byDef[i] = null;
+                }
+
+                any |= inst.byDef[i] != null;
+            }
+
+            if (!any) insts.RemoveAt(k);
+        }
+
+        // Build ahead of the dog, so the town is there before he is.
+        double limit = worldX + panelW + Ahead;
+        if (ownedCount == 0)
+        {
+            queue.Clear();
+            cursor = -1;
+            nextSpawnX = lapStart = worldX - Behind;
+        }
+        else
+        {
+            // Slots bought this run go up right away: on screen with a pop when nothing is around, else just past the right edge.
+            while (queue.Count > 0)
+            {
+                int q = queue.Dequeue();
+                if (!slotOwned[q] || HasInst(q)) continue;
+
+                double x = limit;
+                bool popIn = false;
+                if (insts.Count == 0)
+                {
+                    x = worldX + 0.78f * panelW;
+                    popIn = true;
+                    lapStart = x;
+                    nextSpawnX = x + SlotSpacing;
+                    cursor = q;
+                }
+                else
+                {
+                    while (NearInst(x)) x += SlotSpacing;
+                }
+
+                AddInst(q, x, popIn, owned);
+                dirty = true;
+            }
+
+            // The rest of the lap, in shop order; after the last slot comes open country until the next lap starts.
+            while (true)
+            {
+                int slot = PeekSlot(out bool wrapped);
+                if (slot < 0) break;
+
+                double x = wrapped ? lapStart + LapPx : nextSpawnX;
+                if (x >= limit) break;
+
+                if (wrapped) lapStart = x;
+                cursor = slot;
+                AddInst(slot, x, false, owned);
+                nextSpawnX = x + SlotSpacing;
+                dirty = true;
             }
         }
 
-        if (newest != null)
+        if (dirty) Reorder();
+
+        foreach (var inst in insts)
         {
-            // Later defs are drawn in front, so goods end up on top of the stall whichever was bought first.
-            foreach (var p in props)
-                if (p != null) p.rt.SetAsLastSibling();
-            if (!initial) RequestPan(newest, panelW, worldW);
+            float baseX = (float)(inst.x - worldX);
+            for (int i = 0; i < Defs.Length; i++)
+                if (inst.byDef[i] != null) Place(inst.byDef[i], baseX, dt);
         }
-
-        float step = Mathf.Min(panLeft, PanPxPerSecond * dt);
-        panLeft -= step;
-        PanSpeed = dt > 0f ? step / dt : 0f;
-        scroll += stride * dt + step;
-
-        foreach (var p in props)
-            if (p != null) Place(p, dt, worldW);
     }
 
-    Prop Spawn(Def def, int building, float slotX, bool instant)
+    bool HasInst(int slot)
+    {
+        foreach (var inst in insts)
+            if (inst.slot == slot) return true;
+        return false;
+    }
+
+    bool NearInst(double x)
+    {
+        foreach (var inst in insts)
+            if (System.Math.Abs(inst.x - x) < SlotSpacing) return true;
+        return false;
+    }
+
+    // The next owned slot after the cursor in shop order (skipping ones already standing); wrapped = it starts a new lap.
+    int PeekSlot(out bool wrapped)
+    {
+        wrapped = false;
+        for (int n = 1; n <= slotCount; n++)
+        {
+            int idx = cursor + n;
+            int sl = idx % slotCount;
+            if (slotOwned[sl] && !HasInst(sl))
+            {
+                wrapped = idx >= slotCount;
+                return sl;
+            }
+        }
+
+        return -1;
+    }
+
+    void AddInst(int slot, double x, bool popIn, int[] owned)
+    {
+        var inst = new Inst { slot = slot, x = x };
+        for (int i = 0; i < Defs.Length; i++)
+            if (defSlot[i] == slot && Has(i, owned)) inst.byDef[i] = Spawn(Defs[i], popIn);
+        insts.Add(inst);
+    }
+
+    static void DestroyInst(Inst inst)
+    {
+        foreach (var p in inst.byDef)
+            if (p != null) Object.Destroy(p.rt.gameObject);
+    }
+
+    // Later defs are drawn in front, so goods end up on top of the stall whichever was built first.
+    void Reorder()
+    {
+        for (int i = 0; i < Defs.Length; i++)
+            foreach (var inst in insts)
+                if (inst.byDef[i] != null) inst.byDef[i].rt.SetAsLastSibling();
+    }
+
+    Prop Spawn(Def def, bool popIn)
     {
         var frames = Frames(def);
         if (frames == null) return null;
@@ -160,8 +314,8 @@ public class TownProps
 
         return new Prop
         {
-            def = def, building = building, slotX = slotX + def.Offset * SizeScale, rt = rt, img = img, frames = frames,
-            pop = instant ? 1f : -1f,
+            def = def, rt = rt, img = img, frames = frames,
+            pop = popIn ? 0f : 1f,
             anim = Random.value * frames.Length,
             bob = Random.value * 6f,
             patrolX = Random.Range(-PatrolRange, PatrolRange),
@@ -169,37 +323,14 @@ public class TownProps
         };
     }
 
-    // The world only moves one way, so the pan is how far to scroll for the new prop to land in view, left or right of the dog.
-    void RequestPan(Prop p, float panelW, float worldW)
+    void Place(Prop p, float slotScreenX, float dt)
     {
-        float sx = ScreenX(p.slotX, scroll + panLeft, worldW);
-        bool visible = sx > 0.08f * panelW && sx < 0.92f * panelW && Mathf.Abs(sx - 0.5f * panelW) > 150f;
-        if (visible) return;
-        float toLeft = Mathf.Repeat(sx - 0.22f * panelW, worldW);
-        float toRight = Mathf.Repeat(sx - 0.78f * panelW, worldW);
-        panLeft += Mathf.Min(toLeft, toRight);
-    }
+        if (p.pop < 1f) p.pop = Mathf.Min(1f, p.pop + dt / PopSeconds);
 
-    static float ScreenX(float slotX, float scrollPos, float worldW)
-    {
-        return Mathf.Repeat(slotX - scrollPos + Margin, worldW) - Margin;
-    }
+        float t = p.pop - 1f;
+        float grow = p.pop >= 1f ? 1f : 1f + 2.70158f * t * t * t + 1.70158f * t * t; // ease-out-back
 
-    void Place(Prop p, float dt, float worldW)
-    {
-        if (p.pop < 0f)
-        {
-            if (panLeft <= 0.5f) p.pop = 0f;
-        }
-        else if (p.pop < 1f)
-        {
-            p.pop = Mathf.Min(1f, p.pop + dt / PopSeconds);
-        }
-
-        float t = Mathf.Max(p.pop, 0f) - 1f;
-        float grow = p.pop >= 1f ? 1f : (p.pop < 0f ? 0f : 1f + 2.70158f * t * t * t + 1.70158f * t * t); // ease-out-back
-
-        float x = ScreenX(p.slotX, scroll, worldW);
+        float x = slotScreenX + p.def.Offset * SizeScale;
         if (p.def.Patrol)
         {
             p.patrolX += p.dir * PatrolSpeed * dt;
