@@ -5,6 +5,7 @@ using UnityEngine.UI;
 // so its size, position and animation are edited in the Inspector. Behaviours that only some buildings have
 // (patrolling, bobbing) are subclasses: swap the component on the prefab to change how a building moves.
 // TownProps instantiates the prefabs ahead of the dog and calls Place every frame.
+[ExecuteAlways]
 public class BuildingProp : MonoBehaviour
 {
     public const float SizeScale = 3.7f; // every height/offset below is multiplied by this, so buildings tower over the dog
@@ -53,6 +54,27 @@ public class BuildingProp : MonoBehaviour
         UnityEditor.EditorApplication.delayCall += () => { if (this != null) RefreshPreview(); };
     }
 
+    Vector2 previewSize; // the size the preview last set; zero until it has run
+
+    // Dragging the rect handles in the Scene view resizes the prop: the new height goes back into the field.
+    void OnRectTransformDimensionsChange()
+    {
+        if (Application.isPlaying || previewSize == Vector2.zero || UnityEditor.EditorUtility.IsPersistent(this)) return;
+        var rt = transform as RectTransform;
+        if (rt == null || (rt.sizeDelta - previewSize).sqrMagnitude < 0.01f) return;
+
+        float h = rt.sizeDelta.y / SizeScale;
+        if (Mathf.Abs(h - height) < 0.001f)
+        {
+            RefreshPreview(); // only the width was dragged: snap it back to the sprite's proportions
+            return;
+        }
+
+        UnityEditor.Undo.RecordObject(this, "Resize building");
+        height = Mathf.Round(h * 10f) / 10f;
+        UnityEditor.EditorApplication.delayCall += () => { if (this != null) RefreshPreview(); };
+    }
+
     public void RefreshPreview()
     {
         if (Application.isPlaying || string.IsNullOrEmpty(file)) return;
@@ -70,6 +92,7 @@ public class BuildingProp : MonoBehaviour
         rt0.anchorMin = rt0.anchorMax = Vector2.zero;
         rt0.pivot = new Vector2(0.5f, 0f);
         rt0.sizeDelta = size;
+        previewSize = size;
 
         var go = new GameObject(PreviewName, typeof(RectTransform), typeof(UnityEngine.UI.RawImage));
         go.hideFlags = HideFlags.HideAndDontSave;

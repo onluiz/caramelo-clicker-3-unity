@@ -1,6 +1,7 @@
 using UnityEngine;
 
 // A hovering prop that bobs up and down.
+[ExecuteAlways]
 public class BobProp : BuildingProp
 {
     [Header("Bob")]

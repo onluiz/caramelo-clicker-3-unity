@@ -1,6 +1,7 @@
 using UnityEngine;
 
 // A prop that walks back and forth around its spot, turning at both ends.
+[ExecuteAlways]
 public class PatrolProp : BuildingProp
 {
     [Header("Patrol")]
