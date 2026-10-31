@@ -987,12 +987,20 @@ public class GameUI
             row.go.SetActive(true);
             int n = mode > 0 ? mode : Mathf.Max(1, s.MaxAffordable(i));
             double cost = s.BuyCost(i, n);
-            bool affordable = s.Petiscos >= cost;
+            bool locked = s.IsBuildingLocked(i);
+            bool affordable = !locked && s.Petiscos >= cost;
 
-            row.icon.color = Color.white;
+            row.icon.color = locked ? new Color(1f, 1f, 1f, 0.5f) : Color.white;
             row.bg.color = affordable ? RowOn : RowOff;
             row.name.text = GameDefs.NameOf(def);
             row.desc.text = GameDefs.DescOf(def);
+            if (locked)
+            {
+                row.cost.color = Bad;
+                row.cost.text = "<size=60%>" + Loc.T("Compre O Início para montar a barraca.") + "</size>";
+                row.count.text = "";
+                continue;
+            }
             row.cost.color = affordable ? Good : Bad;
             row.cost.text = NumberFormat.Format(cost) + (n > 1 ? " (x" + n + ")" : "") +
                 "  <size=70%><color=#35200D>" + Loc.F("+{0}/s cada", NumberFormat.Format(s.CpsEach(i), true)) + "</color></size>";

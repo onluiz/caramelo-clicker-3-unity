@@ -25,10 +25,10 @@ public class TownProps
     {
         new Def { Building = "vira-lata", File = "trash-can", Height = 40f, Offset = 90f },
         new Def { Building = "vira-lata", File = "tiny_dog", Height = 50f, Offset = -70f },
-        new Def { Building = "venda-petiscos", File = "dog-stall", Height = 120f },
-        new Def { Building = "venda-petiscos", File = "stall-treats", Height = 21f, Offset = -26f, Lift = 39f }, // on the stall counter, left
+        new Def { Building = "o-inicio", File = "dog-stall", Height = 120f },
+        new Def { Building = "venda-petiscos", Slot = "o-inicio", File = "stall-treats", Height = 21f, Offset = -26f, Lift = 39f }, // on the stall counter, left
         new Def { Building = "cachorro-entregador", File = "cachorro-entregador", Cols = 5, Frames = 17, FrameW = 68, FrameH = 60, Height = 78f, Patrol = true },
-        new Def { Building = "racao-caramelo", Slot = "venda-petiscos", File = "stall-feed", Height = 31f, Offset = 26f, Lift = 39f }, // same stall, right
+        new Def { Building = "racao-caramelo", Slot = "o-inicio", File = "stall-feed", Height = 31f, Offset = 26f, Lift = 39f }, // same stall, right
         new Def { Building = "petshop", File = "petshop", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
         new Def { Building = "iluminacao-caramelo", File = "street-lamp-on", Height = 190f },
         new Def { Building = "drone-entregas", File = "red-drone", Cols = 5, Frames = 17, FrameW = 357, FrameH = 282, Height = 100f, Air = 190f, Bob = true },

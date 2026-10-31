@@ -166,9 +166,18 @@ public class GameState
         return (int)Math.Floor(Math.Log(1 + Petiscos * (g - 1) / first) / Math.Log(g));
     }
 
+    // The street stall comes with "O Início": the stall-based buildings stay locked until it is bought.
+    public bool IsBuildingLocked(int building)
+    {
+        string key = GameDefs.Buildings[building].Key;
+        if (key != "venda-petiscos" && key != "racao-caramelo") return false;
+        int start = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == "o-inicio");
+        return start >= 0 && Owned[start] <= 0;
+    }
+
     public bool TryBuy(int building, int count)
     {
-        if (count <= 0) return false;
+        if (count <= 0 || IsBuildingLocked(building)) return false;
         double cost = BuyCost(building, count);
         if (Petiscos < cost) return false;
         Petiscos -= cost;

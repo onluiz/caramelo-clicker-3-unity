@@ -118,6 +118,7 @@ public static class Loc
         { "{0} osso", "{0} bone" },
         { "{0} ossos", "{0} bones" },
         { "Junte mais petiscos para desbloquear.", "Collect more treats to unlock." },
+        { "Compre O Início para montar a barraca.", "Buy The Beginning to set up the stall." },
         { "+{0}/s cada", "+{0}/s each" },
         { "{0} petiscos", "{0} treats" },
         { "Ainda falta produzir mais petiscos para ganhar um Osso Celestial.", "You still need to produce more treats to earn a Celestial Bone." },
