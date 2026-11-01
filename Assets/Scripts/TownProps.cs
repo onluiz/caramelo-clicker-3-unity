@@ -184,6 +184,10 @@ public class TownProps
     readonly double[] slotX, slotHalf; // fixed world x of each slot centre within a lap, and half its width   // fixed world x of each slot within a lap
     readonly double lapPx;
     public double LapPx => lapPx;   // length of the looping map, in canvas px
+    public double IndustrialL { get; private set; }   // the industrial district, from its welcome board to its last building (world x within a lap)
+    public double IndustrialR { get; private set; }
+    public double CityL { get; private set; }         // the residential district, same convention
+    public double CityR { get; private set; }
     readonly List<Inst> insts = new List<Inst>();
     readonly int slotCount;
 
@@ -290,6 +294,11 @@ public class TownProps
             if (Factories.Contains(names[sl])) indR = System.Math.Max(indR, slotX[sl] + slotHalf[sl]);
             else cityR = System.Math.Max(cityR, slotX[sl] + slotHalf[sl]);
         }
+
+        CityL = cityL;
+        CityR = cityR;
+        IndustrialL = indL;
+        IndustrialR = indR;
 
         for (double x = LampEvery; x < lapPx; x += LampEvery)
         {

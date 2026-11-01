@@ -96,6 +96,8 @@ public static class Loc
         { "Som: Ligado", "Sound: On" },
         { "Som: Mudo", "Sound: Off" },
         { "Idioma: Português", "Language: English" },
+        { "Tela: sempre ligada", "Screen: always on" },
+        { "Tela: apaga em {0} min", "Screen: sleeps after {0} min" },
         { "Reiniciar jogo", "Restart game" },
         { "Confirmar reinício!", "Confirm restart!" },
         { "Isso apaga todo o progresso! Clique em \"Confirmar reinício\" para continuar.", "This erases all your progress! Tap \"Confirm restart\" to continue." },

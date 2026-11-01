@@ -72,7 +72,7 @@ public class GameUI
     const float NightShadeMax = 0.58f;
     const float HeadGlowY = -150f; // the glow is centred on his body, so he is lit too
     const float HeadLightX = 25f, HeadLightY = -30f; // from the dog anchor: right above his head
-    RectTransform safeRoot, tapArea, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
+    RectTransform shopBackdrop, safeRoot, tapArea, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
     CanvasScaler scaler;
     bool portrait;
     Vector2Int lastScreen;
@@ -92,11 +92,45 @@ public class GameUI
     readonly List<GroundMark> groundMarks = new List<GroundMark>();
     double nextMarkX;
     bool groundStarted;
+
+    // Asphalt under the industrial district: a dark strip (plus a light curb) per lap copy, positioned in world space.
+    static readonly Color AsphaltColor = new Color(0.27f, 0.28f, 0.31f, 1f);
+    static readonly Color AsphaltMark = new Color(0.17f, 0.18f, 0.2f, 0.55f);
+    static readonly Color AsphaltCurb = new Color(0.62f, 0.63f, 0.66f, 1f);
+    static readonly Color LaneColor = new Color(1f, 0.8f, 0.15f, 0.95f);
+    const double LaneStep = 150.0;   // distance between dashes' starts
+    const float LaneDash = 80f;
+    readonly List<GroundMark> laneMarks = new List<GroundMark>();
+    double nextLaneX;
+    bool laneStarted;
+    const float AsphaltMargin = 200f; // the asphalt extends this far past the first and last building
+    readonly RectTransform[] asphalt = new RectTransform[2];
+    readonly RectTransform[] asphaltCurb = new RectTransform[2];
+
+    // Residential district: a lawn with a pale pavement strip along the top, where the dog walks.
+    static readonly Color LawnColor = new Color(0.45f, 0.68f, 0.3f, 1f);
+    static readonly Color LawnMark = new Color(0.25f, 0.46f, 0.17f, 0.55f);
+    static readonly Color PavementColor = new Color(0.82f, 0.78f, 0.69f, 1f);
+    static readonly Color PavementEdge = new Color(0.58f, 0.54f, 0.46f, 1f);
+    const float PavementHeight = 62f;
+    readonly RectTransform[] lawn = new RectTransform[2];
+    readonly RectTransform[] pavement = new RectTransform[2];
+    readonly RectTransform[] pavementEdge = new RectTransform[2];
+
+    static bool InZone(double x, double lap, double l, double r)
+    {
+        double m = x - System.Math.Floor((x - l) / lap) * lap; // l <= m < l + lap
+        return m < r;
+    }
+
+    bool OnAsphalt(double x) => InZone(x, town.LapPx, town.IndustrialL - AsphaltMargin, town.IndustrialR + AsphaltMargin);
+    bool OnLawn(double x) => InZone(x, town.LapPx, town.CityL - AsphaltMargin, town.CityR + AsphaltMargin);
     float clock;
 
     TextMeshProUGUI counterText, cpsText, buffText, toastText, statsText;
     Image statsPill;
-    TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, resetText, sitText;
+    TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, resetText, sitText, awakeText;
+    readonly ScreenAwake awake = new ScreenAwake();
     Image tabBuildingsBg, tabUpgradesBg, tabCeuBg, tabDevBg, resetBg;
     GameObject devContent, ceuContent;
     bool showDev, showCeu;
@@ -287,6 +321,9 @@ public class GameUI
             falling[i] = new FallingBone { rt = img.rectTransform };
         }
 
+        // The shop's colour reaches the screen edges, behind the notch / rounded corners outside the safe area.
+        shopBackdrop = NewImage(canvasRect, "ShopBackdrop", null, PanelDark, false, false).rectTransform;
+
         // Game and shop panels live inside the device's safe area (notches, rounded corners).
         safeRoot = NewRect("SafeArea", canvasRect);
         Stretch(safeRoot);
@@ -433,7 +470,7 @@ public class GameUI
         dimBtn.onClick.AddListener(() => SetSettingsOpen(false));
 
         var border = NewImage(settingsRoot, "Panel", ProceduralArt.RoundedRect(), CardBorder, true, true);
-        Place(border.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(780f, 640f));
+        Place(border.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(780f, 748f));
         var panel = NewImage(border.transform, "Inner", ProceduralArt.RoundedRect(), CardBg, true);
         Box(panel.rectTransform, Vector2.zero, Vector2.one, new Vector2(6f, 6f), new Vector2(-6f, -6f));
 
@@ -456,19 +493,28 @@ public class GameUI
             ApplyLanguage();
         });
 
+        var awakeBtn = NewButton(panel.transform, "ScreenAwakeButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out awakeText);
+        Place((RectTransform)awakeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -344f), new Vector2(640f, 96f));
+        awakeBtn.onClick.AddListener(() =>
+        {
+            awake.Next();
+            awakeText.text = awake.Label();
+        });
+        awakeText.text = awake.Label();
+
         var resetBtn = NewButton(panel.transform, "ResetButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out resetBg, out resetText);
-        Place((RectTransform)resetBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -344f), new Vector2(640f, 96f));
+        Place((RectTransform)resetBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -452f), new Vector2(640f, 96f));
         resetBtn.onClick.AddListener(OnResetClicked);
 
-        float closeY = -476f;
+        float closeY = -584f;
         if (DevMode.Enabled)
         {
             // Dev only (Editor / local builds): type an amount of petiscos and add it to the balance.
-            border.rectTransform.sizeDelta = new Vector2(780f, 868f);
-            closeY = -704f;
+            border.rectTransform.sizeDelta = new Vector2(780f, 976f);
+            closeY = -812f;
 
             var nightBtn = NewButton(panel.transform, "ForceNightButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out forceNightText);
-            Place((RectTransform)nightBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -560f), new Vector2(640f, 96f));
+            Place((RectTransform)nightBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -668f), new Vector2(640f, 96f));
             nightBtn.onClick.AddListener(() =>
             {
                 sky.ForceNight = !sky.ForceNight;
@@ -477,7 +523,7 @@ public class GameUI
             forceNightText.text = "Forçar noite: desligado";
 
             var field = NewImage(panel.transform, "DevAmount", ProceduralArt.RoundedRect(), ProceduralArt.Hex("#2B1A0E"), true, true);
-            Place(field.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(-114f, -452f), new Vector2(400f, 96f));
+            Place(field.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(-114f, -560f), new Vector2(400f, 96f));
             var viewport = NewRect("Viewport", field.transform);
             Stretch(viewport);
             viewport.offsetMin = new Vector2(20f, 6f);
@@ -496,7 +542,7 @@ public class GameUI
             input.targetGraphic = field;
 
             var addBtn = NewButton(panel.transform, "DevAddButton", "Adicionar", 34, TabOn, Ink, out _, out _);
-            Place((RectTransform)addBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(256f, -452f), new Vector2(224f, 96f));
+            Place((RectTransform)addBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(256f, -560f), new Vector2(224f, 96f));
             addBtn.onClick.AddListener(() =>
             {
                 string raw = input.text.Trim().Replace(',', '.');
@@ -524,6 +570,7 @@ public class GameUI
         settingsTitleText.text = Loc.T("Configurações");
         closeText.text = Loc.T("Fechar");
         langText.text = Loc.T("Idioma: Português");
+        awakeText.text = awake.Label();
         RefreshSitLabel();
 
         for (int i = 0; i < upgradeRows.Count; i++)
@@ -1191,8 +1238,16 @@ public class GameUI
         // The sky fills the game area out to the screen edges, and ends where the shop starts.
         float splitX = (safe.xMin + LeftWidth * safe.width) / Screen.width;
         float splitY = (safe.yMin + PortraitShopHeight * safe.height) / Screen.height;
-        if (portrait) Anchors(sky.Root, 0f, splitY, 1f, 1f);
-        else Anchors(sky.Root, 0f, 0f, splitX, 1f);
+        if (portrait)
+        {
+            Anchors(sky.Root, 0f, splitY, 1f, 1f);
+            Anchors(shopBackdrop, 0f, 0f, 1f, splitY);
+        }
+        else
+        {
+            Anchors(sky.Root, 0f, 0f, splitX, 1f);
+            Anchors(shopBackdrop, splitX, 0f, 1f, 1f);
+        }
 
         if (portrait)
         {
@@ -1237,6 +1292,7 @@ public class GameUI
     public void Update(float dt)
     {
         clock += dt;
+        awake.Update(dt);
 
         if (Screen.width != lastScreen.x || Screen.height != lastScreen.y || Screen.safeArea != lastSafe)
             ApplyLayout();
@@ -1317,6 +1373,70 @@ public class GameUI
         edge.rectTransform.pivot = new Vector2(0.5f, 1f);
         edge.rectTransform.sizeDelta = new Vector2(0f, 5f);
 
+        // Asphalt strips go under the brown edge and the marks, over the dirt; the curbs go on top of the edge.
+        for (int i = 0; i < 2; i++)
+        {
+            var a = NewImage(groundBand, "Asphalt", null, AsphaltColor);
+            asphalt[i] = a.rectTransform;
+            asphalt[i].SetSiblingIndex(0);
+            var c = NewImage(groundBand, "AsphaltCurb", null, AsphaltCurb);
+            asphaltCurb[i] = c.rectTransform;
+            foreach (var rt in new[] { asphalt[i], asphaltCurb[i] })
+            {
+                rt.anchorMin = new Vector2(0f, 0f);
+                rt.anchorMax = new Vector2(0f, 1f);
+                rt.pivot = new Vector2(0f, 0.5f);
+            }
+            asphaltCurb[i].anchorMin = new Vector2(0f, 1f);
+            asphaltCurb[i].pivot = new Vector2(0f, 1f);
+
+            var g = NewImage(groundBand, "Lawn", null, LawnColor);
+            lawn[i] = g.rectTransform;
+            lawn[i].SetSiblingIndex(0);
+            var p = NewImage(groundBand, "Pavement", null, PavementColor);
+            pavement[i] = p.rectTransform;
+            var pe = NewImage(groundBand, "PavementEdge", null, PavementEdge);
+            pavementEdge[i] = pe.rectTransform;
+            lawn[i].anchorMin = new Vector2(0f, 0f);
+            lawn[i].anchorMax = new Vector2(0f, 1f);
+            lawn[i].pivot = new Vector2(0f, 0.5f);
+            foreach (var rt in new[] { pavement[i], pavementEdge[i] })
+            {
+                rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+                rt.pivot = new Vector2(0f, 1f);
+            }
+        }
+    }
+
+    void UpdateAsphalt()
+    {
+        double lap = town.LapPx;
+        double l = town.IndustrialL - AsphaltMargin, r = town.IndustrialR + AsphaltMargin;
+        double k = System.Math.Floor((worldX - l) / lap); // the lap copy the dog is in (or just past)
+        for (int i = 0; i < 2; i++)
+        {
+            double start = l + (k + i) * lap - worldX;
+            float w = (float)(r - l);
+            asphalt[i].anchoredPosition = new Vector2((float)start, 0f);
+            asphalt[i].sizeDelta = new Vector2(w, 0f);
+            asphaltCurb[i].anchoredPosition = new Vector2((float)start, 0f);
+            asphaltCurb[i].sizeDelta = new Vector2(w, 5f);
+        }
+
+        l = town.CityL - AsphaltMargin;
+        r = town.CityR + AsphaltMargin;
+        k = System.Math.Floor((worldX - l) / lap);
+        for (int i = 0; i < 2; i++)
+        {
+            float start = (float)(l + (k + i) * lap - worldX);
+            float w = (float)(r - l);
+            lawn[i].anchoredPosition = new Vector2(start, 0f);
+            lawn[i].sizeDelta = new Vector2(w, 0f);
+            pavement[i].anchoredPosition = new Vector2(start, 0f);
+            pavement[i].sizeDelta = new Vector2(w, PavementHeight);
+            pavementEdge[i].anchoredPosition = new Vector2(start, -PavementHeight);
+            pavementEdge[i].sizeDelta = new Vector2(w, 4f);
+        }
     }
 
     void UpdateGround()
@@ -1343,15 +1463,40 @@ public class GameUI
         // Build the ground ahead of him.
         while (nextMarkX < worldX + width + 60.0)
         {
-            var img = NewImage(groundBand, "Mark", ProceduralArt.RoundedRect(), new Color(0.72f, 0.4f, 0.16f, 0.45f), true);
+            var img = NewImage(groundBand, "Mark", ProceduralArt.RoundedRect(), OnAsphalt(nextMarkX) ? AsphaltMark : OnLawn(nextMarkX) ? LawnMark : new Color(0.72f, 0.4f, 0.16f, 0.45f), true);
             var rt = img.rectTransform;
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f); // x from the left edge, y down from the top
             rt.sizeDelta = new Vector2(Random.Range(18f, 48f), Random.Range(4f, 6f));
             groundMarks.Add(new GroundMark { rt = rt, x = nextMarkX });
-            rt.anchoredPosition = new Vector2(0f, -Random.Range(22f, Mathf.Max(30f, height - 12f)));
+            // Lawn tufts stay below the pavement strip.
+            float minY = OnLawn(nextMarkX) ? PavementHeight + 14f : 22f;
+            rt.anchoredPosition = new Vector2(0f, -Random.Range(minY, Mathf.Max(minY + 8f, height - 12f)));
             nextMarkX += Random.Range(14f, 38f);
         }
 
+        // Yellow dashed centre line on the asphalt, like a road.
+        if (!laneStarted) { laneStarted = true; nextLaneX = System.Math.Floor((worldX - 60.0) / LaneStep) * LaneStep; }
+        for (int i = laneMarks.Count - 1; i >= 0; i--)
+        {
+            if (laneMarks[i].x >= worldX - 120.0) continue;
+            UnityEngine.Object.Destroy(laneMarks[i].rt.gameObject);
+            laneMarks.RemoveAt(i);
+        }
+        for (; nextLaneX < worldX + width + 120.0; nextLaneX += LaneStep)
+        {
+            if (!OnAsphalt(nextLaneX)) continue;
+            var img = NewImage(groundBand, "Lane", ProceduralArt.RoundedRect(), LaneColor, true);
+            var rt = img.rectTransform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0f, 0.5f);
+            rt.sizeDelta = new Vector2(LaneDash, 8f);
+            rt.anchoredPosition = new Vector2(0f, -height * 0.5f);
+            laneMarks.Add(new GroundMark { rt = rt, x = nextLaneX });
+        }
+        foreach (var mark in laneMarks)
+            mark.rt.anchoredPosition = new Vector2((float)(mark.x - worldX), mark.rt.anchoredPosition.y);
+
+        UpdateAsphalt();
         foreach (var mark in groundMarks)
             mark.rt.anchoredPosition = new Vector2((float)(mark.x - worldX), mark.rt.anchoredPosition.y);
     }
