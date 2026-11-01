@@ -1130,10 +1130,13 @@ public class TownProps
         trt.SetParent(inner.rectTransform, false);
         trt.anchorMin = Vector2.zero;
         trt.anchorMax = Vector2.one;
-        trt.offsetMin = trt.offsetMax = Vector2.zero;
+        trt.offsetMin = new Vector2(14f, 0f);   // padding, so longer translations ("FOR SALE") stay inside the board
+        trt.offsetMax = new Vector2(-14f, 0f);
         var text = tgo.AddComponent<TMPro.TextMeshProUGUI>();
         text.text = Loc.T("VENDA");
-        text.fontSize = 78f;
+        text.enableAutoSizing = true;
+        text.fontSizeMin = 30f;
+        text.fontSizeMax = 78f;
         text.fontStyle = TMPro.FontStyles.Bold;
         text.alignment = TMPro.TextAlignmentOptions.Center;
         text.color = new Color(0.78f, 0.15f, 0.12f);

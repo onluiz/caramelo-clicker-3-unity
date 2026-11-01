@@ -72,7 +72,7 @@ public class GameUI
     const float NightShadeMax = 0.58f;
     const float HeadGlowY = -150f; // the glow is centred on his body, so he is lit too
     const float HeadLightX = 25f, HeadLightY = -30f; // from the dog anchor: right above his head
-    RectTransform shopBackdrop, safeRoot, tapArea, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
+    RectTransform hudCoin, hudFrag, hudGem, hudGear, hudSit, hudCps, hudCpsShadow, hudBuff, shopBackdrop, safeRoot, tapArea, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
     CanvasScaler scaler;
     bool portrait;
     Vector2Int lastScreen;
@@ -127,7 +127,7 @@ public class GameUI
     bool OnLawn(double x) => InZone(x, town.LapPx, town.CityL - AsphaltMargin, town.CityR + AsphaltMargin);
     float clock;
 
-    TextMeshProUGUI counterText, cpsText, buffText, toastText, statsText;
+    TextMeshProUGUI counterText, counterShadow, cpsText, buffText, toastText, statsText;
     Image statsPill;
     TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, resetText, sitText, awakeText;
     readonly ScreenAwake awake = new ScreenAwake();
@@ -347,25 +347,38 @@ public class GameUI
         var coinPill = NewImage(left, "CoinPill", ProceduralArt.RoundedRect(), CardBg, true);
         // Three pills of equal width: petiscos, fragments of the next celestial bone, celestial bones.
         Box(coinPill.rectTransform, new Vector2(0.05f, 1f), new Vector2(0.30f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
+        hudCoin = coinPill.rectTransform;
         counterText = PillContent(coinPill, IconLoader.Load("petisco"));
+        // No dark pill behind the petiscos: the value gets a drop shadow like the income text.
+        coinPill.color = new Color(0f, 0f, 0f, 0f);
+        counterShadow = NewText(coinPill.transform, "ValueShadow", "0", 56, ProceduralArt.Hex("#5A2E12"), TextAlignmentOptions.MidlineRight, FontStyles.Bold);
+        Box(counterShadow.rectTransform, Vector2.zero, Vector2.one, new Vector2(92f, 0f), new Vector2(-20f, -8f));
+        counterShadow.enableAutoSizing = true;
+        counterShadow.fontSizeMin = counterText.fontSizeMin;
+        counterShadow.fontSizeMax = counterText.fontSizeMax;
+        counterShadow.transform.SetSiblingIndex(counterText.transform.GetSiblingIndex());
 
         var fragPill = NewImage(left, "FragmentsPill", ProceduralArt.RoundedRect(), CardBg, true);
-        Box(fragPill.rectTransform, new Vector2(0.32f, 1f), new Vector2(0.57f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
+        Box(fragPill.rectTransform, new Vector2(0.32f, 1f), new Vector2(0.49f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
+        hudFrag = fragPill.rectTransform;
         fragmentsText = PillContent(fragPill, IconLoader.Load("fragmento-celestial"), 54f);
 
         var gemPill = NewImage(left, "OssosPill", ProceduralArt.RoundedRect(), CardBg, true);
-        Box(gemPill.rectTransform, new Vector2(0.59f, 1f), new Vector2(0.84f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
+        Box(gemPill.rectTransform, new Vector2(0.51f, 1f), new Vector2(0.68f, 1f), new Vector2(0f, -120f), new Vector2(0f, -28f));
+        hudGem = gemPill.rectTransform;
         ossosText = PillContent(gemPill, IconLoader.Load("osso-celestial"));
 
         var gear = NewButton(left, "SettingsButton", "", 28, CardBg, Color.white, out _, out _);
         Place((RectTransform)gear.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -28f), new Vector2(92f, 92f));
         var gearIcon = NewImage(gear.transform, "Gear", ProceduralArt.Gear(), Color.white);
         Box(gearIcon.rectTransform, Vector2.zero, Vector2.one, new Vector2(14f, 14f), new Vector2(-14f, -14f));
+        hudGear = (RectTransform)gear.transform;
         gear.onClick.AddListener(() => SetSettingsOpen(true));
 
         // Sit / run toggle under the gear: the dog sits until the button is pressed again.
         var sitBtn = NewButton(left, "SitButton", "Sentar", 32, CardBg, Color.white, out _, out sitText);
         Place((RectTransform)sitBtn.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -134f), new Vector2(190f, 76f));
+        hudSit = (RectTransform)sitBtn.transform;
         sitBtn.onClick.AddListener(() =>
         {
             rig.Sitting = !rig.Sitting;
@@ -378,15 +391,18 @@ public class GameUI
         Box(cpsShadow.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(4f, -256f), new Vector2(4f, -146f));
         cpsText = NewText(left, "Cps", "0/s", 84, Color.white, TextAlignmentOptions.Center, FontStyles.Bold);
         Box(cpsText.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0f, -250f), new Vector2(0f, -140f));
+        hudCps = cpsText.rectTransform;
+        hudCpsShadow = cpsShadow.rectTransform;
         foreach (var t in new[] { cpsText, cpsShadow })
         {
             t.enableAutoSizing = true;
-            t.fontSizeMin = 40f;
-            t.fontSizeMax = 84f;
+            t.fontSizeMin = 28f;
+            t.fontSizeMax = 56f; // the petiscos total now has the big size
         }
 
         buffChip = NewImage(left, "BuffChip", ProceduralArt.RoundedRect(), Bad, true);
         Box(buffChip.rectTransform, new Vector2(0.08f, 1f), new Vector2(0.92f, 1f), new Vector2(0f, -316f), new Vector2(0f, -260f));
+        hudBuff = buffChip.rectTransform;
         buffText = NewText(buffChip.transform, "Buff", "", 32, Color.white, TextAlignmentOptions.Center, FontStyles.Bold);
         Box(buffText.rectTransform, Vector2.zero, Vector2.one, new Vector2(16f, 0f), new Vector2(-16f, 0f));
         buffText.enableAutoSizing = true;
@@ -1064,7 +1080,9 @@ public class GameUI
     void RefreshCounters()
     {
         double petiscos = Math.Floor(s.Petiscos);
-        counterText.text = NumberFormat.Format(petiscos);
+        string coin = NumberFormat.Format(petiscos);
+        counterText.text = counterShadow.text = coin;
+        LayoutCoin(coin);
         ossosText.text = NumberFormat.Format(s.Ossos);
         fragmentsText.text = NumberFormat.Fraction(s.Fragments);
         cpsText.text = cpsShadow.text = NumberFormat.Format(s.Cps, true) + "/s";
@@ -1266,7 +1284,64 @@ public class GameUI
             Box(buyBarRt, new Vector2(0f, 0.845f), new Vector2(1f, 0.905f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
         }
 
+        ApplyHud();
+        lastCoinText = null;
         ApplyScrollBox();
+    }
+
+    string lastCoinText;
+
+    // The petiscos icon and value sit side by side as one group, centred in the pill (the pill is centred on screen in portrait).
+    void LayoutCoin(string value)
+    {
+        if (value == lastCoinText) return;
+        float width = hudCoin.rect.width;
+        if (width <= 0f) return;
+        lastCoinText = value;
+
+        const float icon = 102f, gap = 14f, size = 84f; // same size the income text used to have
+        var iconRt = (RectTransform)hudCoin.Find("Icon");
+        counterText.enableAutoSizing = counterShadow.enableAutoSizing = false;
+        counterText.fontSize = size;
+        float textW = counterText.GetPreferredValues(value, 10000f, 0f).x;
+        float avail = width - icon - gap - 24f;
+        float fs = textW > avail ? size * avail / textW : size;
+        counterText.fontSize = counterShadow.fontSize = fs;
+        textW = Mathf.Min(textW * fs / size, avail);
+
+        // The value is centred like the income text under it, and the icon hangs to its left.
+        float left = -textW / 2f - gap - icon;
+        float textLeft = -textW / 2f;
+        iconRt.anchorMin = iconRt.anchorMax = new Vector2(0.5f, 0.5f);
+        iconRt.pivot = new Vector2(0f, 0.5f);
+        iconRt.anchoredPosition = new Vector2(left, 0f);
+        foreach (var t in new[] { counterText, counterShadow })
+        {
+            var rt = t.rectTransform;
+            t.alignment = TextAlignmentOptions.MidlineLeft;
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.pivot = new Vector2(0f, 0.5f);
+            rt.sizeDelta = new Vector2(textW + 4f, 110f);
+            rt.anchoredPosition = new Vector2(textLeft + (t == counterShadow ? 5f : 0f), t == counterShadow ? -5f : 0f);
+        }
+    }
+
+    // HUD positions, the same in both orientations: ossos and fragments stacked on the left, petiscos and the income centred, gear in the corner,
+    // and the sit/run button at the bottom right of the game area.
+    void ApplyHud()
+    {
+        var top = new Vector2(0f, 1f);
+        // The game panel is wider in landscape, so the side pills and the centre one take different shares of it.
+        float side = portrait ? 0.21f : 0.26f, mid0 = portrait ? 0.30f : 0.27f, mid1 = 1f - mid0;
+
+        Box(hudGem, new Vector2(0.02f, 1f), new Vector2(side, 1f), new Vector2(0f, -100f), new Vector2(0f, -20f));
+        Box(hudFrag, new Vector2(0.02f, 1f), new Vector2(side, 1f), new Vector2(0f, -188f), new Vector2(0f, -108f));
+        Box(hudCoin, new Vector2(mid0, 1f), new Vector2(mid1, 1f), new Vector2(0f, -136f), new Vector2(0f, -26f));
+        Place(hudGear, Vector2.one, Vector2.one, new Vector2(-16f, -26f), new Vector2(92f, 92f));
+        Place(hudSit, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-20f, 28f), new Vector2(190f, 76f));
+        Box(hudCpsShadow, top, Vector2.one, new Vector2(3f, -208f), new Vector2(3f, -138f));
+        Box(hudCps, top, Vector2.one, new Vector2(0f, -205f), new Vector2(0f, -135f));
+        Box(hudBuff, new Vector2(0.08f, 1f), new Vector2(0.92f, 1f), new Vector2(0f, -274f), new Vector2(0f, -218f));
     }
 
     // The list sits under the buy-mode bar on the buildings tab; other tabs have no bar, so it moves up to the tabs.
