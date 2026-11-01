@@ -15,6 +15,11 @@ public class GameUI
     const float GameScaleMin = 0.6f;      // ...and shrinks further on big screens, but never below this
     const float ShrinkFromShortSide = 1080f; // shortest screen side (px) where the shrinking starts
     const float ShrinkToShortSide = 2160f;   // shortest screen side (px) where it reaches GameScaleMin
+    // Big landscape screens (desktop, tablets): the UI keeps roughly the proportions of the original game, with a narrow shop and a small HUD.
+    const float DesktopLeftWidth = 0.74f;
+    const float DesktopShopMinPx = 380f;
+    const float DesktopGameScale = 0.5f;
+    const float DesktopOverlayScale = 0.6f; // settings popup, floating texts, golden bone, falling bones
     const bool ShowDevTab = false;        // the Dev tab stays hidden for now (DevMode still gates it outside production)
     const float PortraitShopHeight = 0.45f; // portrait: share of the height used by the shop
     const float RowHeight = 146f;
@@ -147,7 +152,8 @@ public class GameUI
     readonly bool devEnabled = ShowDevTab && DevMode.Enabled;
     RowView ascendRow, ossosRow;
     Image buffChip;
-    RectTransform settingsRoot;
+    RectTransform settingsRoot, settingsPanel;
+    float uiK = 1f; // overlay scale: compact on big landscape screens, like the HUD
     TextMeshProUGUI buyLabelText, settingsTitleText, closeText, langText;
     TextMeshProUGUI ossosText, fragmentsText, cpsShadow;
     readonly List<RowView> blessingRows = new List<RowView>();
@@ -496,6 +502,7 @@ public class GameUI
         dimBtn.onClick.AddListener(() => SetSettingsOpen(false));
 
         var border = NewImage(settingsRoot, "Panel", ProceduralArt.RoundedRect(), CardBorder, true, true);
+        settingsPanel = border.rectTransform;
         Place(border.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(780f, 748f));
         var panel = NewImage(border.transform, "Inner", ProceduralArt.RoundedRect(), CardBg, true);
         Box(panel.rectTransform, Vector2.zero, Vector2.one, new Vector2(6f, 6f), new Vector2(-6f, -6f));
@@ -1244,6 +1251,17 @@ public class GameUI
 
     // ---------------------------------------------------------------- layout
 
+    // Phones keep the large touch-friendly UI; desktops and tablets (physically bigger screens) get the compact one.
+    public static bool? ForcePhone; // test hook: simulate a phone (or not) in the Editor
+
+    static bool IsPhone()
+    {
+        if (ForcePhone.HasValue) return ForcePhone.Value;
+        float shortSide = Mathf.Min(Screen.width, Screen.height);
+        if (!Application.isMobilePlatform) return false;
+        return Screen.dpi > 0f ? shortSide / Screen.dpi < 4.5f : shortSide < 1300f;
+    }
+
     // Landscape: game on the left, shop on the right. Portrait: game on top, shop below.
     void ApplyLayout()
     {
@@ -1264,7 +1282,16 @@ public class GameUI
         safeRoot.offsetMin = safeRoot.offsetMax = Vector2.zero;
 
         // The sky fills the game area out to the screen edges, and ends where the shop starts.
-        float splitX = (safe.xMin + LeftWidth * safe.width) / Screen.width;
+        bool big = !portrait && !IsPhone();
+        // Compact layout: the shop takes ~26% of the width, but never fewer than DesktopShopMinPx pixels so its text stays readable on small windows.
+        float shopFrac = Mathf.Clamp(DesktopShopMinPx / Mathf.Max(1f, safe.width), 1f - DesktopLeftWidth, 0.4f);
+        float shopScale = shopFrac / (1f - LeftWidth); // the shop is authored for the 42% a phone gives it
+        float leftW = big ? 1f - shopFrac : LeftWidth;
+        if (big) gameScale = DesktopGameScale;
+        uiK = big ? DesktopOverlayScale : 1f;
+        settingsPanel.localScale = new Vector3(uiK, uiK, 1f);
+        goldenRect.sizeDelta = new Vector2(100f, 100f) * uiK;
+        float splitX = (safe.xMin + leftW * safe.width) / Screen.width;
         float splitY = (safe.yMin + PortraitShopHeight * safe.height) / Screen.height;
         if (portrait)
         {
@@ -1287,9 +1314,10 @@ public class GameUI
         }
         else
         {
-            AnchorsScaled(leftPanel, 0f, 0f, LeftWidth, 1f, gameScale);
-            Anchors(tapArea, 0f, 0f, LeftWidth, 1f);
-            Anchors(rightPanel, LeftWidth, 0f, 1f, 1f);
+            AnchorsScaled(leftPanel, 0f, 0f, leftW, 1f, gameScale);
+            Anchors(tapArea, 0f, 0f, leftW, 1f);
+            if (big) AnchorsScaled(rightPanel, leftW, 0f, 1f, 1f, shopScale);
+            else { Anchors(rightPanel, leftW, 0f, 1f, 1f); rightPanel.localScale = Vector3.one; }
             LayoutTabs(0.915f, 0.985f);
             Box(buyBarRt, new Vector2(0f, 0.845f), new Vector2(1f, 0.905f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
         }
@@ -1342,7 +1370,7 @@ public class GameUI
     {
         var top = new Vector2(0f, 1f);
         // The game panel is wider in landscape, so the side pills and the centre one take different shares of it.
-        float side = portrait ? 0.21f : 0.26f, mid0 = portrait ? 0.30f : 0.27f, mid1 = 1f - mid0;
+        float side = portrait ? 0.21f : uiK < 1f ? 0.15f : 0.26f, mid0 = portrait ? 0.30f : 0.27f, mid1 = 1f - mid0;
 
         Box(hudGem, new Vector2(0.02f, 1f), new Vector2(side, 1f), new Vector2(0f, -100f), new Vector2(0f, -20f));
         Box(hudFrag, new Vector2(0.02f, 1f), new Vector2(side, 1f), new Vector2(0f, -188f), new Vector2(0f, -108f));
@@ -1641,6 +1669,7 @@ public class GameUI
             RectTransformUtility.ScreenPointToLocalPointInRectangle(floatLayer, screenPos, null, out var local);
             f.active = true;
             f.maxLife = f.life = life;
+            size *= uiK;
             f.text.fontSize = 52f * size;
             f.rt.sizeDelta = new Vector2(400f, 80f) * size;
             f.text.text = text;
@@ -1691,7 +1720,7 @@ public class GameUI
                 b.active = true;
                 b.speed = Random.Range(220f, 380f);
                 b.spin = Random.Range(-60f, 60f);
-                float size = Random.Range(40f, 80f);
+                float size = Random.Range(40f, 80f) * uiK;
                 b.rt.sizeDelta = new Vector2(size, size);
                 b.rt.anchorMin = b.rt.anchorMax = new Vector2(0f, 1f);
                 var area = LeftPanelInCanvas();
