@@ -33,12 +33,14 @@ public class TownProps
         new Def { Building = "venda-petiscos", Slot = "o-inicio", File = "stall-treats", Height = 21f, Offset = -26f, Lift = 39f, MaxStall = 0 }, // on the bare stall's counter, left
         new Def { Building = "racao-caramelo", Slot = "o-inicio", File = "stall-feed", Height = 31f, Offset = 26f, Lift = 39f, MaxStall = 0 }, // same stall, right
         new Def { Building = "creche-caramelo", File = "creche-caramelo", Cols = 3, Frames = 8, FrameW = 431, FrameH = 428, Height = 190f }, // right after the stall
+        new Def { Building = "padaria", File = "padaria", Height = 190f },
         // hidden for now: new Def { Building = "drone-entregas", File = "red-drone", Cols = 5, Frames = 17, FrameW = 357, FrameH = 282, Height = 100f, Air = 190f, Bob = true },
         new Def { Building = "faro-minerador", File = "mina-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f, Lift = -26f },
         new Def { Building = "fabrica-de-petiscos", File = "fabrica-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f, Lift = -20f },
         new Def { Building = "fabrica-de-racao", File = "fabrica-racao", Cols = 3, Frames = 8, FrameW = 256, FrameH = 256, Height = 210f, Lift = -22f },
         new Def { Building = "estatua-caramelo", File = "dog_statue", Height = 115f },
         new Def { Building = "sorveteria-caramelo", File = "sorveteria", Height = 170f },
+        new Def { Building = "parque", File = "parquinho-pets", Height = 150f },
         new Def { Building = "templo-caramelo", File = "templo-caramelo", Height = 185f },
         new Def { Building = "banco-canino", File = "banco-canino", Height = 170f },
         new Def { Building = "pet-shop-caramelo", File = "petshop", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
@@ -137,6 +139,7 @@ public class TownProps
         public Image litImg, glowImg;
         public Image[] pieces;           // signs and boards: their parts, tinted at night
         public Color[] pieceColors;
+        public List<RectTransform> parkDogs;   // puppies living inside the playground (children of the prop)
     }
 
     // One stretch of town: everything built around one slot position in the world.
@@ -328,6 +331,74 @@ public class TownProps
         crechePrevX = worldX;
     }
 
+    // True for one tick each time the dog runs past the middle of the playground (once per lap) while it is owned.
+    public bool PassedPark;
+    const string ParkBuilding = "parque";
+    double parkPrevX = double.NaN;
+
+    // Puppies that live in the playground (set by GameUI before Tick) and the sprite source for them.
+    public int ParkDogs;
+    public System.Func<int, Sprite> DogFrame;
+    float parkClock;
+
+    void CheckParkPass(double worldX, int[] owned)
+    {
+        PassedPark = false;
+        int def = System.Array.FindIndex(Defs, d => d.Building == ParkBuilding);
+        if (def < 0 || !Has(def, owned)) { parkPrevX = double.NaN; return; }
+        if (!double.IsNaN(parkPrevX))
+        {
+            double c = slotX[defSlot[def]];
+            PassedPark = System.Math.Floor((worldX - c) / lapPx) > System.Math.Floor((parkPrevX - c) / lapPx);
+        }
+        parkPrevX = worldX;
+    }
+
+    // Keeps the puppies sitting inside the playground in line with the saved count; they are children of the prop, so they scroll with it.
+    void SyncParkDogs(Prop p, float dt)
+    {
+        if (DogFrame == null) return;
+        p.parkDogs ??= new List<RectTransform>();
+        int want = Mathf.Clamp(ParkDogs, 0, 24);
+        float w = p.rt.sizeDelta.x, h = p.rt.sizeDelta.y;
+        float size = DogRig.CellPx * 1.2f;
+        while (p.parkDogs.Count > want)
+        {
+            Object.Destroy(p.parkDogs[p.parkDogs.Count - 1].gameObject);
+            p.parkDogs.RemoveAt(p.parkDogs.Count - 1);
+        }
+        while (p.parkDogs.Count < want)
+        {
+            int i = p.parkDogs.Count;
+            var go = new GameObject("ParkDog", typeof(RectTransform));
+            var rt = go.GetComponent<RectTransform>();
+            rt.SetParent(p.rt, false);
+            rt.anchorMin = rt.anchorMax = Vector2.zero;
+            rt.sizeDelta = new Vector2(size, size);
+            float fx = Mathf.Repeat(i * 0.618034f + 0.13f, 1f);
+            float fy = 0.30f + 0.09f * (i % 3);
+            rt.anchoredPosition = new Vector2(w * (0.14f + 0.72f * fx), h * fy + DogRig.FeetBelow * 1.2f);
+            rt.localScale = new Vector3(i % 2 == 0 ? 1f : -1f, 1f, 1f);
+            var img = go.AddComponent<Image>();
+            img.raycastTarget = false;
+            img.preserveAspect = true;
+            p.parkDogs.Add(rt);
+        }
+        // Lower on screen = in front.
+        for (int i = 0; i < p.parkDogs.Count; i++)
+        {
+            var rt = p.parkDogs[i];
+            var img = rt.GetComponent<Image>();
+            float t = parkClock * DogRig.FramesPerSecondSeated + i * 3.7f;
+            int f = Mathf.FloorToInt(t) % DogRig.SeatedCount;
+            if (f < 0) f += DogRig.SeatedCount;
+            img.sprite = DogFrame(DogRig.SeatedStart + f);
+            img.color = nightTint;
+        }
+        p.parkDogs.Sort((a, b) => b.anchoredPosition.y.CompareTo(a.anchoredPosition.y));
+        for (int i = 0; i < p.parkDogs.Count; i++) p.parkDogs[i].SetSiblingIndex(i);
+    }
+
     public int StallTier;   // "O Início" upgrades bought, set by GameUI before Tick
 
     bool Visible(int def, int[] owned)
@@ -347,6 +418,8 @@ public class TownProps
         if (panelW <= 1f) return; // layout not ready yet
 
         CheckCrechePass(worldX, owned);
+        CheckParkPass(worldX, owned);
+        parkClock += dt;
 
         nightTint = Color.Lerp(Color.white, NightTint, darkness);
         TickCans(dt, worldX, panelW, canBuilding >= 0 && owned[canBuilding] > 0);
@@ -443,7 +516,11 @@ public class TownProps
         {
             float baseX = (float)(inst.x - worldX);
             for (int i = 0; i < Defs.Length; i++)
-                if (inst.byDef[i] != null) Place(inst.byDef[i], baseX, dt);
+                if (inst.byDef[i] != null)
+                {
+                    Place(inst.byDef[i], baseX, dt);
+                    if (Defs[i].Building == ParkBuilding) SyncParkDogs(inst.byDef[i], dt);
+                }
             if (inst.sign != null) Place(inst.sign, baseX, dt);
             if (inst.banner != null)
             {

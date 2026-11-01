@@ -136,6 +136,24 @@ public class MiniDogs
         return n;
     }
 
+    // Running past the playground: the oldest puppies on the ground (up to 'max') go in and stay there. Returns how many went in.
+    public int EnterPark(int max)
+    {
+        var free = dogs.FindAll(m => m.mode != Mode.Fall && m.mode != Mode.Leave);
+        free.Sort((a, b) => a.bornX.CompareTo(b.bornX));
+        int n = 0;
+        foreach (var m in free)
+        {
+            if (n >= max) break;
+            m.mode = Mode.Leave;
+            m.leaveDelay = Random.Range(0f, 0.5f);
+            m.leaveT = 0f;
+            m.face = 1;
+            n++;
+        }
+        return n;
+    }
+
     public void Tick(float dt)
     {
         bool running = rig.Running;

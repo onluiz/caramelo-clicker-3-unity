@@ -64,7 +64,7 @@ public static class GameDefs
         new BuildingDef { Key = "fabrica-de-racao", Name = "Fábrica de Ração", Description = "A Ração Caramelo foi um sucesso e por isso abriram a primeira fábrica de ração.", BaseCost = 450000, BaseCps = 1200, IconFile = "fabrica-de-racao" },
         new BuildingDef { Key = "estatua-caramelo", Name = "Estátua do Caramelo", Description = "Todo mundo venera o Caramelo.", BaseCost = 1400000, BaseCps = 3700, IconFile = "estatua-caramelo" },
         new BuildingDef { Key = "sorveteria-caramelo", Name = "Sorveteria Caramelo", Description = "Sorvete de petisco com granulado de ossinho. Fila de rabo abanando na porta.", BaseCost = 16000000, BaseCps = 38300.0, IconFile = "sorvete" },
-        new BuildingDef { Key = "parque", Name = "Parque dos Vira-latas", Description = "Uma matilha inteira cavando tesouros.", BaseCost = 50000000, BaseCps = 109000.0, Icon = 7 },
+        new BuildingDef { Key = "parque", Name = "Parquinho dos Pets", Description = "Uma matilha inteira cavando tesouros.", BaseCost = 50000000, BaseCps = 109000.0, Icon = 7 },
         new BuildingDef { Key = "templo-caramelo", Name = "Templo do Caramelo", Description = "Fiéis deixam oferendas o dia todo.", BaseCost = 160000000, BaseCps = 317000.0, IconFile = "templo-caramelo" },
         new BuildingDef { Key = "banco-canino", Name = "Banco Canino", Description = "Rende juros em osso e em moeda.", BaseCost = 240000000.0, BaseCps = 440000.0, IconFile = "banco-canino" },
         new BuildingDef { Key = "pet-shop-caramelo", Name = "Pet Shop Caramelo", Description = "Ração, brinquedo e banho. Todo vira-lata do bairro passa por aqui.", BaseCost = 330000000, BaseCps = 600000, IconFile = "pet-shop-caramelo" },

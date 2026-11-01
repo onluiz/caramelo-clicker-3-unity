@@ -433,6 +433,7 @@ public class GameUI
 
         rig = new DogRig(left, new Vector2(0.5f, 0.4f));
         minis = new MiniDogs(left, rig);
+        town.DogFrame = rig.Frame;
 
         // Night shade over the ground, town and dogs; lit lamps and their glow go above it, then the HUD.
         nightShade = NewImage(left, "NightShade", null, new Color(0.02f, 0.04f, 0.16f, 0f), false);
@@ -1004,6 +1005,17 @@ public class GameUI
         RefreshAll();
     }
 
+    // Running past the playground: the oldest puppies following him go in and stay there until the next rebirth; the rest still go to the daycare.
+    void OnParkPassed()
+    {
+        int room = GameState.ParkCapacity - s.ParkDogs;
+        if (room <= 0) return;
+        int n = minis.EnterPark(room);
+        if (n <= 0) return;
+        s.ParkDogs += n;
+        ShowToast(Loc.F("{0} filhotes ficaram brincando no parquinho!", n), 4f);
+    }
+
     void OnTrashCanClicked(Vector2 screenPos)
     {
         sfx.PlayGolden();
@@ -1452,6 +1464,8 @@ public class GameUI
         worldX += rig.StrideSpeed * dt; // the dog is the one who moves; everything else sits at fixed world positions
         town.StallTier = s.TierOf(0);
         town.Tick(dt, worldX, s.Owned, sky.Darkness);
+        town.ParkDogs = s.ParkDogs;
+        if (town.PassedPark) OnParkPassed();
         if (town.PassedCreche) OnCrechePassed();
         nightShade.color = new Color(0.02f, 0.04f, 0.16f, NightShadeMax * sky.Darkness);
         if (headLight != null)

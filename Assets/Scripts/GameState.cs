@@ -16,6 +16,7 @@ public class SaveData
     public double lifetimeBase;
     public int ascensions;
     public string[] blessings;
+    public int parkDogs;
 }
 
 public class GameState
@@ -35,6 +36,8 @@ public class GameState
     public double OssosEver;
     public double LifetimeBase; // petiscos earned in previous runs; TotalEarned is the current run
     public int Ascensions;
+    public const int ParkCapacity = 12;
+    public int ParkDogs; // puppies living in the playground (cleared on rebirth)
     public readonly HashSet<string> Blessings = new HashSet<string>();
 
     public double Time;
@@ -277,6 +280,7 @@ public class GameState
         OssosEver += gained;
         LifetimeBase += TotalEarned;
         Ascensions++;
+        ParkDogs = 0;
 
         TotalEarned = 0;
         Array.Clear(Owned, 0, Owned.Length);
@@ -306,6 +310,7 @@ public class GameState
         OssosEver = 0;
         LifetimeBase = 0;
         Ascensions = 0;
+        ParkDogs = 0;
         Blessings.Clear();
         Array.Clear(Owned, 0, Owned.Length);
         Upgrades.Clear();
@@ -330,6 +335,7 @@ public class GameState
             ossosEver = OssosEver,
             lifetimeBase = LifetimeBase,
             ascensions = Ascensions,
+            parkDogs = ParkDogs,
             blessings = new string[Blessings.Count],
         };
         Upgrades.CopyTo(data.upgrades);
@@ -362,6 +368,7 @@ public class GameState
         OssosEver = data.ossosEver;
         LifetimeBase = data.lifetimeBase;
         Ascensions = data.ascensions;
+        ParkDogs = Math.Clamp(data.parkDogs, 0, ParkCapacity);
         Blessings.Clear();
         if (data.blessings != null)
             foreach (var id in data.blessings)
