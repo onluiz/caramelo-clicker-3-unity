@@ -9,6 +9,8 @@ public class GameAudio
 
     readonly AudioSource source, music;
     readonly AudioClip click, buy, golden, error;
+    AudioClip normalMusic, lunarMusic;
+    bool lunar;
 
     public bool Muted;
 
@@ -23,7 +25,7 @@ public class GameAudio
         music.loop = true;
         music.volume = MusicVolume;
         music.mute = Muted;
-        music.clip = Resources.Load<AudioClip>("Music/tail_wags_at_twilight");
+        music.clip = normalMusic = Resources.Load<AudioClip>("Music/tail_wags_at_twilight");
         if (music.clip == null) Debug.LogWarning("Music not found at Resources/Music/tail_wags_at_twilight");
         StartMusic();
 
@@ -31,6 +33,19 @@ public class GameAudio
         buy = Tone("buy", 0.24f, t => t < 0.11f ? 660f : 990f, 0.35f);
         golden = Tone("golden", 0.56f, t => t < 0.14f ? 523f : t < 0.28f ? 659f : t < 0.42f ? 784f : 1047f, 0.35f);
         error = Tone("error", 0.16f, t => 150f, 0.35f);
+    }
+
+    // Once the Base Lunar is owned, its own track replaces the regular music.
+    public void SetLunar(bool on)
+    {
+        if (on == lunar) return;
+        lunar = on;
+        if (on && lunarMusic == null) lunarMusic = Resources.Load<AudioClip>("Music/gravity_s_gentle_pull");
+        var clip = on && lunarMusic != null ? lunarMusic : normalMusic;
+        if (music.clip == clip) return;
+        music.Stop();
+        music.clip = clip;
+        StartMusic();
     }
 
     public void SetMuted(bool muted)

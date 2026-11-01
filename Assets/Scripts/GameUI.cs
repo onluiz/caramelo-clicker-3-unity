@@ -82,6 +82,16 @@ public class GameUI
     TownProps town;
     double worldX; // how far the dog has run, in canvas px; the world is fixed and the camera follows him
     RectTransform groundBand;
+    Image groundImage, groundEdge;
+    bool moonGround;
+    int lunarBuilding = -2;
+    static readonly Color GroundColor = new Color(0.93f, 0.62f, 0.3f, 1f);
+    static readonly Color GroundEdgeColor = new Color(0.72f, 0.4f, 0.16f, 0.6f);
+    static readonly Color GroundMarkColor = new Color(0.72f, 0.4f, 0.16f, 0.45f);
+    // Lunar regolith: once the Base Lunar is bought, every stretch of ground looks like the Moon.
+    static readonly Color MoonColor = new Color(0.62f, 0.63f, 0.67f, 1f);
+    static readonly Color MoonEdgeColor = new Color(0.36f, 0.37f, 0.42f, 0.7f);
+    static readonly Color MoonMarkColor = new Color(0.4f, 0.41f, 0.46f, 0.6f);
 
     class GroundMark
     {
@@ -1435,14 +1445,16 @@ public class GameUI
     void BuildGround(Transform parent)
     {
         // Opaque, so the clouds behind the game area do not show through the ground.
-        var band = NewImage(parent, "Ground", null, new Color(0.93f, 0.62f, 0.3f, 1f));
+        var band = NewImage(parent, "Ground", null, GroundColor);
+        groundImage = band;
         groundBand = band.rectTransform;
         groundBand.anchorMin = Vector2.zero;
         groundBand.anchorMax = new Vector2(1f, 0.4f);
         groundBand.offsetMin = Vector2.zero;
         groundBand.offsetMax = new Vector2(0f, -GroundTop);
 
-        var edge = NewImage(groundBand, "Edge", null, new Color(0.72f, 0.4f, 0.16f, 0.6f));
+        var edge = NewImage(groundBand, "Edge", null, GroundEdgeColor);
+        groundEdge = edge;
         edge.rectTransform.anchorMin = new Vector2(0f, 1f);
         edge.rectTransform.anchorMax = new Vector2(1f, 1f);
         edge.rectTransform.pivot = new Vector2(0.5f, 1f);
@@ -1514,11 +1526,44 @@ public class GameUI
         }
     }
 
+    Color MarkColorAt(double x) =>
+        moonGround ? MoonMarkColor : OnAsphalt(x) ? AsphaltMark : OnLawn(x) ? LawnMark : GroundMarkColor;
+
+    // Switches the whole ground between the normal look and the Moon's when the Base Lunar is owned (or lost on a rebirth).
+    void UpdateMoonGround()
+    {
+        if (lunarBuilding == -2) lunarBuilding = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == "base-lunar-caramelo");
+        bool moon = lunarBuilding >= 0 && s.Owned[lunarBuilding] > 0;
+        if (moon == moonGround && groundImage.color == (moon ? MoonColor : GroundColor)) return;
+        moonGround = moon;
+        sfx.SetLunar(moon);
+        groundImage.color = moon ? MoonColor : GroundColor;
+        groundEdge.color = moon ? MoonEdgeColor : GroundEdgeColor;
+        for (int i = 0; i < 2; i++)
+        {
+            asphalt[i].gameObject.SetActive(!moon);
+            asphaltCurb[i].gameObject.SetActive(!moon);
+            lawn[i].gameObject.SetActive(!moon);
+            pavement[i].gameObject.SetActive(!moon);
+            pavementEdge[i].gameObject.SetActive(!moon);
+        }
+
+        foreach (var m in laneMarks) m.rt.gameObject.SetActive(!moon);
+        foreach (var m in groundMarks)
+        {
+            m.rt.GetComponent<Image>().color = MarkColorAt(m.x);
+            var pos = m.rt.anchoredPosition;
+            if (moon && -pos.y < 22f) m.rt.anchoredPosition = new Vector2(pos.x, -22f);
+        }
+    }
+
     void UpdateGround()
     {
         float width = groundBand.rect.width;
         float height = groundBand.rect.height;
         if (width <= 1f || height <= 1f) return;
+
+        UpdateMoonGround();
 
         // The band's size depends on the screen, so the first marks are laid out on first use.
         if (!groundStarted)
@@ -1538,7 +1583,7 @@ public class GameUI
         // Build the ground ahead of him.
         while (nextMarkX < worldX + width + 60.0)
         {
-            var img = NewImage(groundBand, "Mark", ProceduralArt.RoundedRect(), OnAsphalt(nextMarkX) ? AsphaltMark : OnLawn(nextMarkX) ? LawnMark : new Color(0.72f, 0.4f, 0.16f, 0.45f), true);
+            var img = NewImage(groundBand, "Mark", ProceduralArt.RoundedRect(), MarkColorAt(nextMarkX), true);
             var rt = img.rectTransform;
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f); // x from the left edge, y down from the top
             rt.sizeDelta = new Vector2(Random.Range(18f, 48f), Random.Range(4f, 6f));
@@ -1559,7 +1604,7 @@ public class GameUI
         }
         for (; nextLaneX < worldX + width + 120.0; nextLaneX += LaneStep)
         {
-            if (!OnAsphalt(nextLaneX)) continue;
+            if (moonGround || !OnAsphalt(nextLaneX)) continue;
             var img = NewImage(groundBand, "Lane", ProceduralArt.RoundedRect(), LaneColor, true);
             var rt = img.rectTransform;
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
