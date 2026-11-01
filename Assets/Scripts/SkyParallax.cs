@@ -19,6 +19,7 @@ public class SkyParallax
             case 5: return 5;
             case 6: return 6;
             case 7: return 4;
+            case 9: return 1;
             default: return 6;
         }
     }
@@ -26,7 +27,7 @@ public class SkyParallax
     // A cycle is a day, then the evening, then the night, then the next day. Each day picks one of these skies
     // (the pick depends only on the cycle number, so it is the same for the whole loop on the wall clock).
     static readonly int[] DaySets = { 1, 2, 4, 5 };
-    const int EveningSet = 7, NightSet = 3;
+    const int EveningSet = 7, NightSet = 3, MoonSet = 9; // MoonSet: black starry sky, no clouds, no planet (Base Lunar owned)
     static readonly float[] HoldSeconds = { 300f, 90f, 240f }; // day, evening, night: how long each sky stays as it is
     const float FadeSeconds = 60f;                              // crossfade into the next sky
     const int Segments = 3;
@@ -67,6 +68,7 @@ public class SkyParallax
     // 0 by day, 1 at full night: how dark the scene in front of the sky should be (the sky itself is just its art).
     public float Darkness { get; private set; }
     public bool ForceNight;   // dev option: stay at full night
+    public bool Moon;         // Base Lunar owned: permanent black starry sky, no clouds
     static readonly float[] SegmentDarkness = { 0f, 0.35f, 1f };
 
     public RectTransform Root => root;
@@ -184,10 +186,10 @@ public class SkyParallax
             seg++;
         }
 
-        if (ForceNight) { seg = Segments - 1; p = 0.0; }
+        if (ForceNight || Moon) { seg = Segments - 1; p = 0.0; }
         float within = (float)p;
         float t = within > HoldSeconds[seg] ? Mathf.SmoothStep(0f, 1f, (within - HoldSeconds[seg]) / FadeSeconds) : 0f;
-        int cur = SetOf(cycle, seg);
+        int cur = Moon ? MoonSet : SetOf(cycle, seg);
         float darkNow = SegmentDarkness[seg];
         float darkNext = SegmentDarkness[(seg + 1) % Segments];
         Darkness = Mathf.Lerp(darkNow, darkNext, t);

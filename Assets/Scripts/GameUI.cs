@@ -64,6 +64,9 @@ public class GameUI
         public RectTransform rt;
         public float speed, spin;
         public bool active;
+        public Vector2 vel;       // moon mode: slow drift
+        public float life, maxLife;
+        public Image img;
     }
 
     readonly GameState s;
@@ -1576,6 +1579,7 @@ public class GameUI
         if (moon == moonGround && groundImage.color == (moon ? MoonColor : GroundColor)) return;
         moonGround = moon;
         sfx.SetLunar(moon);
+        sky.Moon = moon;
         groundImage.color = moon ? MoonColor : GroundColor;
         groundEdge.color = moon ? MoonEdgeColor : GroundEdgeColor;
         for (int i = 0; i < 2; i++)
@@ -1719,7 +1723,7 @@ public class GameUI
         if (cps > 0)
         {
             float rate = Mathf.Min(10f, 0.6f + Mathf.Log(1f + (float)cps, 2f) * 0.7f);
-            fallingAcc += rate * dt;
+            fallingAcc += (moonGround ? Mathf.Min(rate, 3f) : rate) * dt;
         }
 
         foreach (var b in falling)
@@ -1736,7 +1740,37 @@ public class GameUI
                 b.rt.anchorMin = b.rt.anchorMax = new Vector2(0f, 1f);
                 var area = LeftPanelInCanvas();
                 b.rt.anchoredPosition = new Vector2(Random.Range(area.xMin, area.xMax) + w * 0.5f, 60f);
+                if (moonGround)
+                {
+                    // Low gravity: the treat appears somewhere in the sky and floats for a while, then fades out.
+                    b.maxLife = b.life = Random.Range(7f, 11f);
+                    b.vel = new Vector2(Random.Range(-25f, 25f), Random.Range(-18f, 12f));
+                    b.spin = Random.Range(-20f, 20f);
+                    b.rt.anchoredPosition = new Vector2(Random.Range(area.xMin, area.xMax) + w * 0.5f, -Random.Range(h * 0.1f, h * 0.5f));
+                }
+                else b.maxLife = 0f;
+                if (b.img == null) b.img = b.rt.GetComponent<Image>();
+                if (b.img != null) { var ic = b.img.color; ic.a = 0.55f; b.img.color = ic; }
                 b.rt.gameObject.SetActive(true);
+                continue;
+            }
+
+            if (b.maxLife > 0f)
+            {
+                b.life -= dt;
+                b.rt.anchoredPosition += b.vel * dt + new Vector2(0f, Mathf.Sin(b.life * 1.3f) * 10f * dt);
+                b.rt.Rotate(0f, 0f, b.spin * dt);
+                if (b.img != null)
+                {
+                    var ic = b.img.color;
+                    ic.a = 0.55f * Mathf.Clamp01(Mathf.Min(b.life, b.maxLife - b.life) / 1.5f);
+                    b.img.color = ic;
+                }
+                if (b.life <= 0f)
+                {
+                    b.active = false;
+                    b.rt.gameObject.SetActive(false);
+                }
                 continue;
             }
 
