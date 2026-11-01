@@ -698,6 +698,7 @@ public class TownProps
         var p = d.pos + new Vector2(0f, Mathf.Sin(d.bob * 2.2f) * 9f);
         d.rt.anchoredPosition = p;
         d.rt.localRotation = Quaternion.Euler(0f, 0f, d.angle);
+        d.rt.SetAsLastSibling(); // lit lamps are created later in the same layer: keep the drone in front of them
 
         if (d.sayTimer > 0f)
         {
