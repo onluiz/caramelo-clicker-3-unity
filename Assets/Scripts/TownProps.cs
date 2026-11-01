@@ -40,7 +40,7 @@ public class TownProps
         new Def { Building = "fabrica-de-racao", File = "fabrica-racao", Cols = 3, Frames = 8, FrameW = 256, FrameH = 256, Height = 210f, Lift = -22f },
         new Def { Building = "estatua-caramelo", File = "dog_statue", Height = 115f },
         new Def { Building = "sorveteria-caramelo", File = "sorveteria", Height = 170f },
-        new Def { Building = "parque", File = "parquinho-pets", Height = 150f },
+        new Def { Building = "parque", File = "parquinho-pets", Height = 60f },
         new Def { Building = "templo-caramelo", File = "templo-caramelo", Height = 185f },
         new Def { Building = "banco-canino", File = "banco-canino", Height = 170f },
         new Def { Building = "pet-shop-caramelo", File = "petshop", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
@@ -376,8 +376,8 @@ public class TownProps
             rt.anchorMin = rt.anchorMax = Vector2.zero;
             rt.sizeDelta = new Vector2(size, size);
             float fx = Mathf.Repeat(i * 0.618034f + 0.13f, 1f);
-            float fy = 0.30f + 0.09f * (i % 3);
-            rt.anchoredPosition = new Vector2(w * (0.14f + 0.72f * fx), h * fy + DogRig.FeetBelow * 1.2f);
+            float fy = 0.07f + 0.045f * (i % 3); // the grass strip along the bottom of the strip-shaped playground
+            rt.anchoredPosition = new Vector2(w * (0.05f + 0.90f * fx), h * fy + DogRig.FeetBelow * 1.2f);
             rt.localScale = new Vector3(i % 2 == 0 ? 1f : -1f, 1f, 1f);
             var img = go.AddComponent<Image>();
             img.raycastTarget = false;

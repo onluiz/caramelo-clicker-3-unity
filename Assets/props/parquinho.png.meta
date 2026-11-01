@@ -1,0 +1,4355 @@
+fileFormatVersion: 2
+guid: 90acb215d0edd3e45bc9c094d5cccdbb
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8476776674179497186
+    second: parquinho_0
+  - first:
+      213: -8599833516658988661
+    second: parquinho_1
+  - first:
+      213: 9209598820569643224
+    second: parquinho_2
+  - first:
+      213: 8984636374689632738
+    second: parquinho_3
+  - first:
+      213: -6152422526436689903
+    second: parquinho_4
+  - first:
+      213: 6798811258219456179
+    second: parquinho_5
+  - first:
+      213: 6674451970948349441
+    second: parquinho_6
+  - first:
+      213: 5342776608994888231
+    second: parquinho_7
+  - first:
+      213: -6148966300973842107
+    second: parquinho_8
+  - first:
+      213: 4398720126540590150
+    second: parquinho_9
+  - first:
+      213: 5274260652274021539
+    second: parquinho_10
+  - first:
+      213: -2718698436141700309
+    second: parquinho_11
+  - first:
+      213: -6175395338322405220
+    second: parquinho_12
+  - first:
+      213: 4394051208344156162
+    second: parquinho_13
+  - first:
+      213: 8731668165371439939
+    second: parquinho_14
+  - first:
+      213: 2417702199340084869
+    second: parquinho_15
+  - first:
+      213: 7288274817468594278
+    second: parquinho_16
+  - first:
+      213: 6604864042755312627
+    second: parquinho_17
+  - first:
+      213: 4135554269716226262
+    second: parquinho_18
+  - first:
+      213: 5873645514511695568
+    second: parquinho_19
+  - first:
+      213: -8130148190529448418
+    second: parquinho_20
+  - first:
+      213: -4111647911772186022
+    second: parquinho_21
+  - first:
+      213: -5609082745929643358
+    second: parquinho_22
+  - first:
+      213: -8188245498743231751
+    second: parquinho_23
+  - first:
+      213: -4241952212019816198
+    second: parquinho_24
+  - first:
+      213: -3212811634363024082
+    second: parquinho_25
+  - first:
+      213: -5540299714841045862
+    second: parquinho_26
+  - first:
+      213: 8203453622433211251
+    second: parquinho_27
+  - first:
+      213: 6899979403797382290
+    second: parquinho_28
+  - first:
+      213: 1276644651714956428
+    second: parquinho_29
+  - first:
+      213: -2782450290017835783
+    second: parquinho_30
+  - first:
+      213: 7456548142075362717
+    second: parquinho_31
+  - first:
+      213: 2588492007561665569
+    second: parquinho_32
+  - first:
+      213: -4980229685918771870
+    second: parquinho_33
+  - first:
+      213: 7184523187680774775
+    second: parquinho_34
+  - first:
+      213: -6507550472248260880
+    second: parquinho_35
+  - first:
+      213: 228336048930786333
+    second: parquinho_36
+  - first:
+      213: 8761848810205827984
+    second: parquinho_37
+  - first:
+      213: 8335028621542482319
+    second: parquinho_38
+  - first:
+      213: -6974081582511829232
+    second: parquinho_39
+  - first:
+      213: -6078852867394426552
+    second: parquinho_40
+  - first:
+      213: 5037536696951608402
+    second: parquinho_41
+  - first:
+      213: -1659224817963421385
+    second: parquinho_42
+  - first:
+      213: -5108166673704359026
+    second: parquinho_43
+  - first:
+      213: 8330527533280680637
+    second: parquinho_44
+  - first:
+      213: 4279408686386204204
+    second: parquinho_45
+  - first:
+      213: 4915048821723768606
+    second: parquinho_46
+  - first:
+      213: -9102245834907620042
+    second: parquinho_47
+  - first:
+      213: 3241455593132771910
+    second: parquinho_48
+  - first:
+      213: 7002173047078202467
+    second: parquinho_49
+  - first:
+      213: -5385435707984248285
+    second: parquinho_50
+  - first:
+      213: 2612289744017261987
+    second: parquinho_51
+  - first:
+      213: -7716598417073201300
+    second: parquinho_52
+  - first:
+      213: -3751787342539642289
+    second: parquinho_53
+  - first:
+      213: 5222011854178696944
+    second: parquinho_54
+  - first:
+      213: 6554387800593132759
+    second: parquinho_55
+  - first:
+      213: 6923158589412087678
+    second: parquinho_56
+  - first:
+      213: 2008947101937357447
+    second: parquinho_57
+  - first:
+      213: -4883142631477388083
+    second: parquinho_58
+  - first:
+      213: -6222577084356895366
+    second: parquinho_59
+  - first:
+      213: 7138626848130521808
+    second: parquinho_60
+  - first:
+      213: 1960012749201404128
+    second: parquinho_61
+  - first:
+      213: 8530578802282088085
+    second: parquinho_62
+  - first:
+      213: 1009969377937676264
+    second: parquinho_63
+  - first:
+      213: 6225018793852163097
+    second: parquinho_64
+  - first:
+      213: 7795995159739563139
+    second: parquinho_65
+  - first:
+      213: 9218374025579700479
+    second: parquinho_66
+  - first:
+      213: -6769796682866758984
+    second: parquinho_67
+  - first:
+      213: -6078123838035079295
+    second: parquinho_68
+  - first:
+      213: -4913503269115849346
+    second: parquinho_69
+  - first:
+      213: 5017330052064446839
+    second: parquinho_70
+  - first:
+      213: 5401222182450519701
+    second: parquinho_71
+  - first:
+      213: -8077827303611970352
+    second: parquinho_72
+  - first:
+      213: -444403812236549551
+    second: parquinho_73
+  - first:
+      213: 2011370941804281461
+    second: parquinho_74
+  - first:
+      213: -2606166707195611897
+    second: parquinho_75
+  - first:
+      213: -5490008302663362453
+    second: parquinho_76
+  - first:
+      213: 5916440753046900652
+    second: parquinho_77
+  - first:
+      213: -8272664852649032564
+    second: parquinho_78
+  - first:
+      213: 8161468528254971493
+    second: parquinho_79
+  - first:
+      213: 4989845651074757656
+    second: parquinho_80
+  - first:
+      213: -9004064105235253832
+    second: parquinho_81
+  - first:
+      213: -5844346977888781012
+    second: parquinho_82
+  - first:
+      213: -6487372376014588642
+    second: parquinho_83
+  - first:
+      213: 5691818755219060638
+    second: parquinho_84
+  - first:
+      213: 8047341247420536849
+    second: parquinho_85
+  - first:
+      213: 7105035029224879125
+    second: parquinho_86
+  - first:
+      213: -8230497639937953227
+    second: parquinho_87
+  - first:
+      213: -6616628165135807048
+    second: parquinho_88
+  - first:
+      213: -5672818985674076594
+    second: parquinho_89
+  - first:
+      213: 3957422773586734951
+    second: parquinho_90
+  - first:
+      213: 1252762258916666182
+    second: parquinho_91
+  - first:
+      213: -7441241163897809793
+    second: parquinho_92
+  - first:
+      213: -3997552940136421516
+    second: parquinho_93
+  - first:
+      213: 7795487880121801679
+    second: parquinho_94
+  - first:
+      213: -3425531032112049037
+    second: parquinho_95
+  - first:
+      213: 4688307606911908809
+    second: parquinho_96
+  - first:
+      213: 6936817186331771896
+    second: parquinho_97
+  - first:
+      213: -7568238925890222469
+    second: parquinho_98
+  - first:
+      213: -1013291422689063159
+    second: parquinho_99
+  - first:
+      213: -2266062998198648356
+    second: parquinho_100
+  - first:
+      213: -3923983134145299853
+    second: parquinho_101
+  - first:
+      213: -6063310763688017728
+    second: parquinho_102
+  - first:
+      213: -4792091865015212549
+    second: parquinho_103
+  - first:
+      213: -472100820824730944
+    second: parquinho_104
+  - first:
+      213: 2172023786854949017
+    second: parquinho_105
+  - first:
+      213: -7249078031872410519
+    second: parquinho_106
+  - first:
+      213: -7834843936004254041
+    second: parquinho_107
+  - first:
+      213: 8224271011324105840
+    second: parquinho_108
+  - first:
+      213: 8655415263017780281
+    second: parquinho_109
+  - first:
+      213: -8737168019555249022
+    second: parquinho_110
+  - first:
+      213: -1948948697163138564
+    second: parquinho_111
+  - first:
+      213: 4063153834133842944
+    second: parquinho_112
+  - first:
+      213: 6454079607026277971
+    second: parquinho_113
+  - first:
+      213: -7426055294634646037
+    second: parquinho_114
+  - first:
+      213: -2223348345442260760
+    second: parquinho_115
+  - first:
+      213: 7569255386571204839
+    second: parquinho_116
+  - first:
+      213: -8977824049352709880
+    second: parquinho_117
+  - first:
+      213: -4409826351012850904
+    second: parquinho_118
+  - first:
+      213: 4702206087505958178
+    second: parquinho_119
+  - first:
+      213: 5025946161941692954
+    second: parquinho_120
+  - first:
+      213: 8435761606737872443
+    second: parquinho_121
+  - first:
+      213: -7973630141140087444
+    second: parquinho_122
+  - first:
+      213: 1603883700413292215
+    second: parquinho_123
+  - first:
+      213: -4025589809578901161
+    second: parquinho_124
+  - first:
+      213: 3436569801945100803
+    second: parquinho_125
+  - first:
+      213: -1356907706017722017
+    second: parquinho_126
+  - first:
+      213: -3860690538683846506
+    second: parquinho_127
+  - first:
+      213: 7902502002447109855
+    second: parquinho_128
+  - first:
+      213: 7709271618336040983
+    second: parquinho_129
+  - first:
+      213: -3639333228737391942
+    second: parquinho_130
+  - first:
+      213: 1578196363815810765
+    second: parquinho_131
+  - first:
+      213: 9109480394360661015
+    second: parquinho_132
+  - first:
+      213: -1144661540499090062
+    second: parquinho_133
+  - first:
+      213: -9139140609894245482
+    second: parquinho_134
+  - first:
+      213: -1684178248313756181
+    second: parquinho_135
+  - first:
+      213: -8421177957682055636
+    second: parquinho_136
+  - first:
+      213: -8474406212649974657
+    second: parquinho_137
+  - first:
+      213: 4217230016481410700
+    second: parquinho_138
+  - first:
+      213: 575763783336265418
+    second: parquinho_139
+  - first:
+      213: 1693142146159233756
+    second: parquinho_140
+  - first:
+      213: 8645624513709030355
+    second: parquinho_141
+  - first:
+      213: -8332699906779984228
+    second: parquinho_142
+  - first:
+      213: 2988090420865805378
+    second: parquinho_143
+  - first:
+      213: 5146676023150589291
+    second: parquinho_144
+  - first:
+      213: 1451059537880190340
+    second: parquinho_145
+  - first:
+      213: 5919837174854326197
+    second: parquinho_146
+  - first:
+      213: -6505366581641151143
+    second: parquinho_147
+  - first:
+      213: -1257079659954711704
+    second: parquinho_148
+  - first:
+      213: 860394809709088375
+    second: parquinho_149
+  - first:
+      213: 3712278379136763676
+    second: parquinho_150
+  - first:
+      213: 5428439142865531018
+    second: parquinho_151
+  - first:
+      213: 6431706506928521722
+    second: parquinho_152
+  - first:
+      213: -3452879323140364659
+    second: parquinho_153
+  - first:
+      213: 760618945118061638
+    second: parquinho_154
+  - first:
+      213: 1689625233663659314
+    second: parquinho_155
+  - first:
+      213: 928689295126980017
+    second: parquinho_156
+  - first:
+      213: 7694982622816179832
+    second: parquinho_157
+  - first:
+      213: 7172285407668209073
+    second: parquinho_158
+  - first:
+      213: -5950006389360697088
+    second: parquinho_159
+  - first:
+      213: -8692625009508578060
+    second: parquinho_160
+  - first:
+      213: -6645124827165280923
+    second: parquinho_161
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: parquinho_0
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 691
+        width: 49
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e13c637d6807c5a80800000000000000
+      internalID: -8476776674179497186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_1
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 675
+        width: 87
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b89ea000bf047a880800000000000000
+      internalID: -8599833516658988661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 2172
+        height: 658
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d8f8ef25511fcf70800000000000000
+      internalID: 9209598820569643224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_3
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 612
+        width: 93
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e1dd6d1e27dfac70800000000000000
+      internalID: 8984636374689632738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_4
+      rect:
+        serializedVersion: 2
+        x: 979
+        y: 591
+        width: 16
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11831a32f443e9aa0800000000000000
+      internalID: -6152422526436689903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_5
+      rect:
+        serializedVersion: 2
+        x: 1496
+        y: 635
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b6e81551da3a5e50800000000000000
+      internalID: 6798811258219456179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_6
+      rect:
+        serializedVersion: 2
+        x: 615
+        y: 602
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10e38ce64ba60ac50800000000000000
+      internalID: 6674451970948349441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_7
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 596
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72a0865c40b552a40800000000000000
+      internalID: 5342776608994888231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_8
+      rect:
+        serializedVersion: 2
+        x: 674
+        y: 578
+        width: 27
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5414b965abb7aaaa0800000000000000
+      internalID: -6148966300973842107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_9
+      rect:
+        serializedVersion: 2
+        x: 708
+        y: 594
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64c20d056a46b0d30800000000000000
+      internalID: 4398720126540590150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_10
+      rect:
+        serializedVersion: 2
+        x: 714
+        y: 590
+        width: 24
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a4fc977e10f13940800000000000000
+      internalID: 5274260652274021539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_11
+      rect:
+        serializedVersion: 2
+        x: 1076
+        y: 567
+        width: 25
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2b2d563d2e354ad0800000000000000
+      internalID: -2718698436141700309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_12
+      rect:
+        serializedVersion: 2
+        x: 1174
+        y: 602
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9890bf88a69c4aa0800000000000000
+      internalID: -6175395338322405220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_13
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 584
+        width: 19
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 208ba361b4ecafc30800000000000000
+      internalID: 4394051208344156162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_14
+      rect:
+        serializedVersion: 2
+        x: 739
+        y: 593
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34b2d8d1fed1d2970800000000000000
+      internalID: 8731668165371439939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_15
+      rect:
+        serializedVersion: 2
+        x: 1786
+        y: 586
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58ea85c37576d8120800000000000000
+      internalID: 2417702199340084869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_16
+      rect:
+        serializedVersion: 2
+        x: 1999
+        y: 578
+        width: 27
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 668f3a0e457252560800000000000000
+      internalID: 7288274817468594278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_17
+      rect:
+        serializedVersion: 2
+        x: 617
+        y: 571
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fb4e225ad039ab50800000000000000
+      internalID: 6604864042755312627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_18
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 580
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d029cb72b0746930800000000000000
+      internalID: 4135554269716226262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_19
+      rect:
+        serializedVersion: 2
+        x: 746
+        y: 576
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0de390db971638150800000000000000
+      internalID: 5873645514511695568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_20
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 580
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e16153ccb49eb2f80800000000000000
+      internalID: -8130148190529448418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_21
+      rect:
+        serializedVersion: 2
+        x: 746
+        y: 562
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5a9759320e70f6c0800000000000000
+      internalID: -4111647911772186022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_22
+      rect:
+        serializedVersion: 2
+        x: 2059
+        y: 564
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2aa4715f5f88822b0800000000000000
+      internalID: -5609082745929643358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_23
+      rect:
+        serializedVersion: 2
+        x: 2065
+        y: 564
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fae7b12a128d5e80800000000000000
+      internalID: -8188245498743231751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_24
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 128
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af8506020fe8125c0800000000000000
+      internalID: -4241952212019816198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_25
+      rect:
+        serializedVersion: 2
+        x: 617
+        y: 130
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2dbc8b37dcc963d0800000000000000
+      internalID: -3212811634363024082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_26
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 136
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9493bb53c6ec13b0800000000000000
+      internalID: -5540299714841045862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_27
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 130
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 373e5881b9588d170800000000000000
+      internalID: 8203453622433211251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_28
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 126
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 294cad8c5b6a1cf50800000000000000
+      internalID: 6899979403797382290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_29
+      rect:
+        serializedVersion: 2
+        x: 2075
+        y: 118
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8c4fd9fb8d87b110800000000000000
+      internalID: 1276644651714956428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_30
+      rect:
+        serializedVersion: 2
+        x: 2083
+        y: 110
+        width: 10
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f4ed4a0430c269d0800000000000000
+      internalID: -2782450290017835783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_31
+      rect:
+        serializedVersion: 2
+        x: 537
+        y: 95
+        width: 25
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9d300b570bfa7760800000000000000
+      internalID: 7456548142075362717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_32
+      rect:
+        serializedVersion: 2
+        x: 851
+        y: 103
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12c96a634cb2ce320800000000000000
+      internalID: 2588492007561665569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_33
+      rect:
+        serializedVersion: 2
+        x: 1520
+        y: 112
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 265d4feac7ba2eab0800000000000000
+      internalID: -4980229685918771870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_34
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 98
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77a054226cd84b360800000000000000
+      internalID: 7184523187680774775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_35
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 85
+        width: 23
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f687bfe25980b5a0800000000000000
+      internalID: -6507550472248260880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_36
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 95
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1c8fed3d663b2300800000000000000
+      internalID: 228336048930786333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_37
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 101
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0935ff31217589970800000000000000
+      internalID: 8761848810205827984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_38
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 98
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f81e0c3de58fba370800000000000000
+      internalID: 8335028621542482319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_39
+      rect:
+        serializedVersion: 2
+        x: 1504
+        y: 95
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01fc9cf30c5173f90800000000000000
+      internalID: -6974081582511829232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_40
+      rect:
+        serializedVersion: 2
+        x: 1573
+        y: 91
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8492715368393aba0800000000000000
+      internalID: -6078852867394426552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_41
+      rect:
+        serializedVersion: 2
+        x: 1649
+        y: 95
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2549bc49fece8e540800000000000000
+      internalID: 5037536696951608402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_42
+      rect:
+        serializedVersion: 2
+        x: 1655
+        y: 95
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73137caa1df39f8e0800000000000000
+      internalID: -1659224817963421385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_43
+      rect:
+        serializedVersion: 2
+        x: 1866
+        y: 96
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8bec5879752c19b0800000000000000
+      internalID: -5108166673704359026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_44
+      rect:
+        serializedVersion: 2
+        x: 1882
+        y: 101
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dba5ecc87aafb9370800000000000000
+      internalID: 8330527533280680637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_45
+      rect:
+        serializedVersion: 2
+        x: 1888
+        y: 98
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2e45c8e683836b30800000000000000
+      internalID: 4279408686386204204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_46
+      rect:
+        serializedVersion: 2
+        x: 1894
+        y: 99
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e172c80ccd2c53440800000000000000
+      internalID: 4915048821723768606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_47
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 61
+        width: 19
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63d6d0093a35ea180800000000000000
+      internalID: -9102245834907620042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_48
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 37
+        width: 29
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64ac1ef10b6fbfc20800000000000000
+      internalID: 3241455593132771910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_49
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 31
+        width: 76
+        height: 69
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36c29e68947bc2160800000000000000
+      internalID: 7002173047078202467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_50
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 47
+        width: 65
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32205e0c1c61345b0800000000000000
+      internalID: -5385435707984248285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_51
+      rect:
+        serializedVersion: 2
+        x: 442
+        y: 81
+        width: 12
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a58b828ea7b04420800000000000000
+      internalID: 2612289744017261987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_52
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 79
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6f920cbf9229e490800000000000000
+      internalID: -7716598417073201300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_53
+      rect:
+        serializedVersion: 2
+        x: 461
+        y: 79
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4a2e1f2a49feebc0800000000000000
+      internalID: -3751787342539642289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_54
+      rect:
+        serializedVersion: 2
+        x: 636
+        y: 83
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fe333d2d10587840800000000000000
+      internalID: 5222011854178696944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_55
+      rect:
+        serializedVersion: 2
+        x: 639
+        y: 61
+        width: 20
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7dce18e5afcd5fa50800000000000000
+      internalID: 6554387800593132759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_56
+      rect:
+        serializedVersion: 2
+        x: 641
+        y: 84
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e771a9d7e00041060800000000000000
+      internalID: 6923158589412087678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_57
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 79
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 782d68fceb631eb10800000000000000
+      internalID: 2008947101937357447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_58
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 60
+        width: 31
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcc593f06a79b3cb0800000000000000
+      internalID: -4883142631477388083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_59
+      rect:
+        serializedVersion: 2
+        x: 1349
+        y: 79
+        width: 18
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7ddb634c17f4a9a0800000000000000
+      internalID: -6222577084356895366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_60
+      rect:
+        serializedVersion: 2
+        x: 1416
+        y: 81
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0dad2eadb4f711360800000000000000
+      internalID: 7138626848130521808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_61
+      rect:
+        serializedVersion: 2
+        x: 1542
+        y: 81
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e0f267f53d533b10800000000000000
+      internalID: 1960012749201404128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_62
+      rect:
+        serializedVersion: 2
+        x: 1549
+        y: 73
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59640864934b26670800000000000000
+      internalID: 8530578802282088085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_63
+      rect:
+        serializedVersion: 2
+        x: 1671
+        y: 67
+        width: 11
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e75ff55cc1240e00800000000000000
+      internalID: 1009969377937676264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_64
+      rect:
+        serializedVersion: 2
+        x: 1681
+        y: 45
+        width: 46
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91450b78c95b36650800000000000000
+      internalID: 6225018793852163097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_65
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 53
+        width: 40
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38cf0f6fa40f03c60800000000000000
+      internalID: 7795995159739563139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_66
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 33
+        width: 64
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff0ad51d55e3eef70800000000000000
+      internalID: 9218374025579700479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_67
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 53
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8baeb1ce8c9dc02a0800000000000000
+      internalID: -6769796682866758984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_68
+      rect:
+        serializedVersion: 2
+        x: 479
+        y: 49
+        width: 25
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18fc515929a26aba0800000000000000
+      internalID: -6078123838035079295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_69
+      rect:
+        serializedVersion: 2
+        x: 529
+        y: 47
+        width: 37
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7511a14fcabfcbb0800000000000000
+      internalID: -4913503269115849346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_70
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 65
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7798132791321a540800000000000000
+      internalID: 5017330052064446839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_71
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 61
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59e5ce145fef4fa40800000000000000
+      internalID: 5401222182450519701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_72
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 63
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0dcc1439ddac5ef80800000000000000
+      internalID: -8077827303611970352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_73
+      rect:
+        serializedVersion: 2
+        x: 658
+        y: 57
+        width: 11
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 152afca561925d9f0800000000000000
+      internalID: -444403812236549551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_74
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 65
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57e79c10733d9eb10800000000000000
+      internalID: 2011370941804281461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_75
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 55
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 705f728103905dbd0800000000000000
+      internalID: -2606166707195611897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_76
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 47
+        width: 34
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b681ec939829fc3b0800000000000000
+      internalID: -5490008302663362453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_77
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 63
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: caf410ca48b6b1250800000000000000
+      internalID: 5916440753046900652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_78
+      rect:
+        serializedVersion: 2
+        x: 875
+        y: 31
+        width: 31
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c84ceff9527913d80800000000000000
+      internalID: -8272664852649032564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_79
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 63
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56eea28926c534170800000000000000
+      internalID: 8161468528254971493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_80
+      rect:
+        serializedVersion: 2
+        x: 955
+        y: 63
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 814b65cae2e7f3540800000000000000
+      internalID: 4989845651074757656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_81
+      rect:
+        serializedVersion: 2
+        x: 991
+        y: 65
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b57b90e6632b0380800000000000000
+      internalID: -9004064105235253832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_82
+      rect:
+        serializedVersion: 2
+        x: 1096
+        y: 65
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2dbfc66365b4eea0800000000000000
+      internalID: -5844346977888781012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_83
+      rect:
+        serializedVersion: 2
+        x: 1118
+        y: 57
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e15f7f1123938f5a0800000000000000
+      internalID: -6487372376014588642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_84
+      rect:
+        serializedVersion: 2
+        x: 1126
+        y: 55
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e97fcb650076dfe40800000000000000
+      internalID: 5691818755219060638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_85
+      rect:
+        serializedVersion: 2
+        x: 1164
+        y: 63
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11899d65a36edaf60800000000000000
+      internalID: 8047341247420536849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_86
+      rect:
+        serializedVersion: 2
+        x: 1339
+        y: 62
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 514f7a907b72a9260800000000000000
+      internalID: 7105035029224879125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_87
+      rect:
+        serializedVersion: 2
+        x: 1355
+        y: 61
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 532bec6e00667cd80800000000000000
+      internalID: -8230497639937953227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_88
+      rect:
+        serializedVersion: 2
+        x: 1478
+        y: 55
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bd4c3e7db30d24a0800000000000000
+      internalID: -6616628165135807048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_89
+      rect:
+        serializedVersion: 2
+        x: 1502
+        y: 43
+        width: 15
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4e0ecb30391641b0800000000000000
+      internalID: -5672818985674076594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_90
+      rect:
+        serializedVersion: 2
+        x: 1567
+        y: 49
+        width: 27
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76fada59b079be630800000000000000
+      internalID: 3957422773586734951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_91
+      rect:
+        serializedVersion: 2
+        x: 1591
+        y: 61
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64b6eb613a4b26110800000000000000
+      internalID: 1252762258916666182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_92
+      rect:
+        serializedVersion: 2
+        x: 1607
+        y: 67
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f745bd936966bb890800000000000000
+      internalID: -7441241163897809793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_93
+      rect:
+        serializedVersion: 2
+        x: 1612
+        y: 69
+        width: 6
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 477a958e7c6d588c0800000000000000
+      internalID: -3997552940136421516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_94
+      rect:
+        serializedVersion: 2
+        x: 1617
+        y: 65
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcbd589bce22f2c60800000000000000
+      internalID: 7795487880121801679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_95
+      rect:
+        serializedVersion: 2
+        x: 1627
+        y: 49
+        width: 13
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37452efeca11670d0800000000000000
+      internalID: -3425531032112049037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_96
+      rect:
+        serializedVersion: 2
+        x: 1657
+        y: 63
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cbfeb3cde6301140800000000000000
+      internalID: 4688307606911908809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_97
+      rect:
+        serializedVersion: 2
+        x: 1663
+        y: 63
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f341276a76844060800000000000000
+      internalID: 6936817186331771896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_98
+      rect:
+        serializedVersion: 2
+        x: 1720
+        y: 69
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b76870f8bc638f690800000000000000
+      internalID: -7568238925890222469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_99
+      rect:
+        serializedVersion: 2
+        x: 1733
+        y: 27
+        width: 36
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90f0ba8d1d010f1f0800000000000000
+      internalID: -1013291422689063159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_100
+      rect:
+        serializedVersion: 2
+        x: 1822
+        y: 61
+        width: 23
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd186b195b35d80e0800000000000000
+      internalID: -2266062998198648356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_101
+      rect:
+        serializedVersion: 2
+        x: 1850
+        y: 31
+        width: 80
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37a35a031263b89c0800000000000000
+      internalID: -3923983134145299853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_102
+      rect:
+        serializedVersion: 2
+        x: 1977
+        y: 45
+        width: 27
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c0c2973cfacadba0800000000000000
+      internalID: -6063310763688017728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_103
+      rect:
+        serializedVersion: 2
+        x: 2007
+        y: 45
+        width: 19
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf5aabe96d11f7db0800000000000000
+      internalID: -4792091865015212549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_104
+      rect:
+        serializedVersion: 2
+        x: 2057
+        y: 49
+        width: 7
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c252940ec2c279f0800000000000000
+      internalID: -472100820824730944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_105
+      rect:
+        serializedVersion: 2
+        x: 2063
+        y: 53
+        width: 13
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99020335024942e10800000000000000
+      internalID: 2172023786854949017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_106
+      rect:
+        serializedVersion: 2
+        x: 2071
+        y: 57
+        width: 12
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96c3821ffe9166b90800000000000000
+      internalID: -7249078031872410519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_107
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 35
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a6d7d373fa054390800000000000000
+      internalID: -7834843936004254041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_108
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 37
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 074148629ea722270800000000000000
+      internalID: 8224271011324105840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_109
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 21
+        width: 34
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9344ba7c2563e1870800000000000000
+      internalID: 8655415263017780281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_110
+      rect:
+        serializedVersion: 2
+        x: 493
+        y: 33
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 284918b4af75fb680800000000000000
+      internalID: -8737168019555249022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_111
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 31
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf971246c71f3f4e0800000000000000
+      internalID: -1948948697163138564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_112
+      rect:
+        serializedVersion: 2
+        x: 617
+        y: 31
+        width: 20
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00c605772e8336830800000000000000
+      internalID: 4063153834133842944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_113
+      rect:
+        serializedVersion: 2
+        x: 635
+        y: 31
+        width: 24
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35ed4e8153f719950800000000000000
+      internalID: 6454079607026277971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_114
+      rect:
+        serializedVersion: 2
+        x: 668
+        y: 27
+        width: 41
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be5a4e0fd0a51f890800000000000000
+      internalID: -7426055294634646037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_115
+      rect:
+        serializedVersion: 2
+        x: 736
+        y: 23
+        width: 43
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e826f9a5741521e0800000000000000
+      internalID: -2223348345442260760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_116
+      rect:
+        serializedVersion: 2
+        x: 796
+        y: 29
+        width: 56
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e8e9c2aba56b0960800000000000000
+      internalID: 7569255386571204839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_117
+      rect:
+        serializedVersion: 2
+        x: 853
+        y: 45
+        width: 7
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8096f5af79c586380800000000000000
+      internalID: -8977824049352709880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_118
+      rect:
+        serializedVersion: 2
+        x: 939
+        y: 31
+        width: 29
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 823d8ba4c462dc2c0800000000000000
+      internalID: -4409826351012850904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_119
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 35
+        width: 20
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 225d872f587914140800000000000000
+      internalID: 4702206087505958178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_120
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 47
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a12c5cad76fbfb540800000000000000
+      internalID: 5025946161941692954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_121
+      rect:
+        serializedVersion: 2
+        x: 1110
+        y: 31
+        width: 25
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b364d7b9c78d11570800000000000000
+      internalID: 8435761606737872443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_122
+      rect:
+        serializedVersion: 2
+        x: 1158
+        y: 39
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6d4ffaf1a9f75190800000000000000
+      internalID: -7973630141140087444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_123
+      rect:
+        serializedVersion: 2
+        x: 1164
+        y: 49
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7be5c205ab3224610800000000000000
+      internalID: 1603883700413292215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_124
+      rect:
+        serializedVersion: 2
+        x: 1285
+        y: 43
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7510e9c856b3228c0800000000000000
+      internalID: -4025589809578901161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_125
+      rect:
+        serializedVersion: 2
+        x: 1293
+        y: 43
+        width: 19
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 302b5c2f60621bf20800000000000000
+      internalID: 3436569801945100803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_126
+      rect:
+        serializedVersion: 2
+        x: 1321
+        y: 43
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f51d2dd61ab4b2de0800000000000000
+      internalID: -1356907706017722017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_127
+      rect:
+        serializedVersion: 2
+        x: 1351
+        y: 45
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 690b90ee8621c6ac0800000000000000
+      internalID: -3860690538683846506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_128
+      rect:
+        serializedVersion: 2
+        x: 1360
+        y: 49
+        width: 11
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fde4ca4b3b35bad60800000000000000
+      internalID: 7902502002447109855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_129
+      rect:
+        serializedVersion: 2
+        x: 1430
+        y: 31
+        width: 29
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 718abeff0b5dcfa60800000000000000
+      internalID: 7709271618336040983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_130
+      rect:
+        serializedVersion: 2
+        x: 1516
+        y: 21
+        width: 32
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab215d1e5bd7e7dc0800000000000000
+      internalID: -3639333228737391942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_131
+      rect:
+        serializedVersion: 2
+        x: 1601
+        y: 47
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc6fd033b31e6e510800000000000000
+      internalID: 1578196363815810765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_132
+      rect:
+        serializedVersion: 2
+        x: 1725
+        y: 50
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 714a04297206b6e70800000000000000
+      internalID: 9109480394360661015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_133
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 46
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2751082c4685d10f0800000000000000
+      internalID: -1144661540499090062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_134
+      rect:
+        serializedVersion: 2
+        x: 1840
+        y: 45
+        width: 11
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69b18ea59004b2180800000000000000
+      internalID: -9139140609894245482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_135
+      rect:
+        serializedVersion: 2
+        x: 1985
+        y: 47
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be5a1da6ec890a8e0800000000000000
+      internalID: -1684178248313756181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_136
+      rect:
+        serializedVersion: 2
+        x: 2075
+        y: 49
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c26f20ac347f12b80800000000000000
+      internalID: -8421177957682055636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_137
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 33
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7482ace27cd46a80800000000000000
+      internalID: -8474406212649974657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_138
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 33
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8e3d7c2b5c968a30800000000000000
+      internalID: 4217230016481410700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_139
+      rect:
+        serializedVersion: 2
+        x: 658
+        y: 33
+        width: 7
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac60b444c168df700800000000000000
+      internalID: 575763783336265418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_140
+      rect:
+        serializedVersion: 2
+        x: 708
+        y: 19
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cda4010bfcf3f7710800000000000000
+      internalID: 1693142146159233756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_141
+      rect:
+        serializedVersion: 2
+        x: 914
+        y: 31
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3db390150bd6bf770800000000000000
+      internalID: 8645624513709030355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_142
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 31
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9ec274559d4c5c80800000000000000
+      internalID: -8332699906779984228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_143
+      rect:
+        serializedVersion: 2
+        x: 1301
+        y: 31
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24c247cf764d77920800000000000000
+      internalID: 2988090420865805378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_144
+      rect:
+        serializedVersion: 2
+        x: 1414
+        y: 31
+        width: 13
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6539e5239aac6740800000000000000
+      internalID: 5146676023150589291
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_145
+      rect:
+        serializedVersion: 2
+        x: 1464
+        y: 23
+        width: 9
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48d8a4f26f2332410800000000000000
+      internalID: 1451059537880190340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_146
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 27
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b7185fbb8c772250800000000000000
+      internalID: 5919837174854326197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_147
+      rect:
+        serializedVersion: 2
+        x: 1478
+        y: 30
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95df4979f8b48b5a0800000000000000
+      internalID: -6505366581641151143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_148
+      rect:
+        serializedVersion: 2
+        x: 1543
+        y: 33
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 863d706a5b4fd8ee0800000000000000
+      internalID: -1257079659954711704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_149
+      rect:
+        serializedVersion: 2
+        x: 1625
+        y: 31
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77ecc47558cb0fb00800000000000000
+      internalID: 860394809709088375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_150
+      rect:
+        serializedVersion: 2
+        x: 1649
+        y: 33
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c174fcf6489a48330800000000000000
+      internalID: 3712278379136763676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_151
+      rect:
+        serializedVersion: 2
+        x: 1671
+        y: 31
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a80735ba3a0b55b40800000000000000
+      internalID: 5428439142865531018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_152
+      rect:
+        serializedVersion: 2
+        x: 1679
+        y: 33
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af10b0dcdf2024950800000000000000
+      internalID: 6431706506928521722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_153
+      rect:
+        serializedVersion: 2
+        x: 1768
+        y: 31
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d866debbc88e410d0800000000000000
+      internalID: -3452879323140364659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_154
+      rect:
+        serializedVersion: 2
+        x: 1922
+        y: 33
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 644c13196e24e8a00800000000000000
+      internalID: 760618945118061638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_155
+      rect:
+        serializedVersion: 2
+        x: 1963
+        y: 25
+        width: 7
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23d0f00b231c27710800000000000000
+      internalID: 1689625233663659314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_156
+      rect:
+        serializedVersion: 2
+        x: 2025
+        y: 31
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b560c65efd53ec00800000000000000
+      internalID: 928689295126980017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_157
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 17
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87613c9fce11aca60800000000000000
+      internalID: 7694982622816179832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_158
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 15
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b508cfe393198360800000000000000
+      internalID: 7172285407668209073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_159
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 17
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 001e9de96b45d6da0800000000000000
+      internalID: -5950006389360697088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_160
+      rect:
+        serializedVersion: 2
+        x: 837
+        y: 15
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fc809efb979d5780800000000000000
+      internalID: -8692625009508578060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: parquinho_161
+      rect:
+        serializedVersion: 2
+        x: 1725
+        y: 16
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5653fa45d26c7c3a0800000000000000
+      internalID: -6645124827165280923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      parquinho_0: -8476776674179497186
+      parquinho_1: -8599833516658988661
+      parquinho_10: 5274260652274021539
+      parquinho_100: -2266062998198648356
+      parquinho_101: -3923983134145299853
+      parquinho_102: -6063310763688017728
+      parquinho_103: -4792091865015212549
+      parquinho_104: -472100820824730944
+      parquinho_105: 2172023786854949017
+      parquinho_106: -7249078031872410519
+      parquinho_107: -7834843936004254041
+      parquinho_108: 8224271011324105840
+      parquinho_109: 8655415263017780281
+      parquinho_11: -2718698436141700309
+      parquinho_110: -8737168019555249022
+      parquinho_111: -1948948697163138564
+      parquinho_112: 4063153834133842944
+      parquinho_113: 6454079607026277971
+      parquinho_114: -7426055294634646037
+      parquinho_115: -2223348345442260760
+      parquinho_116: 7569255386571204839
+      parquinho_117: -8977824049352709880
+      parquinho_118: -4409826351012850904
+      parquinho_119: 4702206087505958178
+      parquinho_12: -6175395338322405220
+      parquinho_120: 5025946161941692954
+      parquinho_121: 8435761606737872443
+      parquinho_122: -7973630141140087444
+      parquinho_123: 1603883700413292215
+      parquinho_124: -4025589809578901161
+      parquinho_125: 3436569801945100803
+      parquinho_126: -1356907706017722017
+      parquinho_127: -3860690538683846506
+      parquinho_128: 7902502002447109855
+      parquinho_129: 7709271618336040983
+      parquinho_13: 4394051208344156162
+      parquinho_130: -3639333228737391942
+      parquinho_131: 1578196363815810765
+      parquinho_132: 9109480394360661015
+      parquinho_133: -1144661540499090062
+      parquinho_134: -9139140609894245482
+      parquinho_135: -1684178248313756181
+      parquinho_136: -8421177957682055636
+      parquinho_137: -8474406212649974657
+      parquinho_138: 4217230016481410700
+      parquinho_139: 575763783336265418
+      parquinho_14: 8731668165371439939
+      parquinho_140: 1693142146159233756
+      parquinho_141: 8645624513709030355
+      parquinho_142: -8332699906779984228
+      parquinho_143: 2988090420865805378
+      parquinho_144: 5146676023150589291
+      parquinho_145: 1451059537880190340
+      parquinho_146: 5919837174854326197
+      parquinho_147: -6505366581641151143
+      parquinho_148: -1257079659954711704
+      parquinho_149: 860394809709088375
+      parquinho_15: 2417702199340084869
+      parquinho_150: 3712278379136763676
+      parquinho_151: 5428439142865531018
+      parquinho_152: 6431706506928521722
+      parquinho_153: -3452879323140364659
+      parquinho_154: 760618945118061638
+      parquinho_155: 1689625233663659314
+      parquinho_156: 928689295126980017
+      parquinho_157: 7694982622816179832
+      parquinho_158: 7172285407668209073
+      parquinho_159: -5950006389360697088
+      parquinho_16: 7288274817468594278
+      parquinho_160: -8692625009508578060
+      parquinho_161: -6645124827165280923
+      parquinho_17: 6604864042755312627
+      parquinho_18: 4135554269716226262
+      parquinho_19: 5873645514511695568
+      parquinho_2: 9209598820569643224
+      parquinho_20: -8130148190529448418
+      parquinho_21: -4111647911772186022
+      parquinho_22: -5609082745929643358
+      parquinho_23: -8188245498743231751
+      parquinho_24: -4241952212019816198
+      parquinho_25: -3212811634363024082
+      parquinho_26: -5540299714841045862
+      parquinho_27: 8203453622433211251
+      parquinho_28: 6899979403797382290
+      parquinho_29: 1276644651714956428
+      parquinho_3: 8984636374689632738
+      parquinho_30: -2782450290017835783
+      parquinho_31: 7456548142075362717
+      parquinho_32: 2588492007561665569
+      parquinho_33: -4980229685918771870
+      parquinho_34: 7184523187680774775
+      parquinho_35: -6507550472248260880
+      parquinho_36: 228336048930786333
+      parquinho_37: 8761848810205827984
+      parquinho_38: 8335028621542482319
+      parquinho_39: -6974081582511829232
+      parquinho_4: -6152422526436689903
+      parquinho_40: -6078852867394426552
+      parquinho_41: 5037536696951608402
+      parquinho_42: -1659224817963421385
+      parquinho_43: -5108166673704359026
+      parquinho_44: 8330527533280680637
+      parquinho_45: 4279408686386204204
+      parquinho_46: 4915048821723768606
+      parquinho_47: -9102245834907620042
+      parquinho_48: 3241455593132771910
+      parquinho_49: 7002173047078202467
+      parquinho_5: 6798811258219456179
+      parquinho_50: -5385435707984248285
+      parquinho_51: 2612289744017261987
+      parquinho_52: -7716598417073201300
+      parquinho_53: -3751787342539642289
+      parquinho_54: 5222011854178696944
+      parquinho_55: 6554387800593132759
+      parquinho_56: 6923158589412087678
+      parquinho_57: 2008947101937357447
+      parquinho_58: -4883142631477388083
+      parquinho_59: -6222577084356895366
+      parquinho_6: 6674451970948349441
+      parquinho_60: 7138626848130521808
+      parquinho_61: 1960012749201404128
+      parquinho_62: 8530578802282088085
+      parquinho_63: 1009969377937676264
+      parquinho_64: 6225018793852163097
+      parquinho_65: 7795995159739563139
+      parquinho_66: 9218374025579700479
+      parquinho_67: -6769796682866758984
+      parquinho_68: -6078123838035079295
+      parquinho_69: -4913503269115849346
+      parquinho_7: 5342776608994888231
+      parquinho_70: 5017330052064446839
+      parquinho_71: 5401222182450519701
+      parquinho_72: -8077827303611970352
+      parquinho_73: -444403812236549551
+      parquinho_74: 2011370941804281461
+      parquinho_75: -2606166707195611897
+      parquinho_76: -5490008302663362453
+      parquinho_77: 5916440753046900652
+      parquinho_78: -8272664852649032564
+      parquinho_79: 8161468528254971493
+      parquinho_8: -6148966300973842107
+      parquinho_80: 4989845651074757656
+      parquinho_81: -9004064105235253832
+      parquinho_82: -5844346977888781012
+      parquinho_83: -6487372376014588642
+      parquinho_84: 5691818755219060638
+      parquinho_85: 8047341247420536849
+      parquinho_86: 7105035029224879125
+      parquinho_87: -8230497639937953227
+      parquinho_88: -6616628165135807048
+      parquinho_89: -5672818985674076594
+      parquinho_9: 4398720126540590150
+      parquinho_90: 3957422773586734951
+      parquinho_91: 1252762258916666182
+      parquinho_92: -7441241163897809793
+      parquinho_93: -3997552940136421516
+      parquinho_94: 7795487880121801679
+      parquinho_95: -3425531032112049037
+      parquinho_96: 4688307606911908809
+      parquinho_97: 6936817186331771896
+      parquinho_98: -7568238925890222469
+      parquinho_99: -1013291422689063159
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
