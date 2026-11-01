@@ -172,11 +172,8 @@ public static class Loc
     static readonly Dictionary<string, (string name, string desc)> Buildings = new Dictionary<string, (string, string)>
     {
         { "o-inicio", ("The Beginning", "The beginning of the dream of our ambitious Brazilian caramelo dog: The Caramelo Corps.") },
-        { "ossinho", ("Rubber Bone", "A little toy that always brings in a few treats.") },
         { "vira-lata", ("Stray Pal", "You and your street friends hunt for coins and trash cans to invest in Caramelo Corp.") },
-        { "tigela", ("Full Bowl", "There's always a treat left at the bottom.") },
         { "venda-petiscos", ("Treat Stand", "Caramelo makes homemade treats and sells them on the street.") },
-        { "passeador", ("Dog Walker", "Takes Caramelo for walks and finds treats along the way.") },
         { "cachorro-entregador", ("Delivery Caramelo", "Delivery dogs hired by Caramelo Corps.") },
         { "racao-caramelo", ("Caramelo Kibble", "Mysterious homemade kibble made by Caramelo.") },
         { "creche-caramelo", ("Caramelo Daycare", "Puppies playing, napping and bringing in treats for the whole neighborhood.") },

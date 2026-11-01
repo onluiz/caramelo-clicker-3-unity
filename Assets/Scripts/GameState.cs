@@ -20,7 +20,7 @@ public class SaveData
 
 public class GameState
 {
-    const string SaveKey = "caramelo_clicker_save_v5";
+    const string SaveKey = "caramelo_clicker_save_v6";
     public const double FrenzyMultiplier = 7;
     public const double ClickFrenzyMultiplier = 777;
 
