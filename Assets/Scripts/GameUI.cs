@@ -1337,22 +1337,19 @@ public class GameUI
         if (width <= 0f) return;
         lastCoinText = value;
 
-        const float icon = 102f, gap = 14f, size = 84f; // same size the income text used to have
+        const float size = 84f; // same size the income text used to have
         var iconRt = (RectTransform)hudCoin.Find("Icon");
         counterText.enableAutoSizing = counterShadow.enableAutoSizing = false;
         counterText.fontSize = size;
         float textW = counterText.GetPreferredValues(value, 10000f, 0f).x;
-        float avail = width - icon - gap - 24f;
+        iconRt.gameObject.SetActive(false); // no petisco icon beside the counter
+        float avail = width - 24f;
         float fs = textW > avail ? size * avail / textW : size;
         counterText.fontSize = counterShadow.fontSize = fs;
         textW = Mathf.Min(textW * fs / size, avail);
 
-        // The value is centred like the income text under it, and the icon hangs to its left.
-        float left = -textW / 2f - gap - icon;
+        // The value is centred like the income text under it.
         float textLeft = -textW / 2f;
-        iconRt.anchorMin = iconRt.anchorMax = new Vector2(0.5f, 0.5f);
-        iconRt.pivot = new Vector2(0f, 0.5f);
-        iconRt.anchoredPosition = new Vector2(left, 0f);
         foreach (var t in new[] { counterText, counterShadow })
         {
             var rt = t.rectTransform;
