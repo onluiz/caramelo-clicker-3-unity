@@ -67,7 +67,7 @@ public class GameState
         get
         {
             Recalc();
-            double v = clickMult + baseCps * clickPercent;
+            double v = clickMult * (1 + Cps * clickPercent);
             return v * (ClickFrenzyActive ? ClickFrenzyMultiplier : 1);
         }
     }
