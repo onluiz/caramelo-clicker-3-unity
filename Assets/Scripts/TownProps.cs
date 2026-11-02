@@ -972,7 +972,7 @@ public class TownProps
 
         var go = new GameObject("bonus-trash-can", typeof(RectTransform));
         var rt = go.GetComponent<RectTransform>();
-        rt.SetParent(layer, false);
+        rt.SetParent(litLayer != null ? litLayer : layer, false); // same layer as the lit lamps, so the can is drawn in front of them
         rt.anchorMin = rt.anchorMax = Vector2.zero;
         rt.pivot = new Vector2(0.5f, 0f);
         var img = go.AddComponent<Image>();
