@@ -1,0 +1,88 @@
+# Gera o build WebGL a cada PR, publica no Vercel e comenta a URL do preview.
+# Push na main faz deploy de produção.
+#
+# Secrets necessários (Settings > Secrets and variables > Actions):
+#   UNITY_LICENSE, UNITY_EMAIL, UNITY_PASSWORD  (https://game.ci/docs/github/activation)
+#   VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+# No projeto do Vercel, não conecte o repositório Git (o build não está nele) e,
+# para abrir o preview no celular sem login, desative a Deployment Protection.
+
+name: Preview WebGL
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: webgl-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  build-and-deploy:
+    # Forks não recebem os secrets, então não têm como buildar nem publicar.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-WebGL-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-WebGL-
+
+      - name: Build WebGL
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: WebGL
+          unityVersion: auto
+          buildName: CarameloClicker
+
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          sudo chown -R "$USER" build
+          dir="$(dirname "$(find build -name index.html | head -n 1)")"
+          echo "Build em: $dir"
+          ls -la "$dir" "$dir/Build"
+          cp vercel.json "$dir/"
+          flags=""
+          if [ "${{ github.event_name }}" = "push" ]; then flags="--prod"; fi
+          url="$(npx --yes vercel deploy "$dir" --yes --token "$VERCEL_TOKEN" $flags | tail -n 1)"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deploy: $url"
+
+      - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        env:
+          PREVIEW_URL: ${{ steps.deploy.outputs.url }}
+        with:
+          script: |
+            const marker = '<!-- webgl-preview -->';
+            const body = `${marker}\n🎮 **Preview do jogo:** ${process.env.PREVIEW_URL}\n\nCommit: \`${context.sha.slice(0, 7)}\``;
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
