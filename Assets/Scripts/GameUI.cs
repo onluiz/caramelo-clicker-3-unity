@@ -76,6 +76,9 @@ public class GameUI
     RectTransform canvasRect, bgLayer, floatLayer, overlayLayer;
     SkyParallax sky;
     Image nightShade, headLight, headGlow;
+    Image skyHeat, groundHeat;   // red wash over the sky and the ground after a comet hits
+    static readonly Color HeatColor = new Color(0.92f, 0.07f, 0.03f, 0f);
+    const float HeatMax = 0.62f;
     TextMeshProUGUI forceNightText;
     Sprite[] headLightFrames;
     const float NightShadeMax = 0.58f;
@@ -341,6 +344,8 @@ public class GameUI
             falling[i] = new FallingBone { rt = img.rectTransform };
         }
 
+        skyHeat = NewImage(canvasRect, "SkyHeat", null, HeatColor, false, false); // sized with the sky in ApplyLayout
+
         // The shop's colour reaches the screen edges, behind the notch / rounded corners outside the safe area.
         shopBackdrop = NewImage(canvasRect, "ShopBackdrop", null, PanelDark, false, false).rectTransform;
 
@@ -432,8 +437,14 @@ public class GameUI
 
         int hudCount = left.childCount; // everything built so far is HUD, and goes back on top of the night shade
         BuildGround(left);
+        groundHeat = NewImage(left, "GroundHeat", null, HeatColor, false, false);
+        groundHeat.rectTransform.anchorMin = Vector2.zero;
+        groundHeat.rectTransform.anchorMax = new Vector2(1f, 0.4f);
+        groundHeat.rectTransform.offsetMin = Vector2.zero;
+        groundHeat.rectTransform.offsetMax = new Vector2(0f, -GroundTop);
         town = new TownProps(left, -GroundTop);
         town.OnCanClicked = OnTrashCanClicked;
+        town.OnCometImpact = Haptics.Blast;
 
         rig = new DogRig(left, new Vector2(0.5f, 0.4f));
         minis = new MiniDogs(left, rig);
@@ -977,7 +988,11 @@ public class GameUI
     {
         int mode = BuyModes[buyModeIndex];
         int n = mode > 0 ? mode : Mathf.Max(1, s.MaxAffordable(index));
-        if (s.TryBuy(index, n)) sfx.PlayBuy();
+        if (s.TryBuy(index, n))
+        {
+            sfx.PlayBuy();
+            if (GameDefs.Buildings[index].Key == town.CometKey) town.LaunchComet(); // every purchase calls down a comet
+        }
         else sfx.PlayError();
         RefreshShop();
     }
@@ -1312,11 +1327,13 @@ public class GameUI
         if (portrait)
         {
             Anchors(sky.Root, 0f, splitY, 1f, 1f);
+            Anchors(skyHeat.rectTransform, 0f, splitY, 1f, 1f);
             Anchors(shopBackdrop, 0f, 0f, 1f, splitY);
         }
         else
         {
             Anchors(sky.Root, 0f, 0f, splitX, 1f);
+            Anchors(skyHeat.rectTransform, 0f, 0f, splitX, 1f);
             Anchors(shopBackdrop, splitX, 0f, 1f, 1f);
         }
 
@@ -1461,6 +1478,18 @@ public class GameUI
         ascendRow.go.transform.localScale = new Vector3(k, k, 1f);
     }
 
+    // Everything on screen moves together by a random offset (canvas px), so the whole screen shakes.
+    const float ShakePx = 30f;
+    void ApplyShake(float shake)
+    {
+        Vector2 o = shake > 0.001f ? Random.insideUnitCircle * (ShakePx * shake * shake) : Vector2.zero;
+        sky.Root.anchoredPosition = o;
+        skyHeat.rectTransform.anchoredPosition = o;
+        bgLayer.anchoredPosition = o;
+        shopBackdrop.anchoredPosition = o;
+        safeRoot.anchoredPosition = o;
+    }
+
     // The buildings are tall and stand on the dog's usual line, so he runs lower, in the middle of the road, everywhere.
     float dogDrop;
     void UpdateDogLane(float dt)
@@ -1484,6 +1513,10 @@ public class GameUI
         if (town.PassedPark) OnParkPassed();
         if (town.PassedCreche) OnCrechePassed();
         nightShade.color = new Color(0.02f, 0.04f, 0.16f, NightShadeMax * sky.Darkness);
+        var heat = new Color(HeatColor.r, HeatColor.g, HeatColor.b, HeatMax * town.Heat);
+        skyHeat.color = heat;
+        groundHeat.color = heat;
+        ApplyShake(town.Shake);
         if (headLight != null)
         {
             float on = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.12f, 0.55f, sky.Darkness));

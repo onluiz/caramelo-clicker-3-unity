@@ -49,6 +49,7 @@ public class TownProps
         // hidden for now: new Def { Building = "planta-lunar", File = "lunar-flower", Cols = 3, Frames = 9, FrameW = 246, FrameH = 256, Height = 180f },
         new Def { Building = "fabrica-de-pudim-lunar", File = "fabrica-pudim-lunar", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f, Lift = -22f },
         new Def { Building = "loja-pudim-lunar", File = "loja-pudim-lunar", Height = 190f },
+        new Def { Building = "teletransporte-canino", File = "teletransporte-canino", Height = 190f },
     };
 
     // The delivery dog is not tied to a slot: once bought he runs along the road like Caramelo, at his own pace.
@@ -170,6 +171,7 @@ public class TownProps
     class Boom
     {
         public double x;
+        public float y, size, delay;
         public RectTransform rt;
         public Image img;
         public float t;
@@ -178,6 +180,40 @@ public class TownProps
     static readonly Def BoomDef = new Def { File = "explosion", Cols = 4, Frames = 13, FrameW = 64, FrameH = 64 };
     const float BoomSize = 420f, BoomFps = 18f;
     readonly List<Boom> booms = new List<Boom>();
+
+    // The Caramelo Comet: every time it is bought a comet falls on the road ahead of the dog, bursts in three explosions,
+    // wrecks whatever stands in the blast and turns the sky and ground red, which then fades back to normal.
+    const string CometBuilding = "cometa-caramelo";
+    static readonly Def CometDef = new Def { File = "comet" };
+    const float CometWidth = 1100f, CometFall = 1.25f;
+    const float CometAngle = 50f, CometArt = 31f;            // fall direction below the horizontal, and the direction the art points
+    const float CometHeadX = 0.845f, CometHeadY = 0.27f;     // where the head sits in the sprite (pivot)
+    const float CometTarget = 0.62f;                         // where it lands, as a fraction of the panel width
+    const float BlastRadius = 700f;                          // px each side of the impact: buildings touching it are wrecked
+    const float HeatRise = 0.25f, HeatHold = 2.2f, HeatFade = 7f; // seconds: red comes up, stays, then fades out
+    const float RubbleSeconds = HeatRise + HeatHold + HeatFade;   // the wrecked stretch is rebuilt once the colours are back
+    const int MaxComets = 3;
+    int pendingComets;
+    float cometGap;
+    float rebuildPop;
+
+    class Comet
+    {
+        public RectTransform rt;    // the falling sprite; null once it has hit
+        public float flight;        // seconds in the air
+        public float since;         // seconds since the impact
+        public double x;            // world x of the impact
+        public Vector2 start, target;
+    }
+
+    readonly List<Comet> comets = new List<Comet>();
+    public float Heat { get; private set; }   // 0..1, how red the sky and ground are
+    public float Shake { get; private set; }  // 0..1, how hard the screen shakes (each explosion kicks it up, then it dies down)
+    public System.Action OnCometImpact;       // the comet just hit: the device vibrates
+    const float ShakeSeconds = 1.3f;
+
+    public string CometKey => CometBuilding;
+    public void LaunchComet() { if (pendingComets + comets.Count < MaxComets) pendingComets++; }
 
     static readonly Dictionary<string, Sprite[]> Cache = new Dictionary<string, Sprite[]>();
 
@@ -433,6 +469,8 @@ public class TownProps
 
         nightTint = Color.Lerp(Color.white, NightTint, darkness);
         TickCans(dt, worldX, panelW, canBuilding >= 0 && owned[canBuilding] > 0);
+        TickComets(dt, worldX, panelW);
+        if (rebuildPop > 0f) rebuildPop -= dt;
 
         releaseTimer -= dt;
         if (releaseTimer <= 0f)
@@ -532,7 +570,8 @@ public class TownProps
                 double x = lap * lapPx + slotX[sl];
                 if (sl >= slotCount + 2 && !lamps) continue;
                 if (x + slotHalf[sl] < from || x - slotHalf[sl] >= limit || HasInst(sl, x)) continue;
-                AddInst(sl, x, lampsJustBought && sl >= slotCount + 2, owned);
+                if (Wrecked(x, slotHalf[sl])) continue; // still rubble from a comet
+                AddInst(sl, x, (lampsJustBought && sl >= slotCount + 2) || rebuildPop > 0f, owned);
                 dirty = true;
             }
         }
@@ -919,24 +958,147 @@ public class TownProps
 
     void Explode(double x, float canH)
     {
+        SpawnBoom(x, canH * 0.5f - CanDrop, BoomSize, 0f);
+    }
+
+    void SpawnBoom(double x, float y, float size, float delay)
+    {
         var frames = Frames(BoomDef);
         if (frames == null) return;
 
         var go = new GameObject("explosion", typeof(RectTransform));
         var rt = go.GetComponent<RectTransform>();
-        rt.SetParent(layer, false);
+        rt.SetParent(litLayer != null ? litLayer : layer, false); // above the lit lamps, so a blast is never hidden behind one
         rt.anchorMin = rt.anchorMax = Vector2.zero;
         rt.pivot = new Vector2(0.5f, 0.5f);
-        rt.sizeDelta = new Vector2(BoomSize, BoomSize);
+        rt.sizeDelta = new Vector2(size, size);
         var img = go.AddComponent<Image>();
         img.raycastTarget = false;
         img.sprite = frames[0];
+        img.enabled = delay <= 0f;
         rt.SetAsLastSibling();
-        booms.Add(new Boom { x = x, rt = rt, img = img, t = 0f });
-        boomY = canH * 0.5f - CanDrop;
+        booms.Add(new Boom { x = x, y = y, size = size, delay = delay, rt = rt, img = img, t = 0f });
     }
 
-    float boomY;
+    // True while a comet's rubble covers this stretch of road: nothing is built there until the colours are back.
+    bool Wrecked(double x, double half)
+    {
+        foreach (var c in comets)
+            if (c.rt == null && System.Math.Abs(x - c.x) < half + BlastRadius) return true;
+        return false;
+    }
+
+    void TickComets(float dt, double worldX, float panelW)
+    {
+        cometGap -= dt;
+        if (pendingComets > 0 && cometGap <= 0f)
+        {
+            var frames = Frames(CometDef);
+            if (frames != null)
+            {
+                pendingComets--;
+                cometGap = 0.6f;
+                comets.Add(NewComet(frames[0], panelW));
+            }
+            else pendingComets = 0;
+        }
+
+        float heat = 0f;
+        for (int i = comets.Count - 1; i >= 0; i--)
+        {
+            var c = comets[i];
+            if (c.rt != null)
+            {
+                c.flight += dt;
+                float u = Mathf.Clamp01(c.flight / CometFall);
+                float p = u * (0.4f + 0.6f * u); // falls faster as it goes
+                c.rt.anchoredPosition = Vector2.Lerp(c.start, c.target, p);
+                if (u < 1f) continue;
+
+                // Impact: three explosions and the blast.
+                c.x = worldX + c.target.x;
+                Object.Destroy(c.rt.gameObject);
+                c.rt = null;
+                SpawnBoom(c.x, 140f, 950f, 0f);
+                SpawnBoom(c.x - 190f, 70f, 720f, 0.22f);
+                SpawnBoom(c.x + 210f, 180f, 820f, 0.45f);
+                Blast(c.x);
+                Shake = 1f;
+                OnCometImpact?.Invoke();
+                continue;
+            }
+
+            float before = c.since;
+            c.since += dt;
+            if (before < 0.22f && c.since >= 0.22f) Shake = Mathf.Max(Shake, 0.75f); // the second and third explosions shake it again
+            if (before < 0.45f && c.since >= 0.45f) Shake = Mathf.Max(Shake, 0.85f);
+            if (c.since >= RubbleSeconds)
+            {
+                comets.RemoveAt(i);
+                rebuildPop = 1.2f; // what was wrecked pops back in
+                continue;
+            }
+
+            float h = c.since < HeatRise ? c.since / HeatRise
+                : c.since < HeatRise + HeatHold ? 1f
+                : Mathf.SmoothStep(1f, 0f, (c.since - HeatRise - HeatHold) / HeatFade);
+            heat = Mathf.Max(heat, h);
+        }
+
+        Heat = heat;
+        Shake = Mathf.Max(0f, Shake - dt / ShakeSeconds);
+    }
+
+    Comet NewComet(Sprite sprite, float panelW)
+    {
+        var go = new GameObject("comet", typeof(RectTransform));
+        var rt = go.GetComponent<RectTransform>();
+        rt.SetParent(litLayer != null ? litLayer : layer, false);
+        rt.anchorMin = rt.anchorMax = Vector2.zero;
+        rt.pivot = new Vector2(CometHeadX, CometHeadY);
+        float aspect = sprite.rect.width / sprite.rect.height;
+        rt.sizeDelta = new Vector2(CometWidth, CometWidth / aspect);
+        rt.localRotation = Quaternion.Euler(0f, 0f, -(CometAngle - CometArt)); // the art points ~31° down; the fall is steeper
+        var img = go.AddComponent<Image>();
+        img.raycastTarget = false;
+        img.sprite = sprite;
+        rt.SetAsLastSibling();
+
+        float a = CometAngle * Mathf.Deg2Rad;
+        var target = new Vector2(panelW * CometTarget, 40f);
+        var start = target - new Vector2(Mathf.Cos(a), -Mathf.Sin(a)) * 2000f;
+        return new Comet { rt = rt, start = start, target = target };
+    }
+
+    // Wrecks every stretch of town the blast touches (the rest of the world keeps its colours).
+    void Blast(double cx)
+    {
+        double lo = cx - BlastRadius, hi = cx + BlastRadius;
+        int bursts = 0;
+        for (int k = insts.Count - 1; k >= 0; k--)
+        {
+            var inst = insts[k];
+            if (inst.x + inst.half < lo || inst.x - inst.half > hi) continue;
+
+            bool building = false;
+            foreach (var p in inst.byDef) building |= p != null;
+            if (building && bursts < 5)
+            {
+                bursts++;
+                SpawnBoom(inst.x, 130f, Mathf.Clamp((float)inst.half * 1.4f, 320f, 640f), 0.1f + (float)(System.Math.Abs(inst.x - cx) / BlastRadius) * 0.5f);
+            }
+
+            DestroyInst(inst);
+            insts.RemoveAt(k);
+        }
+
+        for (int i = cans.Count - 1; i >= 0; i--)
+        {
+            if (cans[i].x < lo || cans[i].x > hi) continue;
+            Object.Destroy(cans[i].rt.gameObject);
+            cans.RemoveAt(i);
+        }
+    }
 
     void TickCans(float dt, double worldX, float panelW, bool unlocked)
     {
@@ -950,6 +1112,14 @@ public class TownProps
         for (int i = booms.Count - 1; i >= 0; i--)
         {
             var b = booms[i];
+            b.rt.anchoredPosition = new Vector2((float)(b.x - worldX), b.y);
+            if (b.delay > 0f)
+            {
+                b.delay -= dt;
+                if (b.delay > 0f) continue;
+                b.img.enabled = true;
+            }
+
             b.t += dt * BoomFps;
             int f = (int)b.t;
             var bf = Frames(BoomDef);
@@ -961,7 +1131,6 @@ public class TownProps
             }
 
             b.img.sprite = bf[f];
-            b.rt.anchoredPosition = new Vector2((float)(b.x - worldX), boomY);
         }
 
         for (int i = cans.Count - 1; i >= 0; i--)
@@ -1146,6 +1315,7 @@ public class TownProps
     {
         var used = new HashSet<string> { "trash-can", "explosion", "light" };
         if (runner != null) used.Add(RunnerDef.File);
+        if (pendingComets > 0 || comets.Exists(c => c.rt != null)) used.Add(CometDef.File);
         if (drone != null && drone.variant >= 0) used.Add(DroneVariants[drone.variant].File);
         foreach (var inst in insts)
             if (inst.banner != null && inst.banner.def == LampDef) { used.Add(LampDef.File); used.Add(LampOnDef.File); }

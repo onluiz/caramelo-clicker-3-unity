@@ -1,0 +1,845 @@
+fileFormatVersion: 2
+guid: ef182aae9e76e3b4991f6f1c2e1b94d0
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1007099247943580590
+    second: teletransporte_icon_0
+  - first:
+      213: -7647261916049169616
+    second: teletransporte_icon_1
+  - first:
+      213: 2855984463192774463
+    second: teletransporte_icon_2
+  - first:
+      213: 8805432664861644031
+    second: teletransporte_icon_3
+  - first:
+      213: -6269707332637397359
+    second: teletransporte_icon_4
+  - first:
+      213: 7513551045144643348
+    second: teletransporte_icon_5
+  - first:
+      213: -4766772380487244915
+    second: teletransporte_icon_6
+  - first:
+      213: -2893853705570851254
+    second: teletransporte_icon_7
+  - first:
+      213: 5526565354356283779
+    second: teletransporte_icon_8
+  - first:
+      213: 7861106141751828144
+    second: teletransporte_icon_9
+  - first:
+      213: 4051487161586415626
+    second: teletransporte_icon_10
+  - first:
+      213: 5712965560963442839
+    second: teletransporte_icon_11
+  - first:
+      213: -1818652042447504097
+    second: teletransporte_icon_12
+  - first:
+      213: -695687360700405814
+    second: teletransporte_icon_13
+  - first:
+      213: 3494923052566109404
+    second: teletransporte_icon_14
+  - first:
+      213: -125097763315991494
+    second: teletransporte_icon_15
+  - first:
+      213: -3134406568641885893
+    second: teletransporte_icon_16
+  - first:
+      213: -7236895477379258092
+    second: teletransporte_icon_17
+  - first:
+      213: 4565527785565597861
+    second: teletransporte_icon_18
+  - first:
+      213: -6681905919216388011
+    second: teletransporte_icon_19
+  - first:
+      213: 9122188342805373888
+    second: teletransporte_icon_20
+  - first:
+      213: -6080125261564872494
+    second: teletransporte_icon_21
+  - first:
+      213: 9095268480534722011
+    second: teletransporte_icon_22
+  - first:
+      213: -920880379965071785
+    second: teletransporte_icon_23
+  - first:
+      213: -8059157716476223750
+    second: teletransporte_icon_24
+  - first:
+      213: 4054761937486256275
+    second: teletransporte_icon_25
+  - first:
+      213: -4845173853044325943
+    second: teletransporte_icon_26
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: teletransporte_icon_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1090
+        height: 1245
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25482c0e1901602f0800000000000000
+      internalID: -1007099247943580590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_1
+      rect:
+        serializedVersion: 2
+        x: 1141
+        y: 1164
+        width: 82
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0332485edc77fd590800000000000000
+      internalID: -7647261916049169616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_2
+      rect:
+        serializedVersion: 2
+        x: 1087
+        y: 853
+        width: 128
+        height: 161
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f37d3a4dcbe72a720800000000000000
+      internalID: 2855984463192774463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_3
+      rect:
+        serializedVersion: 2
+        x: 1123
+        y: 841
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff413b20b5e233a70800000000000000
+      internalID: 8805432664861644031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_4
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 789
+        width: 26
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19e6c7836668df8a0800000000000000
+      internalID: -6269707332637397359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_5
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 730
+        width: 31
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4178c97fdde754860800000000000000
+      internalID: 7513551045144643348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_6
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 697
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d832aef76c509ddb0800000000000000
+      internalID: -4766772380487244915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_7
+      rect:
+        serializedVersion: 2
+        x: 1125
+        y: 680
+        width: 98
+        height: 106
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4660871367f6d7d0800000000000000
+      internalID: -2893853705570851254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_8
+      rect:
+        serializedVersion: 2
+        x: 1081
+        y: 648
+        width: 27
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3891366a8ed42bc40800000000000000
+      internalID: 5526565354356283779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_9
+      rect:
+        serializedVersion: 2
+        x: 1075
+        y: 600
+        width: 37
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0be52c0d262481d60800000000000000
+      internalID: 7861106141751828144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_10
+      rect:
+        serializedVersion: 2
+        x: 1109
+        y: 369
+        width: 127
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a08f9669b16c93830800000000000000
+      internalID: 4051487161586415626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_11
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 547
+        width: 7
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 798244bb8e7884f40800000000000000
+      internalID: 5712965560963442839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_12
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 546
+        width: 9
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1db0ef5a99d2c6e0800000000000000
+      internalID: -1818652042447504097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_13
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 562
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac729b6080c6856f0800000000000000
+      internalID: -695687360700405814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_14
+      rect:
+        serializedVersion: 2
+        x: 165
+        y: 515
+        width: 11
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdcd689dff5708030800000000000000
+      internalID: 3494923052566109404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_15
+      rect:
+        serializedVersion: 2
+        x: 1076
+        y: 537
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3cba5f3f30934ef0800000000000000
+      internalID: -125097763315991494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_16
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 471
+        width: 29
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b39037625d95084d0800000000000000
+      internalID: -3134406568641885893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_17
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 363
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 419ad22f7e1619b90800000000000000
+      internalID: -7236895477379258092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_18
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 244
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a030dee4530c5f30800000000000000
+      internalID: 4565527785565597861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_19
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 206
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 558f68ef7f91543a0800000000000000
+      internalID: -6681905919216388011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_20
+      rect:
+        serializedVersion: 2
+        x: 1109
+        y: 150
+        width: 128
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c3af1367f5889e70800000000000000
+      internalID: 9122188342805373888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_21
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 258
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d8fb8ad94e0f9ba0800000000000000
+      internalID: -6080125261564872494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_22
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 71
+        width: 27
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd534178e72e83e70800000000000000
+      internalID: 9095268480534722011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_23
+      rect:
+        serializedVersion: 2
+        x: 1147
+        y: 95
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75e1e876c206833f0800000000000000
+      internalID: -920880379965071785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_24
+      rect:
+        serializedVersion: 2
+        x: 1149
+        y: 69
+        width: 60
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afe169091ce182090800000000000000
+      internalID: -8059157716476223750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_25
+      rect:
+        serializedVersion: 2
+        x: 1045
+        y: 67
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39894a4cf78654830800000000000000
+      internalID: 4054761937486256275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teletransporte_icon_26
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 55
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c1484e2d0c72ccb0800000000000000
+      internalID: -4845173853044325943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      teletransporte_icon_0: -1007099247943580590
+      teletransporte_icon_1: -7647261916049169616
+      teletransporte_icon_10: 4051487161586415626
+      teletransporte_icon_11: 5712965560963442839
+      teletransporte_icon_12: -1818652042447504097
+      teletransporte_icon_13: -695687360700405814
+      teletransporte_icon_14: 3494923052566109404
+      teletransporte_icon_15: -125097763315991494
+      teletransporte_icon_16: -3134406568641885893
+      teletransporte_icon_17: -7236895477379258092
+      teletransporte_icon_18: 4565527785565597861
+      teletransporte_icon_19: -6681905919216388011
+      teletransporte_icon_2: 2855984463192774463
+      teletransporte_icon_20: 9122188342805373888
+      teletransporte_icon_21: -6080125261564872494
+      teletransporte_icon_22: 9095268480534722011
+      teletransporte_icon_23: -920880379965071785
+      teletransporte_icon_24: -8059157716476223750
+      teletransporte_icon_25: 4054761937486256275
+      teletransporte_icon_26: -4845173853044325943
+      teletransporte_icon_3: 8805432664861644031
+      teletransporte_icon_4: -6269707332637397359
+      teletransporte_icon_5: 7513551045144643348
+      teletransporte_icon_6: -4766772380487244915
+      teletransporte_icon_7: -2893853705570851254
+      teletransporte_icon_8: 5526565354356283779
+      teletransporte_icon_9: 7861106141751828144
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
