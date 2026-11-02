@@ -117,7 +117,7 @@ public class TownProps
 
     const float SizeScale = 3.7f;    // all prop heights are multiplied by this, so buildings tower over the dog as he runs past
     const float PxPerMeter = 100f;
-    const float SlotGap = 4f * PxPerMeter;           // empty road between the edges of two neighbouring slots, whatever their sizes
+    const float SlotGap = 9f * PxPerMeter;          // empty road between the edges of two neighbouring slots, whatever their sizes
     const float FactoryGap = 100f * PxPerMeter;       // same, between the last town slot and the first factory
     const float StartX = 9f * PxPerMeter;            // world x of the first slot's left edge
     const float MapMeters = 1000f;                   // the road is a loop this long; whatever the layout leaves over is open country
@@ -149,6 +149,7 @@ public class TownProps
         public double x, half;
         public readonly Prop[] byDef = new Prop[Defs.Length];
         public Prop sign, banner;   // banner: welcome board (pseudo slots past slotCount)
+        public Prop flower;         // street lamps: the lunar flower planted beside them
     }
 
     // Bonus trash cans: appear at random spots ahead of the dog, stay in the world and can be tapped for a reward.
@@ -214,6 +215,11 @@ public class TownProps
     int lampBuilding = -1;
     bool lampsOn, lampsInit;
 
+    // The lunar plant is not a slot of its own: once bought, a flower grows beside every street lamp.
+    static readonly Def FlowerDef = new Def { File = "lunar-flower", Cols = 3, Frames = 9, FrameW = 246, FrameH = 256, Height = 85f, Offset = 62f };
+    const string FlowerBuilding = "planta-lunar";
+    int flowerBuilding = -1;
+
     // groundY is the top of the ground strip, in the parent's space (distance from its 40% height line).
     public TownProps(Transform parent, float groundY)
     {
@@ -244,6 +250,7 @@ public class TownProps
         canBuilding = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == CanBuildingKey);
 
         lampBuilding = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == LampBuilding);
+        flowerBuilding = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == FlowerBuilding);
 
         slotCount = slots.Count;
         slotOwned = new bool[slotCount];
@@ -464,6 +471,23 @@ public class TownProps
                 continue;
             }
 
+            if (inst.slot >= slotCount + 2)
+            {
+                bool wantFlower = flowerBuilding >= 0 && owned[flowerBuilding] > 0;
+                if (wantFlower && inst.flower == null)
+                {
+                    float fx = (float)(inst.x - worldX);
+                    inst.flower = Spawn(FlowerDef, fx + inst.half > -100f && fx - inst.half < panelW + 100f);
+                    if (inst.flower != null && litLayer != null) inst.flower.rt.SetParent(litLayer, false); // same layer as the lit lamp, so both draw in front of the buildings
+                    dirty |= inst.flower != null;
+                }
+                else if (!wantFlower && inst.flower != null)
+                {
+                    Object.Destroy(inst.flower.rt.gameObject);
+                    inst.flower = null;
+                }
+            }
+
             if (inst.slot >= slotCount) continue; // welcome board: nothing to keep in line
 
             float sx = (float)(inst.x - worldX);
@@ -525,6 +549,7 @@ public class TownProps
                     if (Defs[i].Building == ParkBuilding) SyncParkDogs(inst.byDef[i], dt);
                 }
             if (inst.sign != null) Place(inst.sign, baseX, dt);
+            if (inst.flower != null) Place(inst.flower, baseX, dt);
             if (inst.banner != null)
             {
                 Place(inst.banner, baseX, dt);
@@ -1044,7 +1069,9 @@ public class TownProps
         var on = Frames(LampOnDef);
         if (on == null) return p;
 
-        var g = NewLightImage(litLayer, "lamp-glow", GlowSprite());
+        p.rt.SetParent(litLayer, false); // the unlit lamp shares the lit one's layer, so both (and the flower) draw in front of the buildings
+
+        var g =NewLightImage(litLayer, "lamp-glow", GlowSprite());
         g.rectTransform.sizeDelta = new Vector2(GlowSize, GlowSize);
         g.rectTransform.pivot = new Vector2(0.5f, 0.5f);
         var l = NewLightImage(litLayer, "lamp-lit", on[0]);
@@ -1123,6 +1150,8 @@ public class TownProps
         foreach (var inst in insts)
             if (inst.banner != null && inst.banner.def == LampDef) { used.Add(LampDef.File); used.Add(LampOnDef.File); }
         foreach (var inst in insts)
+            if (inst.flower != null) used.Add(FlowerDef.File);
+        foreach (var inst in insts)
             foreach (var p in inst.byDef)
                 if (p != null) used.Add(p.def.File);
 
@@ -1147,6 +1176,7 @@ public class TownProps
         foreach (var p in inst.byDef)
             if (p != null) Object.Destroy(p.rt.gameObject);
         if (inst.sign != null) Object.Destroy(inst.sign.rt.gameObject);
+        if (inst.flower != null) Object.Destroy(inst.flower.rt.gameObject);
         if (inst.banner != null)
         {
             Object.Destroy(inst.banner.rt.gameObject);
