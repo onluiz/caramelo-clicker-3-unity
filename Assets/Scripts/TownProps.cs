@@ -252,7 +252,7 @@ public class TownProps
     bool lampsOn, lampsInit;
 
     // The lunar plant is not a slot of its own: once bought, a flower grows beside every street lamp.
-    static readonly Def FlowerDef = new Def { File = "lunar-flower", Cols = 3, Frames = 9, FrameW = 246, FrameH = 256, Height = 85f, Offset = 62f };
+    static readonly Def FlowerDef = new Def { File = "lunar-flower", Cols = 3, Frames = 9, FrameW = 246, FrameH = 256, Height = 59.5f, Offset = 62f };
     const string FlowerBuilding = "planta-lunar";
     int flowerBuilding = -1;
 

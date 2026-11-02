@@ -33,6 +33,8 @@ public static class NumberFormat
 
         if (v < 1000)
         {
+            if (decimals && v > 0 && v < 1)
+                return (Math.Floor(v * 100) / 100).ToString("0.00", CultureInfo.InvariantCulture).Replace('.', dec);
             if (decimals && v < 100)
                 return (Math.Floor(v * 10) / 10).ToString("0.0", CultureInfo.InvariantCulture).Replace('.', dec);
             return Math.Floor(v).ToString("0", CultureInfo.InvariantCulture);

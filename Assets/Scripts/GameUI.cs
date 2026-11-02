@@ -594,7 +594,21 @@ public class GameUI
             Place((RectTransform)addBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(256f, -560f), new Vector2(224f, 96f));
             addBtn.onClick.AddListener(() =>
             {
-                string raw = input.text.Trim().Replace(',', '.');
+                // Phone keyboards add spaces/zero-width chars and pt-BR users type "1.000.000" or "1,5e9".
+                var sb = new System.Text.StringBuilder();
+                foreach (char ch in input.text)
+                    if (char.IsDigit(ch) || ch == '.' || ch == ',' || ch == 'e' || ch == 'E' || ch == '+' || ch == '-') sb.Append(ch);
+                string raw = sb.ToString();
+                if (raw.IndexOfAny(new[] { 'e', 'E' }) < 0)
+                {
+                    int lastSep = Math.Max(raw.LastIndexOf('.'), raw.LastIndexOf(','));
+                    int seps = 0;
+                    foreach (char ch in raw) if (ch == '.' || ch == ',') seps++;
+                    // several separators, or one followed by exactly 3 digits: thousands separators
+                    if (seps > 1 || (seps == 1 && raw.Length - lastSep - 1 == 3)) raw = raw.Replace(".", "").Replace(",", "");
+                    else raw = raw.Replace(',', '.');
+                }
+                else raw = raw.Replace(',', '.');
                 if (double.TryParse(raw, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double amount)
                     && amount > 0.0 && !double.IsInfinity(amount))
                     DevAdd(amount);
