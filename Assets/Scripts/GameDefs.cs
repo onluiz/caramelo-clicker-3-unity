@@ -13,6 +13,8 @@ public class BuildingDef
     // Procedural icon index, or a PNG under Resources/Icons when IconFile is set.
     public int Icon;
     public string IconFile;
+    // Keys of buildings that must have been bought at least once before this one can be bought.
+    public string[] Requires;
 }
 
 public class UpgradeDef
@@ -47,36 +49,62 @@ public static class GameDefs
 {
     public const double CostGrowth = 1.15;
 
+    // Catalog from version 1 of the game (costs, income and dependencies); the order is the shop order.
+    // Requires: buildings that must have been bought at least once before this one can be bought.
     public static readonly BuildingDef[] Buildings =
     {
-        new BuildingDef { Key = "o-inicio", Name = "O Início", Description = "O início do sonho do nosso ambicioso cachorro caramelo brasileiro: The Caramelo Corps.", BaseCost = 10, BaseCps = 0.1, IconFile = "o-inicio" },
+        new BuildingDef { Key = "o-inicio", Name = "O Início", Description = "O início do sonho do nosso ambicioso cachorro caramelo brasileiro: The Caramelo Corps.", BaseCost = 10, BaseCps = 0.05, IconFile = "o-inicio" },
         new BuildingDef { Key = "vira-lata", Name = "Amigo Vira-lata", Description = "Você e seus amigos de rua buscam por moedas e latas de lixo para investir na Caramelo Corp.", BaseCost = 15, BaseCps = 0.2, IconFile = "vira-lata" },
-        new BuildingDef { Key = "venda-petiscos", Name = "Venda de Petiscos", Description = "O Caramelo faz petiscos caseiros e vende na rua.", BaseCost = 40, BaseCps = 0.301, IconFile = "venda-petiscos" },
-        new BuildingDef { Key = "cachorro-entregador", Name = "Caramelo Entregador", Description = "Cachorros entregadores contratados pela Caramelo Corps.", BaseCost = 100, BaseCps = 1, IconFile = "cachorro-entregador" },
-        new BuildingDef { Key = "racao-caramelo", Name = "Ração Caramelo", Description = "Ração caseira misteriosa fabricada pelo Caramelo.", BaseCost = 350, BaseCps = 2.17, IconFile = "racao-caramelo" },
-        new BuildingDef { Key = "creche-caramelo", Name = "Creche Caramelo", Description = "Filhotes brincando, cochilando e rendendo petiscos para toda a vizinhança.", BaseCost = 1100, BaseCps = 8, IconFile = "creche-caramelo" },
-        new BuildingDef { Key = "iluminacao-caramelo", Name = "Iluminação Caramelo", Description = "O Caramelo investe na iluminação da cidade para garantir a segurança de seus entregadores e drones durante a noite.", BaseCost = 3500, BaseCps = 18.0, IconFile = "iluminacao-caramelo" },
-        new BuildingDef { Key = "drone-entregas", Name = "Drone de Entregas", Description = "Faz a entrega dos petiscos e rações fabricados pelo Caramelo.", BaseCost = 7000, BaseCps = 32.7, IconFile = "drone-entregas" },
-        new BuildingDef { Key = "padaria", Name = "Padaria para Pets", Description = "Biscoitos e petiscos feitos na hora!", BaseCost = 12000, BaseCps = 47, Icon = 4, IconFile = "padaria-pets" },
-        new BuildingDef { Key = "faro-minerador", Name = "Mina de Petiscos", Description = "Foi encontrada uma mina de petiscos caninos super raros! A Caramelo Corp vai cuidar e “preservar” ela com todo o carinho do mundo. Fechada para visitantes.", BaseCost = 22000, BaseCps = 85.0, IconFile = "faro-minerador" },
-        new BuildingDef { Key = "fabrica-racao", Name = "Fábrica de Ração Pequena", Description = "Produção industrial de petiscos.", BaseCost = 40000, BaseCps = 154.0, Icon = 5 },
-        new BuildingDef { Key = "fabrica-de-petiscos", Name = "Fábrica de Petiscos", Description = "Os investimentos do Caramelo seguem com tudo e a primeira fábrica de petiscos foi criada.", BaseCost = 130000, BaseCps = 260, IconFile = "fabrica-de-petiscos" },
-        new BuildingDef { Key = "fabrica-de-racao", Name = "Fábrica de Ração", Description = "A Ração Caramelo foi um sucesso e por isso abriram a primeira fábrica de ração.", BaseCost = 450000, BaseCps = 1200, IconFile = "fabrica-de-racao" },
-        new BuildingDef { Key = "estatua-caramelo", Name = "Estátua do Caramelo", Description = "Todo mundo venera o Caramelo.", BaseCost = 1400000, BaseCps = 3700, IconFile = "estatua-caramelo" },
-        new BuildingDef { Key = "sorveteria-caramelo", Name = "Sorveteria Caramelo", Description = "Sorvete de petisco com granulado de ossinho. Fila de rabo abanando na porta.", BaseCost = 16000000, BaseCps = 38300.0, IconFile = "sorvete" },
-        new BuildingDef { Key = "parque", Name = "Parquinho dos Pets", Description = "Uma matilha inteira cavando tesouros.", BaseCost = 50000000, BaseCps = 109000.0, Icon = 7, IconFile = "parquinho-pets" },
-        new BuildingDef { Key = "templo-caramelo", Name = "Templo do Caramelo", Description = "Fiéis deixam oferendas o dia todo.", BaseCost = 160000000, BaseCps = 317000.0, IconFile = "templo-caramelo" },
-        new BuildingDef { Key = "banco-canino", Name = "Banco Canino", Description = "Rende juros em osso e em moeda.", BaseCost = 240000000.0, BaseCps = 440000.0, IconFile = "banco-canino" },
-        new BuildingDef { Key = "pet-shop-caramelo", Name = "Pet Shop Caramelo", Description = "Ração, brinquedo e banho. Todo vira-lata do bairro passa por aqui.", BaseCost = 330000000, BaseCps = 600000, IconFile = "pet-shop-caramelo" },
-        new BuildingDef { Key = "veterinaria-caramelo", Name = "Veterinária Caramelo", Description = "Consulta, vacina e um biscoito no final. Todo vira-lata sai de rabo abanando.", BaseCost = 1000000000.0, BaseCps = 1640000.0, IconFile = "veterinaria-caramelo" },
-        new BuildingDef { Key = "base-lunar-caramelo", Name = "Base Lunar Caramelo", Description = "Plantaram uma bandeira na Lua. E um osso.", BaseCost = 5000000000.0, BaseCps = 7430000.0, IconFile = "base-lunar-caramelo" },
-        new BuildingDef { Key = "planta-lunar", Name = "Planta Lunar", Description = "Uma planta misteriosa descoberta na Lua. Dela saem os melhores pudins caninos.", BaseCost = 25000000000.0, BaseCps = 33800000.0, IconFile = "planta-lunar" },
-        new BuildingDef { Key = "pudim-lunar", Name = "Pudim Lunar Caseiro", Description = "Feito com a planta lunar. Todo cachorro entra na fila por uma colherada.", BaseCost = 150000000000.0, BaseCps = 184000000.0, IconFile = "pudim-lunar" },
-        new BuildingDef { Key = "fabrica-de-pudim-lunar", Name = "Fábrica de Pudim Lunar", Description = "Os cachorros gostaram tanto do nutritivo pudim do Caramelo que ele montou a própria fábrica na Lua.", BaseCost = 900000000000.0, BaseCps = 1010000000.0, IconFile = "fabrica-de-pudim-lunar" },
-        new BuildingDef { Key = "loja-pudim-lunar", Name = "Loja de Pudim Lunar", Description = "Vitrine, fila na porta e um pudim com lua em cima. A franquia do Caramelo chegou na Lua.", BaseCost = 6000000000000.0, BaseCps = 6090000000.0, IconFile = "loja-pudim-lunar" },
-        new BuildingDef { Key = "cometa-caramelo", Name = "Cometa Caramelo", Description = "Passa raspando e deixa uma chuva de ossos e moedas.", BaseCost = 40000000000000.0, BaseCps = 36900000000.0, IconFile = "cometa-caramelo" },
-        new BuildingDef { Key = "sol-caramelo", Name = "Sol Caramelo", Description = "Por motivos desconhecidos, o Sol tomou a forma de um cachorro caramelo. Todos os cachorros que recebem a luz dele relatam ter energia de sobra.", BaseCost = 250000000000000.0, BaseCps = 210000000000.0, IconFile = "sol-caramelo" },
+        new BuildingDef { Key = "venda-petiscos", Name = "Venda de Petiscos", Description = "O Caramelo faz petiscos caseiros e vende na rua.", BaseCost = 100, BaseCps = 0.3, IconFile = "venda-petiscos" },
+        new BuildingDef { Key = "racao-caramelo", Name = "Ração Caramelo", Description = "Ração caseira misteriosa fabricada pelo Caramelo.", BaseCost = 150, BaseCps = 0.5, IconFile = "racao-caramelo" },
+        new BuildingDef { Key = "cachorro-entregador", Name = "Caramelo Entregador", Description = "Cachorros entregadores contratados pela Caramelo Corps.", BaseCost = 200, BaseCps = 1, IconFile = "cachorro-entregador", Requires = new[] { "venda-petiscos", "racao-caramelo" } },
+        new BuildingDef { Key = "drone-entregas", Name = "Drone de Entregas", Description = "Faz a entrega dos petiscos e rações fabricados pelo Caramelo.", BaseCost = 500, BaseCps = 2, IconFile = "drone-entregas", Requires = new[] { "venda-petiscos", "racao-caramelo" } },
+        new BuildingDef { Key = "padaria", Name = "Padaria para Pets", Description = "Biscoitos e petiscos feitos na hora!", BaseCost = 1000, BaseCps = 3.5, Icon = 4, IconFile = "padaria-pets" },
+        new BuildingDef { Key = "faro-minerador", Name = "Mina de Petiscos", Description = "Foi encontrada uma mina de petiscos caninos super raros! A Caramelo Corp vai cuidar e “preservar” ela com todo o carinho do mundo. Fechada para visitantes.", BaseCost = 2000, BaseCps = 6, IconFile = "faro-minerador" },
+        new BuildingDef { Key = "iluminacao-caramelo", Name = "Iluminação Caramelo", Description = "O Caramelo investe na iluminação da cidade para garantir a segurança de seus entregadores e drones durante a noite.", BaseCost = 14000, BaseCps = 25, IconFile = "iluminacao-caramelo" },
+        new BuildingDef { Key = "fabrica-de-petiscos", Name = "Fábrica de Petiscos", Description = "Os investimentos do Caramelo seguem com tudo e a primeira fábrica de petiscos foi criada.", BaseCost = 80000, BaseCps = 85, IconFile = "fabrica-de-petiscos" },
+        new BuildingDef { Key = "fabrica-de-racao", Name = "Fábrica de Ração", Description = "A Ração Caramelo foi um sucesso e por isso abriram a primeira fábrica de ração.", BaseCost = 500000, BaseCps = 300, IconFile = "fabrica-de-racao" },
+        new BuildingDef { Key = "estatua-caramelo", Name = "Estátua do Caramelo", Description = "Todo mundo venera o Caramelo.", BaseCost = 3.3e6, BaseCps = 1200, IconFile = "estatua-caramelo" },
+        new BuildingDef { Key = "creche-caramelo", Name = "Creche Caramelo", Description = "Filhotes brincando, cochilando e rendendo petiscos para toda a vizinhança.", BaseCost = 8e6, BaseCps = 2500, IconFile = "creche-caramelo" },
+        new BuildingDef { Key = "parque", Name = "Parquinho dos Pets", Description = "Uma matilha inteira cavando tesouros.", BaseCost = 14e6, BaseCps = 3500, Icon = 7, IconFile = "parquinho-pets" },
+        new BuildingDef { Key = "templo-caramelo", Name = "Templo do Caramelo", Description = "Fiéis deixam oferendas o dia todo.", BaseCost = 24e6, BaseCps = 5000, IconFile = "templo-caramelo" },
+        new BuildingDef { Key = "banco-canino", Name = "Banco Canino", Description = "Rende juros em osso e em moeda.", BaseCost = 160e6, BaseCps = 20000, IconFile = "banco-canino" },
+        new BuildingDef { Key = "pet-shop-caramelo", Name = "Pet Shop Caramelo", Description = "Ração, brinquedo e banho. Todo vira-lata do bairro passa por aqui.", BaseCost = 1.2e9, BaseCps = 90000, IconFile = "pet-shop-caramelo" },
+        new BuildingDef { Key = "sorveteria-caramelo", Name = "Sorveteria Caramelo", Description = "Sorvete de petisco com granulado de ossinho. Fila de rabo abanando na porta.", BaseCost = 3e9, BaseCps = 170000, IconFile = "sorvete" },
+        new BuildingDef { Key = "veterinaria-caramelo", Name = "Veterinária Caramelo", Description = "Consulta, vacina e um biscoito no final. Todo vira-lata sai de rabo abanando.", BaseCost = 9.5e9, BaseCps = 400000, IconFile = "veterinaria-caramelo" },
+        new BuildingDef { Key = "base-lunar-caramelo", Name = "Base Lunar Caramelo", Description = "Plantaram uma bandeira na Lua. E um osso.", BaseCost = 70e9, BaseCps = 1.8e6, IconFile = "base-lunar-caramelo" },
+        new BuildingDef { Key = "planta-lunar", Name = "Planta Lunar", Description = "Uma planta misteriosa descoberta na Lua. Dela saem os melhores pudins caninos.", BaseCost = 1.1e12, BaseCps = 13e6, IconFile = "planta-lunar", Requires = new[] { "base-lunar-caramelo" } },
+        new BuildingDef { Key = "pudim-lunar", Name = "Pudim Lunar Caseiro", Description = "Feito com a planta lunar. Todo cachorro entra na fila por uma colherada.", BaseCost = 2.1e12, BaseCps = 22e6, IconFile = "pudim-lunar", Requires = new[] { "planta-lunar" } },
+        new BuildingDef { Key = "fabrica-de-pudim-lunar", Name = "Fábrica de Pudim Lunar", Description = "Os cachorros gostaram tanto do nutritivo pudim do Caramelo que ele montou a própria fábrica na Lua.", BaseCost = 3e12, BaseCps = 29e6, IconFile = "fabrica-de-pudim-lunar", Requires = new[] { "pudim-lunar" } },
+        new BuildingDef { Key = "loja-pudim-lunar", Name = "Loja de Pudim Lunar", Description = "Vitrine, fila na porta e um pudim com lua em cima. A franquia do Caramelo chegou na Lua.", BaseCost = 3.2e12, BaseCps = 30.5e6, IconFile = "loja-pudim-lunar", Requires = new[] { "fabrica-de-pudim-lunar" } },
+        new BuildingDef { Key = "cometa-caramelo", Name = "Cometa Caramelo", Description = "Passa raspando e deixa uma chuva de ossos e moedas.", BaseCost = 3.5e12, BaseCps = 32.7e6, IconFile = "cometa-caramelo" },
+        new BuildingDef { Key = "sol-caramelo", Name = "Sol Caramelo", Description = "Por motivos desconhecidos, o Sol tomou a forma de um cachorro caramelo. Todos os cachorros que recebem a luz dele relatam ter energia de sobra.", BaseCost = 4e12, BaseCps = 36e6, IconFile = "sol-caramelo" },
+        new BuildingDef { Key = "teletransporte-canino", Name = "Teletransporte Canino", Description = "O cachorro entra por um portal e sai do outro lado do mundo, já com o petisco na boca.", BaseCost = 30e12, BaseCps = 160e6, Icon = 8 },
+        new BuildingDef { Key = "galaxia-caramelo", Name = "Galáxia Caramelo", Description = "Bilhões de estrelas, todas em formato de osso.", BaseCost = 250e12, BaseCps = 750e6, Icon = 7 },
+        new BuildingDef { Key = "buraco-negro-petiscos", Name = "Buraco Negro de Petiscos", Description = "Engole tudo que passa perto, principalmente petiscos. Devolve em dobro, de um jeito que ninguém entende.", BaseCost = 1e15, BaseCps = 1.8e9, Icon = 10 },
+        new BuildingDef { Key = "dimensao-caramelo", Name = "Dimensão Caramelo", Description = "Um universo inteiro onde tudo é caramelo, até as leis da física.", BaseCost = 1e18, BaseCps = 1e12, Icon = 11 },
     };
+
+    // Indices of the buildings each building requires (resolved once; must come right after Buildings).
+    static readonly int[][] RequiresIdx = BuildRequires();
+
+    static int[][] BuildRequires()
+    {
+        var result = new int[Buildings.Length][];
+        for (int i = 0; i < Buildings.Length; i++)
+        {
+            var keys = Buildings[i].Requires ?? new string[0];
+            result[i] = new int[keys.Length];
+            for (int k = 0; k < keys.Length; k++)
+            {
+                string key = keys[k];
+                result[i][k] = System.Array.FindIndex(Buildings, b => b.Key == key);
+            }
+        }
+        return result;
+    }
+
+    public static int[] RequiresOf(int building) { return RequiresIdx[building]; }
 
     public const int PawIcon = 9;
     public const int StarIcon = 7;
@@ -193,7 +221,7 @@ public static class GameDefs
     {
         if (u.Kind != UpgradeKind.Building) return Loc.T(u.Description);
         var b = Buildings[u.Building];
-        return u.Generic ? Loc.F("{0} produz o dobro.", NameOf(b)) : Loc.TierDesc(b.Key, u.Tier, u.Description);
+        return Loc.T("Melhore a produção em 100%");
     }
 
     // The short effect line shown next to the price (only for upgrades with flavor-text descriptions).
@@ -203,9 +231,12 @@ public static class GameDefs
     }
 
     // Static initializers run in textual order: the tier tables must precede Upgrades.
-    static readonly string[] TierNames = { "Turbinado", "Deluxe", "Supremo", "Lendário" };
-    static readonly int[] TierOwned = { 1, 10, 25, 50 };
-    static readonly double[] TierCostMult = { 10, 100, 1000, 100000 };
+    // Tiers 0-3 have their own names for most buildings; the rest use these (placeholders until the real ones arrive).
+    static readonly string[] TierNames = { "Turbinado", "Deluxe", "Supremo", "Lendário", "Mítico", "Cósmico", "Eterno", "Divino", "Universal", "Infinito", "Definitivo" };
+    // Units owned that unlock each tier, the same for every building.
+    static readonly int[] TierOwned = { 10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 };
+    // Placeholder prices (times the building's base cost) until the real table arrives.
+    static readonly double[] TierCostMult = { 50, 500, 5e3, 5e4, 5e5, 5e6, 5e7, 5e8, 5e9, 5e10, 5e11 };
 
     public static readonly List<UpgradeDef> Upgrades = BuildUpgrades();
     public static readonly Dictionary<string, UpgradeDef> ById = BuildIndex();
@@ -250,7 +281,7 @@ public static class GameDefs
         for (int b = 0; b < Buildings.Length; b++)
         {
             var building = Buildings[b];
-            for (int t = 0; t < TierNames.Length; t++)
+            for (int t = 0; t < TierOwned.Length; t++)
             {
                 var text = FindTierText(building.Key, t);
                 list.Add(new UpgradeDef
@@ -260,7 +291,6 @@ public static class GameDefs
                     Generic = text == null,
                     Name = text != null ? text.Name : building.Name + " " + TierNames[t],
                     Description = text != null ? text.Description : building.Name + " produz o dobro.", // composed again by DescOf
-                    Effect = text != null ? "Produção de " + building.Name + " x2" : null,
                     Cost = building.BaseCost * TierCostMult[t],
                     Kind = UpgradeKind.Building,
                     Building = b,
@@ -277,7 +307,8 @@ public static class GameDefs
         {
             if (sorted[i].Cost <= sorted[i - 1].Cost) sorted[i].Cost = NextPrice(sorted[i - 1].Cost);
         }
-        return sorted;
+        // The general upgrades (paws, nose, kibble) stay pinned at the top of the list, in price order; the building ones follow by price.
+        return sorted.Where(u => u.Kind != UpgradeKind.Building).Concat(sorted.Where(u => u.Kind == UpgradeKind.Building)).ToList();
     }
 
     // About 5% above the given price, rounded up to three significant digits.

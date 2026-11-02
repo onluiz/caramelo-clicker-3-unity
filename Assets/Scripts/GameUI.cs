@@ -1231,7 +1231,7 @@ public class GameUI
             if (locked)
             {
                 row.cost.color = Bad;
-                row.cost.text = "<size=60%>" + Loc.T("Compre O Início para montar a barraca.") + "</size>";
+                row.cost.text = "<size=60%>" + Loc.F("Requer: {0}", s.MissingRequirements(i)) + "</size>";
                 row.count.text = "";
                 continue;
             }

@@ -21,7 +21,7 @@ public class SaveData
 
 public class GameState
 {
-    const string SaveKey = "caramelo_clicker_save_v6";
+    const string SaveKey = "caramelo_clicker_save_v7";
     public const double FrenzyMultiplier = 7;
     public const double ClickFrenzyMultiplier = 777;
 
@@ -37,6 +37,7 @@ public class GameState
     public double LifetimeBase; // petiscos earned in previous runs; TotalEarned is the current run
     public int Ascensions;
     public const int ParkCapacity = 12;
+    public const int ParkStartDogs = 6; // puppies already living in the playground when it is first bought
     public int ParkDogs; // puppies living in the playground (cleared on rebirth)
     public readonly HashSet<string> Blessings = new HashSet<string>();
 
@@ -178,13 +179,21 @@ public class GameState
         return (int)Math.Floor(Math.Log(1 + Petiscos * (g - 1) / first) / Math.Log(g));
     }
 
-    // The street stall comes with "O Início": the stall-based buildings stay locked until it is bought.
+    // A building stays locked until every building it requires has been bought at least once.
     public bool IsBuildingLocked(int building)
     {
-        string key = GameDefs.Buildings[building].Key;
-        if (key != "venda-petiscos" && key != "racao-caramelo") return false;
-        int start = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == "o-inicio");
-        return start >= 0 && Owned[start] <= 0;
+        foreach (int r in GameDefs.RequiresOf(building))
+            if (r >= 0 && Owned[r] <= 0) return true;
+        return false;
+    }
+
+    // Names of the required buildings still missing, for the shop row.
+    public string MissingRequirements(int building)
+    {
+        var names = new List<string>();
+        foreach (int r in GameDefs.RequiresOf(building))
+            if (r >= 0 && Owned[r] <= 0) names.Add(GameDefs.NameOf(GameDefs.Buildings[r]));
+        return string.Join(", ", names);
     }
 
     public bool TryBuy(int building, int count)
@@ -193,6 +202,7 @@ public class GameState
         double cost = BuyCost(building, count);
         if (Petiscos < cost) return false;
         Petiscos -= cost;
+        if (GameDefs.Buildings[building].Key == "parque" && Owned[building] == 0) ParkDogs = Math.Max(ParkDogs, ParkStartDogs);
         Owned[building] += count;
         dirty = true;
         return true;

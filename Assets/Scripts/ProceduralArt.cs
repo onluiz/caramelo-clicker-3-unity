@@ -5,7 +5,7 @@ using UnityEngine;
 public static class ProceduralArt
 {
     static Sprite goldenBone, blob, rounded, gradient, gear;
-    static readonly Sprite[] icons = new Sprite[11];
+    static readonly Sprite[] icons = new Sprite[12];
 
     public static Color Hex(string html)
     {
@@ -253,6 +253,17 @@ public static class ProceduralArt
                 P.Fill(p => Sdf.Circle(p, Vector2.zero, 0.6f), Hex("#8E63F0"));
                 P.Fill(p => Sdf.Circle(p, Vector2.zero, 0.4f), Hex("#C7A8FF"));
                 P.Fill(p => Sdf.Circle(p, Vector2.zero, 0.2f), Hex("#F4ECFF"));
+                break;
+            case 10: // black hole
+                P.Shape(p => Sdf.Circle(p, Vector2.zero, 0.85f), Hex("#2B1B4D"), line, w);
+                P.Fill(p => Sdf.Ring(p, Vector2.zero, 0.58f, 0.08f), Hex("#FF9F43"));
+                P.Fill(p => Sdf.Circle(p, Vector2.zero, 0.4f), Hex("#0B0714"));
+                break;
+            case 11: // dimension
+                P.Shape(p => Sdf.Circle(p, Vector2.zero, 0.85f), Hex("#1F8A70"), line, w);
+                P.Fill(p => Sdf.Ring(p, Vector2.zero, 0.6f, 0.07f), Hex("#7EE8C8"));
+                P.Fill(p => Sdf.Ring(p, Vector2.zero, 0.38f, 0.07f), Hex("#C9FFF0"));
+                P.Fill(p => Sdf.Circle(p, Vector2.zero, 0.14f), Hex("#FFFFFF"));
                 break;
             default: // paw
                 var brown = Hex("#8A4B1F");

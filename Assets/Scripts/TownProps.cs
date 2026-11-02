@@ -32,23 +32,23 @@ public class TownProps
         new Def { Building = "o-inicio", File = "stall-good-full", Height = 122.7f, MinStall = 3 },
         new Def { Building = "venda-petiscos", Slot = "o-inicio", File = "stall-treats", Height = 21f, Offset = -26f, Lift = 39f, MaxStall = 0 }, // on the bare stall's counter, left
         new Def { Building = "racao-caramelo", Slot = "o-inicio", File = "stall-feed", Height = 31f, Offset = 26f, Lift = 39f, MaxStall = 0 }, // same stall, right
-        new Def { Building = "creche-caramelo", File = "creche-caramelo", Cols = 3, Frames = 8, FrameW = 431, FrameH = 428, Height = 190f }, // right after the stall
-        new Def { Building = "padaria", File = "padaria", Height = 190f },
         // hidden for now: new Def { Building = "drone-entregas", File = "red-drone", Cols = 5, Frames = 17, FrameW = 357, FrameH = 282, Height = 100f, Air = 190f, Bob = true },
+        new Def { Building = "padaria", File = "padaria", Height = 190f },
         new Def { Building = "faro-minerador", File = "mina-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f, Lift = -26f },
         new Def { Building = "fabrica-de-petiscos", File = "fabrica-petiscos", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f, Lift = -20f },
         new Def { Building = "fabrica-de-racao", File = "fabrica-racao", Cols = 3, Frames = 8, FrameW = 256, FrameH = 256, Height = 210f, Lift = -22f },
         new Def { Building = "estatua-caramelo", File = "dog_statue", Height = 115f },
-        new Def { Building = "sorveteria-caramelo", File = "sorveteria", Height = 170f },
+        new Def { Building = "creche-caramelo", File = "creche-caramelo", Cols = 3, Frames = 8, FrameW = 431, FrameH = 428, Height = 190f },
         new Def { Building = "parque", File = "parquinho-pets", Height = 60f },
         new Def { Building = "templo-caramelo", File = "templo-caramelo", Height = 185f },
         new Def { Building = "banco-canino", File = "banco-canino", Height = 170f },
         new Def { Building = "pet-shop-caramelo", File = "petshop", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 200f },
+        new Def { Building = "sorveteria-caramelo", File = "sorveteria", Height = 170f },
         new Def { Building = "veterinaria-caramelo", File = "veterinaria-caramelo", Height = 190f },
-        new Def { Building = "loja-pudim-lunar", File = "loja-pudim-lunar", Height = 190f },
         new Def { Building = "base-lunar-caramelo", File = "base-lunar-caramelo", Height = 200f }, // wide: ~1710 px on screen, fits the Ahead margin
         // hidden for now: new Def { Building = "planta-lunar", File = "lunar-flower", Cols = 3, Frames = 9, FrameW = 246, FrameH = 256, Height = 180f },
         new Def { Building = "fabrica-de-pudim-lunar", File = "fabrica-pudim-lunar", Cols = 3, Frames = 9, FrameW = 256, FrameH = 234, Height = 210f, Lift = -22f },
+        new Def { Building = "loja-pudim-lunar", File = "loja-pudim-lunar", Height = 190f },
     };
 
     // The delivery dog is not tied to a slot: once bought he runs along the road like Caramelo, at his own pace.
@@ -183,6 +183,7 @@ public class TownProps
     readonly RectTransform layer;
     readonly int[] buildingOf = new int[Defs.Length];
     readonly int[] defSlot = new int[Defs.Length];
+    readonly int[] hostOf = new int[Defs.Length];   // building whose slot the def shares (-1 = its own)
     readonly bool[] slotOwned;
     readonly double[] slotX, slotHalf; // fixed world x of each slot centre within a lap, and half its width   // fixed world x of each slot within a lap
     readonly double lapPx;
@@ -232,6 +233,7 @@ public class TownProps
             buildingOf[i] = System.Array.FindIndex(GameDefs.Buildings, b => b.Key == key);
             if (buildingOf[i] < 0) Debug.LogError("TownProps: unknown building " + key);
             string slot = Defs[i].Slot ?? key;
+            hostOf[i] = Defs[i].Slot == null ? -1 : System.Array.FindIndex(GameDefs.Buildings, b => b.Key == slot);
             if (!slots.ContainsKey(slot)) slots[slot] = slots.Count;
             defSlot[i] = slots[slot];
         }
@@ -408,6 +410,7 @@ public class TownProps
 
     bool Has(int def, int[] owned)
     {
+        if (hostOf[def] >= 0 && owned[hostOf[def]] <= 0) return false; // goods need the building whose slot they sit in
         return buildingOf[def] >= 0 && owned[buildingOf[def]] > 0;
     }
 
