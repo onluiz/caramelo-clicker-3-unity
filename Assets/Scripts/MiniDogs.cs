@@ -156,6 +156,7 @@ public class MiniDogs
 
     public void Tick(float dt)
     {
+        root.anchoredPosition = new Vector2(0f, -rig.Drop); // lowered with Caramelo
         bool running = rig.Running;
         for (int i = dogs.Count - 1; i >= 0; i--)
         {

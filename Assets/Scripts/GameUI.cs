@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 // Builds and drives the whole uGUI hierarchy. Layout is anchor-based against a 1600x900 (landscape) or 1080x1920 (portrait) reference.
 public class GameUI
 {
+    const float DogDrop = 110f; // the most the dog is lowered from his usual ground line
     const float GroundTop = 215f;         // the ground strip's top edge, this far below the dog's anchor
     const float LeftWidth = 0.58f;        // landscape: share of the width used by the game area
     const float GameScale = 0.85f;        // the whole game area (HUD, ground, dog) is drawn a bit smaller than the panel
@@ -1460,9 +1461,21 @@ public class GameUI
         ascendRow.go.transform.localScale = new Vector3(k, k, 1f);
     }
 
+    // The buildings are tall and stand on the dog's usual line, so he runs lower, in the middle of the road, everywhere.
+    float dogDrop;
+    void UpdateDogLane(float dt)
+    {
+        float target = Mathf.Clamp(groundBand.rect.height * 0.5f - 65f, 0f, DogDrop);
+        dogDrop = Mathf.MoveTowards(dogDrop, target, 120f * dt);
+        rig.Drop = dogDrop;
+        if (headLight != null) headLight.rectTransform.anchoredPosition = new Vector2(HeadLightX, HeadLightY - dogDrop);
+        if (headGlow != null) headGlow.rectTransform.anchoredPosition = new Vector2(0f, HeadGlowY - dogDrop);
+    }
+
     void UpdateDog(float dt)
     {
         rig.Tick(dt, s.Cps);
+        UpdateDogLane(dt);
         minis.Tick(dt);
         worldX += rig.StrideSpeed * dt; // the dog is the one who moves; everything else sits at fixed world positions
         town.StallTier = s.TierOf(0);

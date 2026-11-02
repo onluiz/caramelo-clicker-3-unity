@@ -76,6 +76,8 @@ public class DogRig
     // Horizontal speed (px/s) the ground should scroll at so the feet look planted.
     public float StrideSpeed { get; private set; }
     public RectTransform Root => rootRt;
+    public float Drop { get { return drop; } set { drop = value; rootRt.anchoredPosition = new Vector2(0f, -value); } } // how far the whole dog is lowered from the usual ground line
+    float drop;
 
     // What the mini dogs copy from him: whether he is moving, his current gait and animation speed, and his frames.
     public bool Running => StrideSpeed > 1f;
