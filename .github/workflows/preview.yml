@@ -1,3 +1,12 @@
+# Gera o build WebGL a cada PR, publica no Vercel e comenta a URL do preview.
+# Push na main faz deploy de produção.
+#
+# Secrets necessários (Settings > Secrets and variables > Actions):
+#   UNITY_LICENSE, UNITY_EMAIL, UNITY_PASSWORD  (https://game.ci/docs/github/activation)
+#   VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+# No projeto do Vercel, não conecte o repositório Git (o build não está nele) e,
+# para abrir o preview no celular sem login, desative a Deployment Protection.
+
 name: Preview WebGL
 
 on:
