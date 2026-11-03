@@ -161,6 +161,7 @@ public class GameUI
     Image buffChip;
     RectTransform settingsRoot, settingsPanel;
     float settingsFullH;
+    CanvasGroup toastGroup;
     Image musicIcon;
     float uiK = 1f; // overlay scale: compact on big landscape screens, like the HUD
     TextMeshProUGUI buyLabelText, settingsTitleText, closeText, langText;
@@ -503,9 +504,17 @@ public class GameUI
         }
         for (int i = 0; i < hudCount; i++) left.GetChild(0).SetAsLastSibling();
 
-        toastText = NewText(left, "Toast", "", 32, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
-        Anchors(toastText.rectTransform, 0.02f, 0.13f, 0.98f, 0.21f);
+        // Notifications sit at the top, just under the buff chip, on a translucent white plate.
+        var toastPlate = NewImage(left, "ToastPlate", ProceduralArt.RoundedRect(), new Color(1f, 1f, 1f, 0.7f), true);
+        Box(toastPlate.rectTransform, new Vector2(0.04f, 1f), new Vector2(0.96f, 1f), new Vector2(0f, -372f), new Vector2(0f, -290f));
+        toastGroup = toastPlate.gameObject.AddComponent<CanvasGroup>();
+        toastText = NewText(toastPlate.transform, "Toast", "", 32, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
+        Box(toastText.rectTransform, Vector2.zero, Vector2.one, new Vector2(16f, 4f), new Vector2(-16f, -4f));
         toastText.textWrappingMode = TextWrappingModes.Normal;
+        toastText.enableAutoSizing = true;
+        toastText.fontSizeMin = 20f;
+        toastText.fontSizeMax = 32f;
+        toastGroup.gameObject.SetActive(false);
 
         statsPill = NewImage(left, "StatsPill", ProceduralArt.RoundedRect(), new Color(CardBg.r, CardBg.g, CardBg.b, 0.9f), true);
         Place(statsPill.rectTransform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 30f), new Vector2(620f, 56f));
@@ -1199,6 +1208,8 @@ public class GameUI
     {
         toastText.text = message;
         toastTimer = seconds;
+        toastGroup.alpha = 1f;
+        toastGroup.gameObject.SetActive(true);
     }
 
     // ---------------------------------------------------------------- refresh
@@ -1853,9 +1864,10 @@ public class GameUI
         if (toastTimer <= 0f)
         {
             toastText.text = "";
+            toastGroup.gameObject.SetActive(false);
             return;
         }
-        toastText.alpha = Mathf.Clamp01(toastTimer);
+        toastGroup.alpha = Mathf.Clamp01(toastTimer);
     }
 
     void SpawnFloat(Vector2 screenPos, string text, Color color, float size = 1f, float life = 1f)
