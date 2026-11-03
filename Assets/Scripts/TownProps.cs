@@ -1184,6 +1184,9 @@ public class TownProps
         btn.navigation = new Navigation { mode = Navigation.Mode.None };
 
         var can = new Can { x = worldX + panelW + Random.Range(120f, 1800f), rt = rt, phase = Random.value * 6f };
+        // The position is only set at the start of the next tick, so place it now or it shows up at the screen's origin for a frame.
+        rt.anchoredPosition = new Vector2((float)(can.x - worldX), -CanDrop);
+        rt.localScale = Vector3.zero;
         btn.onClick.AddListener(() =>
         {
             cans.Remove(can);
