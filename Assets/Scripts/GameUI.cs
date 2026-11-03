@@ -160,7 +160,10 @@ public class GameUI
     RowView ascendRow, ossosRow;
     Image buffChip;
     RectTransform settingsRoot, settingsPanel;
+    static string pendingToast; // shown by the next GameUI, which a scene reload creates
     float settingsFullH;
+    RectTransform confirmRoot, confirmPanel;
+    TextMeshProUGUI confirmTitleText, confirmMessageText, confirmCancelText, confirmOkText;
     CanvasGroup toastGroup;
     Image musicIcon;
     float uiK = 1f; // overlay scale: compact on big landscape screens, like the HUD
@@ -187,7 +190,7 @@ public class GameUI
     bool goldenActive;
     float goldenTimer, goldenLife;
 
-    float toastTimer, resetConfirmTimer, uiTimer, counterTimer;
+    float toastTimer, uiTimer, counterTimer;
 
     public GameUI(GameState state, GameAudio audio)
     {
@@ -206,6 +209,11 @@ public class GameUI
         goldenTimer = Random.Range(25f, 45f) * (float)s.GoldenInterval;
         RefreshAll();
         if (!string.IsNullOrEmpty(s.OfflineMessage)) ShowToast(s.OfflineMessage, 8f);
+        if (pendingToast != null)
+        {
+            ShowToast(pendingToast, 4f);
+            pendingToast = null;
+        }
     }
 
     // ---------------------------------------------------------------- building blocks
@@ -692,7 +700,43 @@ public class GameUI
         Place((RectTransform)closeBtn.transform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 24f), new Vector2(640f, 96f));
         closeBtn.onClick.AddListener(() => SetSettingsOpen(false));
 
+        BuildResetConfirm();
         settingsRoot.gameObject.SetActive(false);
+    }
+
+    void BuildResetConfirm()
+    {
+        confirmRoot = NewRect("ResetConfirm", canvasRect);
+        Stretch(confirmRoot);
+
+        var dim = NewImage(confirmRoot, "Dim", null, new Color(0f, 0f, 0f, 0.6f), false, true);
+        Stretch(dim.rectTransform);
+
+        var border = NewImage(confirmRoot, "Panel", ProceduralArt.RoundedRect(), CardBorder, true, true);
+        confirmPanel = border.rectTransform;
+        Place(confirmPanel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(700f, 440f));
+        var panel = NewImage(border.transform, "Inner", ProceduralArt.RoundedRect(), CardBg, true);
+        Box(panel.rectTransform, Vector2.zero, Vector2.one, new Vector2(6f, 6f), new Vector2(-6f, -6f));
+
+        confirmTitleText = NewText(panel.transform, "Title", "", 50, CardText, TextAlignmentOptions.Center, FontStyles.Bold);
+        Place(confirmTitleText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -30f), new Vector2(620f, 70f));
+
+        confirmMessageText = NewText(panel.transform, "Message", "", 34, Color.white, TextAlignmentOptions.Center);
+        Place(confirmMessageText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -112f), new Vector2(600f, 150f));
+        confirmMessageText.textWrappingMode = TextWrappingModes.Normal;
+        confirmMessageText.enableAutoSizing = true;
+        confirmMessageText.fontSizeMin = 22f;
+        confirmMessageText.fontSizeMax = 34f;
+
+        var cancel = NewButton(panel.transform, "CancelButton", "", 36, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out confirmCancelText);
+        Place((RectTransform)cancel.transform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(-160f, 28f), new Vector2(300f, 96f));
+        cancel.onClick.AddListener(() => confirmRoot.gameObject.SetActive(false));
+
+        var ok = NewButton(panel.transform, "ConfirmResetButton", "", 36, Bad, Color.white, out _, out confirmOkText);
+        Place((RectTransform)ok.transform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(160f, 28f), new Vector2(300f, 96f));
+        ok.onClick.AddListener(ConfirmReset);
+
+        confirmRoot.gameObject.SetActive(false);
     }
 
     // Re-applies every text that is not refreshed continuously (labels and row names/descriptions).
@@ -704,6 +748,10 @@ public class GameUI
         emptyText.text = Loc.T("Nenhuma melhoria por enquanto.\nContinue juntando petiscos!");
         settingsTitleText.text = Loc.T("Configurações");
         closeText.text = Loc.T("Fechar");
+        confirmTitleText.text = Loc.T("Reiniciar progresso");
+        confirmMessageText.text = Loc.T("Isso apaga todo o seu progresso e não pode ser desfeito. Tem certeza?");
+        confirmCancelText.text = Loc.T("Cancelar");
+        confirmOkText.text = Loc.T("Reiniciar");
         langText.text = Loc.T("Idioma: Português");
         awakeText.text = awake.Label();
         RefreshSitLabel();
@@ -753,12 +801,13 @@ public class GameUI
         k = Mathf.Min(k, canvasW * Margin / PanelW, canvasH * Margin / MinPanelH);
         settingsPanel.localScale = new Vector3(k, k, 1f);
         settingsPanel.sizeDelta = new Vector2(PanelW, Mathf.Min(settingsFullH, canvasH * Margin / k));
+        confirmPanel.localScale = new Vector3(k, k, 1f);
     }
 
     void SetSettingsOpen(bool open)
     {
         if (open) FitSettingsPanel();
-        resetConfirmTimer = 0f;
+        if (!open) confirmRoot.gameObject.SetActive(false);
         RefreshButtons();
         settingsRoot.gameObject.SetActive(open);
     }
@@ -1157,24 +1206,21 @@ public class GameUI
         RefreshAll();
     }
 
+    // Asks first, in a modal over the settings, so the warning is not hidden behind them.
     void OnResetClicked()
     {
-        if (resetConfirmTimer <= 0f)
-        {
-            resetConfirmTimer = 6f;
-            RefreshButtons();
-            ShowToast(Loc.T("Isso apaga todo o progresso! Clique em \"Confirmar reinício\" para continuar."), 6f);
-            return;
-        }
+        FitSettingsPanel();
+        confirmRoot.gameObject.SetActive(true);
+    }
 
-        resetConfirmTimer = 0f;
+    void ConfirmReset()
+    {
+        confirmRoot.gameObject.SetActive(false);
         s.ResetAll();
         s.Save();
-        RefreshButtons();
-        HideGolden();
-        ShowToast(Loc.T("Jogo reiniciado. Boa sorte, Caramelo!"), 4f);
-        SetSettingsOpen(false);
-        RefreshAll();
+        // Reload the scene so nothing from the old run (props, dogs, floating texts, timers) survives on the map.
+        pendingToast = Loc.T("Jogo reiniciado. Boa sorte, Caramelo!");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
     }
 
     // 0 = buildings, 1 = upgrades, 2 = ceu (prestige), 3 = dev.
@@ -1238,9 +1284,7 @@ public class GameUI
         musicIcon.sprite = ProceduralArt.MusicNote(sfx.MusicMuted && sfx.SfxMuted);
         vibText.text = Loc.T(Haptics.Enabled ? "Vibração: Ligada" : "Vibração: Desligada");
         sfxText.text = Loc.T(sfx.SfxMuted ? "Efeitos sonoros: Desligados" : "Efeitos sonoros: Ligados");
-        bool confirming = resetConfirmTimer > 0f;
-        resetText.text = Loc.T(confirming ? "Confirmar reinício!" : "Reiniciar jogo");
-        resetBg.color = confirming ? Bad : ProceduralArt.Hex("#8A5A2B");
+        resetText.text = Loc.T("Reiniciar progresso");
     }
 
     void RefreshCounters()
@@ -1605,12 +1649,6 @@ public class GameUI
         UpdateFloats(dt);
         UpdateFalling(dt);
         UpdateGolden(dt);
-
-        if (resetConfirmTimer > 0f)
-        {
-            resetConfirmTimer -= dt;
-            if (resetConfirmTimer <= 0f) RefreshButtons();
-        }
 
         if (ascendConfirmTimer > 0f)
         {
