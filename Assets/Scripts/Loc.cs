@@ -95,6 +95,8 @@ public static class Loc
         { "Fechar", "Close" },
         { "Música: Ligada", "Music: On" },
         { "Música: Desligada", "Music: Off" },
+        { "Vibração: Ligada", "Vibration: On" },
+        { "Vibração: Desligada", "Vibration: Off" },
         { "Efeitos sonoros: Ligados", "Sound effects: On" },
         { "Efeitos sonoros: Desligados", "Sound effects: Off" },
         { "Idioma: Português", "Language: English" },

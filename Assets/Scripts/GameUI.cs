@@ -151,7 +151,7 @@ public class GameUI
 
     TextMeshProUGUI counterText, counterShadow, cpsText, buffText, toastText, statsText;
     Image statsPill;
-    TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, sfxText, resetText, sitText, awakeText;
+    TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, sfxText, vibText, resetText, sitText, awakeText;
     readonly ScreenAwake awake = new ScreenAwake();
     Image tabBuildingsBg, tabUpgradesBg, tabCeuBg, tabDevBg, resetBg;
     GameObject devContent, ceuContent;
@@ -550,7 +550,7 @@ public class GameUI
 
         // The title and the close button stay fixed; everything between them scrolls when the panel is short.
         const float SettingsTop = 110f, SettingsBottom = 150f;
-        float contentH = DevMode.Enabled ? 988f : 556f;
+        float contentH = DevMode.Enabled ? 1096f : 664f;
         settingsFullH = SettingsTop + contentH + SettingsBottom;
         border.rectTransform.sizeDelta = new Vector2(780f, settingsFullH);
 
@@ -588,8 +588,16 @@ public class GameUI
             RefreshButtons();
         });
 
+        var vibBtn = NewButton(box, "VibrationButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out vibText);
+        Place((RectTransform)vibBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -234f), new Vector2(640f, 96f));
+        vibBtn.onClick.AddListener(() =>
+        {
+            Haptics.SetEnabled(!Haptics.Enabled);
+            RefreshButtons();
+        });
+
         var langBtn = NewButton(box, "LanguageButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out langText);
-        Place((RectTransform)langBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -234f), new Vector2(640f, 96f));
+        Place((RectTransform)langBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -342f), new Vector2(640f, 96f));
         langBtn.onClick.AddListener(() =>
         {
             Loc.Set(Loc.IsEnglish ? Lang.Pt : Lang.En);
@@ -597,7 +605,7 @@ public class GameUI
         });
 
         var awakeBtn = NewButton(box, "ScreenAwakeButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out awakeText);
-        Place((RectTransform)awakeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -342f), new Vector2(640f, 96f));
+        Place((RectTransform)awakeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -450f), new Vector2(640f, 96f));
         awakeBtn.onClick.AddListener(() =>
         {
             awake.Next();
@@ -606,19 +614,19 @@ public class GameUI
         awakeText.text = awake.Label();
 
         var resetBtn = NewButton(box, "ResetButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out resetBg, out resetText);
-        Place((RectTransform)resetBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -450f), new Vector2(640f, 96f));
+        Place((RectTransform)resetBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -558f), new Vector2(640f, 96f));
         resetBtn.onClick.AddListener(OnResetClicked);
 
         if (DevMode.Enabled)
         {
             // Dev only (Editor / local builds): a divider and a heading, then an amount of petiscos to add to the balance.
             var divider = NewImage(box, "DevDivider", ProceduralArt.RoundedRect(), CardBorder, true);
-            Place(divider.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -574f), new Vector2(640f, 4f));
+            Place(divider.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -682f), new Vector2(640f, 4f));
             var devLabel = NewText(box, "DevLabel", "Dev Mode", 34, CardText, TextAlignmentOptions.Center, FontStyles.Bold);
-            Place(devLabel.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -590f), new Vector2(640f, 48f));
+            Place(devLabel.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -698f), new Vector2(640f, 48f));
 
             var nightBtn = NewButton(box, "ForceNightButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out forceNightText);
-            Place((RectTransform)nightBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -882f), new Vector2(640f, 96f));
+            Place((RectTransform)nightBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -990f), new Vector2(640f, 96f));
             nightBtn.onClick.AddListener(() =>
             {
                 sky.ForceNight = !sky.ForceNight;
@@ -627,7 +635,7 @@ public class GameUI
             forceNightText.text = "Forçar noite: desligado";
 
             var field = NewImage(box, "DevAmount", ProceduralArt.RoundedRect(), ProceduralArt.Hex("#2B1A0E"), true, true);
-            Place(field.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -666f), new Vector2(640f, 96f));
+            Place(field.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -774f), new Vector2(640f, 96f));
             var viewport = NewRect("Viewport", field.transform);
             Stretch(viewport);
             viewport.offsetMin = new Vector2(20f, 6f);
@@ -646,7 +654,7 @@ public class GameUI
             input.targetGraphic = field;
 
             var addBtn = NewButton(box, "DevAddButton", "Adicionar", 34, TabOn, Ink, out _, out _);
-            Place((RectTransform)addBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -774f), new Vector2(640f, 96f));
+            Place((RectTransform)addBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -882f), new Vector2(640f, 96f));
             addBtn.onClick.AddListener(() =>
             {
                 // Phone keyboards add spaces/zero-width chars and pt-BR users type "1.000.000" or "1,5e9".
@@ -1203,6 +1211,7 @@ public class GameUI
     {
         muteText.text = Loc.T(sfx.MusicMuted ? "Música: Desligada" : "Música: Ligada");
         musicIcon.sprite = ProceduralArt.MusicNote(sfx.MusicMuted && sfx.SfxMuted);
+        vibText.text = Loc.T(Haptics.Enabled ? "Vibração: Ligada" : "Vibração: Desligada");
         sfxText.text = Loc.T(sfx.SfxMuted ? "Efeitos sonoros: Desligados" : "Efeitos sonoros: Ligados");
         bool confirming = resetConfirmTimer > 0f;
         resetText.text = Loc.T(confirming ? "Confirmar reinício!" : "Reiniciar jogo");
