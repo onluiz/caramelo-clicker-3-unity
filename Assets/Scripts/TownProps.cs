@@ -58,7 +58,7 @@ public class TownProps
     const float RunnerSpeed = 1000f;      // px/s at his average; Caramelo's top sprint is ~1050, so they trade places
     const float RunnerStride = 44f;       // px covered per animation frame
     const float RunnerSayCooldown = 15f;
-    const string RunnerLine = "E aí boss, só fazendo entrega";
+    const string RunnerLine = "E aí, boss!";
 
     class Runner
     {
@@ -80,7 +80,7 @@ public class TownProps
     // The delivery drone (building "drone-entregas"): not tied to a slot either. It cruises around the sky in screen space,
     // hopping between random spots (one of four models), then flies off to the right, is gone for a while and comes back as another model.
     const string DroneBuilding = "drone-entregas";
-    const string DroneLine = "Olá Boss, indo fazer entrega! :D";
+    const string DroneLine = "Entrega a caminho! :D";
     const float DroneSpeed = 170f;            // px/s cruising
     const float DroneMinAway = 25f, DroneMaxAway = 50f;
     const float DroneFps = 12f;
@@ -702,10 +702,10 @@ public class TownProps
         if (r.sayTimer > 0f)
         {
             r.sayTimer -= dt;
-            r.bubble.gameObject.SetActive(r.sayTimer > 0f);
             r.bubbleGroup.alpha = Mathf.Clamp01(r.sayTimer / 0.5f);
-            r.bubble.anchoredPosition = new Vector2(screenX, laneY + r.rt.sizeDelta.y + 10f);
-            r.bubble.SetAsLastSibling();
+            bool show = r.sayTimer > 0f && PlaceBubble(r.bubble, screenX, laneY + r.rt.sizeDelta.y + 10f, panelW);
+            r.bubble.gameObject.SetActive(show);
+            if (show) r.bubble.SetAsLastSibling();
         }
     }
 
@@ -854,11 +854,10 @@ public class TownProps
         if (d.sayTimer > 0f)
         {
             d.sayTimer -= dt;
-            d.bubble.gameObject.SetActive(d.sayTimer > 0f);
             d.bubbleGroup.alpha = Mathf.Clamp01(d.sayTimer / 0.5f);
-            float half = d.bubble.sizeDelta.x * 0.5f;
-            d.bubble.anchoredPosition = new Vector2(Mathf.Clamp(p.x, half, Mathf.Max(half, panelW - half)), p.y + d.rt.sizeDelta.y * 0.5f + 10f);
-            d.bubble.SetAsLastSibling();
+            bool show = d.sayTimer > 0f && PlaceBubble(d.bubble, p.x, p.y + d.rt.sizeDelta.y * 0.5f + 10f, panelW);
+            d.bubble.gameObject.SetActive(show);
+            if (show) d.bubble.SetAsLastSibling();
         }
     }
 
@@ -914,6 +913,20 @@ public class TownProps
     }
 
     const float BubblePadX = 56f;   // left/right padding between the delivery dog's dialogue text and the box edge
+
+    // Puts a bubble above targetX, kept inside the panel; the tail slides along the box to keep pointing at
+    // targetX. Returns false (bubble stays hidden) when the box is wider than the space available.
+    static bool PlaceBubble(RectTransform bubble, float targetX, float y, float panelW)
+    {
+        float half = bubble.sizeDelta.x * 0.5f;
+        if (half * 2f > panelW) return false;
+        float x = Mathf.Clamp(targetX, half, panelW - half);
+        bubble.anchoredPosition = new Vector2(x, y);
+        var tail = bubble.Find("Tail") as RectTransform;
+        if (tail != null)
+            tail.anchoredPosition = new Vector2(Mathf.Clamp(targetX - x, -half + 30f, half - 30f), tail.anchoredPosition.y);
+        return true;
+    }
 
     static void BuildBubble(Runner r)
     {
