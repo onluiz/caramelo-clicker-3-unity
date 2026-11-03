@@ -6,11 +6,13 @@ public static class NumberFormat
     static readonly string[] Suffixes =
     {
         "", " mil", " mi", " bi", " tri", " quad", " quint", " sext", " sept", " oct", " non", " dec",
+        " undec", " duodec", " tredec", " quatdec", " quindec", " sexdec", " sepdec", " octdec", " novdec", " vig",
     };
 
     static readonly string[] SuffixesEn =
     {
         "", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc",
+        "Ud", "Dd", "Td", "Qad", "Qid", "Sxd", "Spd", "Ocd", "Nod", "Vg",
     };
 
     // Two decimals below 1000 (fragments of a bone), the usual abbreviation above.

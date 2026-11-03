@@ -401,9 +401,14 @@ public class GameUI
         gear.onClick.AddListener(() => SetSettingsOpen(true));
 
         // Sit / run toggle under the gear: the dog sits until the button is pressed again.
-        var sitBtn = NewButton(left, "SitButton", "Sentar", 32, CardBg, Color.white, out _, out sitText);
-        Place((RectTransform)sitBtn.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -134f), new Vector2(190f, 76f));
+        // A square button that shows the pose it would put the dog in (sitting while he runs, running while he sits).
+        var sitBtn = NewButton(left, "SitButton", "", 32, CardBg, Color.white, out _, out sitText);
+        sitText.gameObject.SetActive(false);
+        Place((RectTransform)sitBtn.transform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-28f, -134f), SitSize);
         hudSit = (RectTransform)sitBtn.transform;
+        sitIcon = NewImage(sitBtn.transform, "Pose", null, Color.white);
+        Box(sitIcon.rectTransform, Vector2.zero, Vector2.one, new Vector2(8f, 8f), new Vector2(-8f, -8f));
+        sitIcon.preserveAspect = true;
         sitBtn.onClick.AddListener(() =>
         {
             rig.Sitting = !rig.Sitting;
@@ -482,7 +487,7 @@ public class GameUI
         for (int i = 0; i < hudCount; i++) left.GetChild(0).SetAsLastSibling();
 
         toastText = NewText(left, "Toast", "", 32, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
-        Anchors(toastText.rectTransform, 0.02f, 0.075f, 0.98f, 0.155f);
+        Anchors(toastText.rectTransform, 0.02f, 0.13f, 0.98f, 0.21f);
         toastText.textWrappingMode = TextWrappingModes.Normal;
 
         statsPill = NewImage(left, "StatsPill", ProceduralArt.RoundedRect(), new Color(CardBg.r, CardBg.g, CardBg.b, 0.9f), true);
@@ -651,10 +656,23 @@ public class GameUI
         RefreshAll();
     }
 
-    // The button offers the action the dog is not doing: "Sentar" while he runs, "Correr" while he sits.
+    // The button offers the action the dog is not doing: the seated pose while he runs, a running pose while he sits.
+    Image sitIcon;
+    Sprite sitPose, runPose;
+    const int SitPoseFrame = 16, RunPoseFrame = 21; // last frame of the sit clip, and a mid-stride walk frame
+    const float PoseX = 26f, PoseY = 26f, PoseSize = 68f; // crop of the 120px cell around the dog (from its left and bottom edges)
+
     void RefreshSitLabel()
     {
-        sitText.text = Loc.T(rig.Sitting ? "Correr" : "Sentar");
+        if (sitPose == null) sitPose = CropPose(rig.Frame(SitPoseFrame));
+        if (runPose == null) runPose = CropPose(rig.Frame(RunPoseFrame));
+        sitIcon.sprite = rig.Sitting ? runPose : sitPose;
+    }
+
+    static Sprite CropPose(Sprite cell)
+    {
+        var r = cell.rect;
+        return Sprite.Create(cell.texture, new Rect(r.x + PoseX, r.y + PoseY, PoseSize, PoseSize), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
     }
 
     void SetSettingsOpen(bool open)
@@ -1351,14 +1369,33 @@ public class GameUI
             Anchors(shopBackdrop, splitX, 0f, 1f, 1f);
         }
 
+        // Tab row and buy-mode bar: fractions of the shop's height, but on small screens never shorter than a thumb needs
+        // (a share of the short side, in screen pixels), which on a phone is much taller than the fractions give.
+        float shopPx = safe.height * (portrait ? PortraitShopHeight : 1f);
+        float tabF = portrait ? 0.09f : 0.07f, barF = portrait ? 0.075f : 0.06f;
+        if (!big && shopPx > 0f)
+        {
+            tabF = Mathf.Min(Mathf.Max(tabF, TouchTabShort * shortSide / shopPx), 0.2f);
+            barF = Mathf.Min(Mathf.Max(barF, TouchBarShort * shortSide / shopPx), 0.17f);
+        }
+
+        const float tabsTop = 0.985f, rowGap = 0.01f;
+        float tabsBottom = tabsTop - tabF, barTop = tabsBottom - rowGap;
+        barBottom = barTop - barF;
+        tabsBottomY = tabsBottom;
+
+        // The Sit/Run button grows with the same rule; the game area is drawn at gameScale, so undo that and the canvas scale.
+        float pxPerUnit = Mathf.Sqrt(Screen.width / scaler.referenceResolution.x * Screen.height / scaler.referenceResolution.y);
+        sitK = 1f;
+        if (pxPerUnit > 0f)
+            sitK = Mathf.Clamp(TouchSitShort * shortSide / (SitSize.y * gameScale * pxPerUnit), 1f, 2.2f);
+
         if (portrait)
         {
             AnchorsScaled(leftPanel, 0f, PortraitShopHeight, 1f, 1f, gameScale);
             Anchors(tapArea, 0f, PortraitShopHeight, 1f, 1f);
             Anchors(rightPanel, 0f, 0f, 1f, PortraitShopHeight);
             rightPanel.localScale = Vector3.one; // the desktop layout shrinks the shop; a resize into portrait must undo it
-            LayoutTabs(0.895f, 0.985f);
-            Box(buyBarRt, new Vector2(0f, 0.81f), new Vector2(1f, 0.885f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
         }
         else
         {
@@ -1366,9 +1403,10 @@ public class GameUI
             Anchors(tapArea, 0f, 0f, leftW, 1f);
             if (big) AnchorsScaled(rightPanel, leftW, 0f, 1f, 1f, shopScale);
             else { Anchors(rightPanel, leftW, 0f, 1f, 1f); rightPanel.localScale = Vector3.one; }
-            LayoutTabs(0.915f, 0.985f);
-            Box(buyBarRt, new Vector2(0f, 0.845f), new Vector2(1f, 0.905f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
         }
+
+        LayoutTabs(tabsBottom, tabsTop);
+        Box(buyBarRt, new Vector2(0f, barBottom), new Vector2(1f, barTop), new Vector2(14f, 0f), new Vector2(-14f, 0f));
 
         ApplyHud();
         lastCoinText = null;
@@ -1376,6 +1414,11 @@ public class GameUI
     }
 
     string lastCoinText;
+
+    // Minimum touch sizes on small screens, as a share of the screen's short side (screen pixels).
+    const float TouchTabShort = 0.115f, TouchBarShort = 0.10f, TouchSitShort = 0.105f;
+    static readonly Vector2 SitSize = new Vector2(96f, 96f);
+    float sitK = 1f, barBottom = 0.845f, tabsBottomY = 0.915f;
 
     // The petiscos icon and value sit side by side as one group, centred in the pill (the pill is centred on screen in portrait).
     void LayoutCoin(string value)
@@ -1421,7 +1464,7 @@ public class GameUI
         Box(hudFrag, new Vector2(0.02f, 1f), new Vector2(side, 1f), new Vector2(0f, -188f), new Vector2(0f, -108f));
         Box(hudCoin, new Vector2(mid0, 1f), new Vector2(mid1, 1f), new Vector2(0f, -136f), new Vector2(0f, -26f));
         Place(hudGear, Vector2.one, Vector2.one, new Vector2(-16f, -26f), new Vector2(92f, 92f));
-        Place(hudSit, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-20f, 28f), new Vector2(190f, 76f));
+        Place(hudSit, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-20f, 28f), SitSize * sitK);
         Box(hudCpsShadow, top, Vector2.one, new Vector2(3f, -208f), new Vector2(3f, -138f));
         Box(hudCps, top, Vector2.one, new Vector2(0f, -205f), new Vector2(0f, -135f));
         Box(hudBuff, new Vector2(0.08f, 1f), new Vector2(0.92f, 1f), new Vector2(0f, -274f), new Vector2(0f, -218f));
@@ -1431,7 +1474,7 @@ public class GameUI
     void ApplyScrollBox()
     {
         bool bar = buyBar.activeSelf;
-        float top = portrait ? (bar ? 0.8f : 0.885f) : (bar ? 0.835f : 0.905f);
+        float top = (bar ? barBottom : tabsBottomY) - 0.01f;
         Box(scrollRt, Vector2.zero, new Vector2(1f, top), new Vector2(10f, 10f), new Vector2(-10f, 0f));
     }
 
