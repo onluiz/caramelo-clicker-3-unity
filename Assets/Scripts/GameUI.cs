@@ -160,6 +160,7 @@ public class GameUI
     RowView ascendRow, ossosRow;
     Image buffChip;
     RectTransform settingsRoot, settingsPanel;
+    float settingsFullH;
     float uiK = 1f; // overlay scale: compact on big landscape screens, like the HUD
     TextMeshProUGUI buyLabelText, settingsTitleText, closeText, langText;
     TextMeshProUGUI ossosText, fragmentsText, cpsShadow;
@@ -531,24 +532,47 @@ public class GameUI
         var title = settingsTitleText = NewText(panel.transform, "Title", "Configurações", 54, CardText, TextAlignmentOptions.Center, FontStyles.Bold);
         Place(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -30f), new Vector2(700f, 80f));
 
-        var muteBtn = NewButton(panel.transform, "MuteButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out muteText);
-        Place((RectTransform)muteBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -128f), new Vector2(640f, 96f));
+        // The title and the close button stay fixed; everything between them scrolls when the panel is short.
+        const float SettingsTop = 110f, SettingsBottom = 150f;
+        float contentH = DevMode.Enabled ? 880f : 448f;
+        settingsFullH = SettingsTop + contentH + SettingsBottom;
+        border.rectTransform.sizeDelta = new Vector2(780f, settingsFullH);
+
+        var sViewport = NewRect("SettingsViewport", panel.transform);
+        Box(sViewport, Vector2.zero, Vector2.one, new Vector2(0f, SettingsBottom), new Vector2(0f, -SettingsTop));
+        sViewport.gameObject.AddComponent<RectMask2D>();
+        var sCatcher = sViewport.gameObject.AddComponent<Image>();
+        sCatcher.color = new Color(0f, 0f, 0f, 0f);
+        var box = NewRect("SettingsContent", sViewport);
+        Box(box, new Vector2(0f, 1f), Vector2.one, Vector2.zero, Vector2.zero);
+        box.pivot = new Vector2(0.5f, 1f);
+        box.sizeDelta = new Vector2(0f, contentH);
+        var sScroll = sViewport.gameObject.AddComponent<ScrollRect>();
+        sScroll.viewport = sViewport;
+        sScroll.content = box;
+        sScroll.horizontal = false;
+        sScroll.vertical = true;
+        sScroll.movementType = ScrollRect.MovementType.Clamped;
+        sScroll.scrollSensitivity = 40f;
+
+        var muteBtn = NewButton(box, "MuteButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out muteText);
+        Place((RectTransform)muteBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -18f), new Vector2(640f, 96f));
         muteBtn.onClick.AddListener(() =>
         {
             sfx.SetMuted(!sfx.Muted);
             RefreshButtons();
         });
 
-        var langBtn = NewButton(panel.transform, "LanguageButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out langText);
-        Place((RectTransform)langBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -236f), new Vector2(640f, 96f));
+        var langBtn = NewButton(box, "LanguageButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out langText);
+        Place((RectTransform)langBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -126f), new Vector2(640f, 96f));
         langBtn.onClick.AddListener(() =>
         {
             Loc.Set(Loc.IsEnglish ? Lang.Pt : Lang.En);
             ApplyLanguage();
         });
 
-        var awakeBtn = NewButton(panel.transform, "ScreenAwakeButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out awakeText);
-        Place((RectTransform)awakeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -344f), new Vector2(640f, 96f));
+        var awakeBtn = NewButton(box, "ScreenAwakeButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out awakeText);
+        Place((RectTransform)awakeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -234f), new Vector2(640f, 96f));
         awakeBtn.onClick.AddListener(() =>
         {
             awake.Next();
@@ -556,19 +580,20 @@ public class GameUI
         });
         awakeText.text = awake.Label();
 
-        var resetBtn = NewButton(panel.transform, "ResetButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out resetBg, out resetText);
-        Place((RectTransform)resetBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -452f), new Vector2(640f, 96f));
+        var resetBtn = NewButton(box, "ResetButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out resetBg, out resetText);
+        Place((RectTransform)resetBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -342f), new Vector2(640f, 96f));
         resetBtn.onClick.AddListener(OnResetClicked);
 
-        float closeY = -584f;
         if (DevMode.Enabled)
         {
-            // Dev only (Editor / local builds): type an amount of petiscos and add it to the balance.
-            border.rectTransform.sizeDelta = new Vector2(780f, 976f);
-            closeY = -812f;
+            // Dev only (Editor / local builds): a divider and a heading, then an amount of petiscos to add to the balance.
+            var divider = NewImage(box, "DevDivider", ProceduralArt.RoundedRect(), CardBorder, true);
+            Place(divider.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -466f), new Vector2(640f, 4f));
+            var devLabel = NewText(box, "DevLabel", "Dev Mode", 34, CardText, TextAlignmentOptions.Center, FontStyles.Bold);
+            Place(devLabel.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -482f), new Vector2(640f, 48f));
 
-            var nightBtn = NewButton(panel.transform, "ForceNightButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out forceNightText);
-            Place((RectTransform)nightBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -668f), new Vector2(640f, 96f));
+            var nightBtn = NewButton(box, "ForceNightButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out forceNightText);
+            Place((RectTransform)nightBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -774f), new Vector2(640f, 96f));
             nightBtn.onClick.AddListener(() =>
             {
                 sky.ForceNight = !sky.ForceNight;
@@ -576,8 +601,8 @@ public class GameUI
             });
             forceNightText.text = "Forçar noite: desligado";
 
-            var field = NewImage(panel.transform, "DevAmount", ProceduralArt.RoundedRect(), ProceduralArt.Hex("#2B1A0E"), true, true);
-            Place(field.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(-114f, -560f), new Vector2(400f, 96f));
+            var field = NewImage(box, "DevAmount", ProceduralArt.RoundedRect(), ProceduralArt.Hex("#2B1A0E"), true, true);
+            Place(field.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -558f), new Vector2(640f, 96f));
             var viewport = NewRect("Viewport", field.transform);
             Stretch(viewport);
             viewport.offsetMin = new Vector2(20f, 6f);
@@ -595,8 +620,8 @@ public class GameUI
             input.lineType = TMP_InputField.LineType.SingleLine;
             input.targetGraphic = field;
 
-            var addBtn = NewButton(panel.transform, "DevAddButton", "Adicionar", 34, TabOn, Ink, out _, out _);
-            Place((RectTransform)addBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(256f, -560f), new Vector2(224f, 96f));
+            var addBtn = NewButton(box, "DevAddButton", "Adicionar", 34, TabOn, Ink, out _, out _);
+            Place((RectTransform)addBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -666f), new Vector2(640f, 96f));
             addBtn.onClick.AddListener(() =>
             {
                 // Phone keyboards add spaces/zero-width chars and pt-BR users type "1.000.000" or "1,5e9".
@@ -622,7 +647,7 @@ public class GameUI
         }
 
         var closeBtn = NewButton(panel.transform, "CloseButton", "Fechar", 38, TabOn, Ink, out _, out closeText);
-        Place((RectTransform)closeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, closeY), new Vector2(640f, 96f));
+        Place((RectTransform)closeBtn.transform, new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 24f), new Vector2(640f, 96f));
         closeBtn.onClick.AddListener(() => SetSettingsOpen(false));
 
         settingsRoot.gameObject.SetActive(false);
@@ -1353,6 +1378,7 @@ public class GameUI
         if (big) gameScale = DesktopGameScale;
         uiK = big ? DesktopOverlayScale : 1f;
         settingsPanel.localScale = new Vector3(uiK, uiK, 1f);
+        settingsPanel.sizeDelta = new Vector2(settingsPanel.sizeDelta.x, Mathf.Min(settingsFullH, canvasRect.rect.height * 0.94f / uiK));
         goldenRect.sizeDelta = new Vector2(100f, 100f) * uiK;
         float splitX = (safe.xMin + leftW * safe.width) / Screen.width;
         float splitY = (safe.yMin + PortraitShopHeight * safe.height) / Screen.height;
