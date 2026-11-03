@@ -84,7 +84,7 @@ public class GameUI
     const float NightShadeMax = 0.58f;
     const float HeadGlowY = -150f; // the glow is centred on his body, so he is lit too
     const float HeadLightX = 25f, HeadLightY = -30f; // from the dog anchor: right above his head
-    RectTransform hudCoin, hudFrag, hudGem, hudGear, hudMusic, hudSit, hudCps, hudCpsShadow, hudBuff, shopBackdrop, safeRoot, tapArea, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
+    RectTransform hudCoin, hudFrag, hudGem, hudGear, hudMusic, hudToast, hudSit, hudCps, hudCpsShadow, hudBuff, shopBackdrop, safeRoot, tapArea, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
     CanvasScaler scaler;
     bool portrait;
     Vector2Int lastScreen;
@@ -514,13 +514,13 @@ public class GameUI
 
         // Notifications sit at the top, just under the buff chip, on a translucent white plate.
         var toastPlate = NewImage(left, "ToastPlate", ProceduralArt.RoundedRect(), new Color(1f, 1f, 1f, 0.7f), true);
-        Box(toastPlate.rectTransform, new Vector2(0.04f, 1f), new Vector2(0.96f, 1f), new Vector2(0f, -372f), new Vector2(0f, -290f));
+        hudToast = toastPlate.rectTransform; // sized and placed in ApplyHud, right under the buff chip, with the same size and font
         toastGroup = toastPlate.gameObject.AddComponent<CanvasGroup>();
         toastText = NewText(toastPlate.transform, "Toast", "", 32, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
-        Box(toastText.rectTransform, Vector2.zero, Vector2.one, new Vector2(16f, 4f), new Vector2(-16f, -4f));
+        Box(toastText.rectTransform, Vector2.zero, Vector2.one, new Vector2(16f, 0f), new Vector2(-16f, 0f));
         toastText.textWrappingMode = TextWrappingModes.Normal;
         toastText.enableAutoSizing = true;
-        toastText.fontSizeMin = 20f;
+        toastText.fontSizeMin = 18f;
         toastText.fontSizeMax = 32f;
         toastGroup.gameObject.SetActive(false);
 
@@ -1170,7 +1170,10 @@ public class GameUI
     {
         HideGolden();
         sfx.PlayGolden();
-        ShowToast(s.ApplyGoldenBone(), 6f);
+        double frenzy = s.FrenzyUntil, clickFrenzy = s.ClickFrenzyUntil;
+        string msg = s.ApplyGoldenBone();
+        // A frenzy already shows up as the buff chip, with its countdown, so only the other rewards need a notification.
+        if (s.FrenzyUntil == frenzy && s.ClickFrenzyUntil == clickFrenzy) ShowToast(msg, 6f);
         RefreshAll();
     }
 
@@ -1599,6 +1602,7 @@ public class GameUI
         Box(hudCpsShadow, top, Vector2.one, new Vector2(3f, -208f), new Vector2(3f, -138f));
         Box(hudCps, top, Vector2.one, new Vector2(0f, -205f), new Vector2(0f, -135f));
         Box(hudBuff, new Vector2(0.08f, 1f), new Vector2(0.92f, 1f), new Vector2(0f, -274f), new Vector2(0f, -218f));
+        Box(hudToast, new Vector2(0.08f, 1f), new Vector2(0.92f, 1f), new Vector2(0f, -336f), new Vector2(0f, -280f));
     }
 
     // The list sits under the buy-mode bar on the buildings tab; other tabs have no bar, so it moves up to the tabs.
