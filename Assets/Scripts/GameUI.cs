@@ -1511,6 +1511,7 @@ public class GameUI
         float target = Mathf.Clamp(groundBand.rect.height * 0.5f - 65f, 0f, DogDrop);
         dogDrop = Mathf.MoveTowards(dogDrop, target, 120f * dt);
         rig.Drop = dogDrop;
+        town.DogDrop = dogDrop;
         if (headLight != null) headLight.rectTransform.anchoredPosition = new Vector2(HeadLightX, HeadLightY - dogDrop);
         if (headGlow != null) headGlow.rectTransform.anchoredPosition = new Vector2(0f, HeadGlowY - dogDrop);
     }

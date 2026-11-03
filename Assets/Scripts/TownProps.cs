@@ -209,6 +209,8 @@ public class TownProps
     readonly List<Comet> comets = new List<Comet>();
     public float Heat { get; private set; }   // 0..1, how red the sky and ground are
     public float Shake { get; private set; }  // 0..1, how hard the screen shakes (each explosion kicks it up, then it dies down)
+    public float DogDrop;                     // how far Caramelo is lowered from the usual ground line; the delivery dog runs a bit above him, in the same lane
+    const float RunnerLaneFrac = 0.75f;
     public System.Action OnCometImpact;       // the comet just hit: the device vibrates
     const float ShakeSeconds = 1.3f;
 
@@ -692,16 +694,17 @@ public class TownProps
         }
 
         float screenX = panelW * 0.5f + rel;
-        r.rt.anchoredPosition = new Vector2(screenX, 0f);
+        float laneY = -DogDrop * RunnerLaneFrac;
+        r.rt.anchoredPosition = new Vector2(screenX, laneY);
         r.rt.SetAsLastSibling();
-        UpdateRunnerLight(r, screenX, darkness);
+        UpdateRunnerLight(r, screenX, laneY, darkness);
 
         if (r.sayTimer > 0f)
         {
             r.sayTimer -= dt;
             r.bubble.gameObject.SetActive(r.sayTimer > 0f);
             r.bubbleGroup.alpha = Mathf.Clamp01(r.sayTimer / 0.5f);
-            r.bubble.anchoredPosition = new Vector2(screenX, r.rt.sizeDelta.y + 10f);
+            r.bubble.anchoredPosition = new Vector2(screenX, laneY + r.rt.sizeDelta.y + 10f);
             r.bubble.SetAsLastSibling();
         }
     }
@@ -729,15 +732,15 @@ public class TownProps
         if (r.glowRt != null) r.glowRt.gameObject.SetActive(on);
     }
 
-    void UpdateRunnerLight(Runner r, float screenX, float darkness)
+    void UpdateRunnerLight(Runner r, float screenX, float laneY, float darkness)
     {
         if (r.lightRt == null) return;
         float on = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.12f, 0.55f, darkness));
         var sheet = Sheet("light", 4, 12, 48, 48);
         if (sheet != null) r.lightImg.sprite = sheet[(int)(r.clock * 10f) % sheet.Length];
-        r.lightRt.anchoredPosition = new Vector2(screenX + 20f, 250f);
+        r.lightRt.anchoredPosition = new Vector2(screenX + 20f, 250f + laneY);
         r.lightImg.color = new Color(1f, 0.95f, 0.7f, LightAlpha * on);
-        r.glowRt.anchoredPosition = new Vector2(screenX, 110f);
+        r.glowRt.anchoredPosition = new Vector2(screenX, 110f + laneY);
         r.glowImg.color = new Color(1f, 0.82f, 0.45f, 0.22f * on);
     }
 
