@@ -84,7 +84,7 @@ public class GameUI
     const float NightShadeMax = 0.58f;
     const float HeadGlowY = -150f; // the glow is centred on his body, so he is lit too
     const float HeadLightX = 25f, HeadLightY = -30f; // from the dog anchor: right above his head
-    RectTransform hudCoin, hudFrag, hudGem, hudGear, hudSit, hudCps, hudCpsShadow, hudBuff, shopBackdrop, safeRoot, tapArea, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
+    RectTransform hudCoin, hudFrag, hudGem, hudGear, hudMusic, hudSit, hudCps, hudCpsShadow, hudBuff, shopBackdrop, safeRoot, tapArea, leftPanel, rightPanel, tabBuildingsRt, tabUpgradesRt, tabCeuRt, tabDevRt, buyBarRt, scrollRt;
     CanvasScaler scaler;
     bool portrait;
     Vector2Int lastScreen;
@@ -151,7 +151,7 @@ public class GameUI
 
     TextMeshProUGUI counterText, counterShadow, cpsText, buffText, toastText, statsText;
     Image statsPill;
-    TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, resetText, sitText, awakeText;
+    TextMeshProUGUI tabBuildingsText, tabUpgradesText, tabCeuText, tabDevText, emptyText, muteText, sfxText, resetText, sitText, awakeText;
     readonly ScreenAwake awake = new ScreenAwake();
     Image tabBuildingsBg, tabUpgradesBg, tabCeuBg, tabDevBg, resetBg;
     GameObject devContent, ceuContent;
@@ -161,6 +161,7 @@ public class GameUI
     Image buffChip;
     RectTransform settingsRoot, settingsPanel;
     float settingsFullH;
+    Image musicIcon;
     float uiK = 1f; // overlay scale: compact on big landscape screens, like the HUD
     TextMeshProUGUI buyLabelText, settingsTitleText, closeText, langText;
     TextMeshProUGUI ossosText, fragmentsText, cpsShadow;
@@ -401,6 +402,21 @@ public class GameUI
         hudGear = (RectTransform)gear.transform;
         gear.onClick.AddListener(() => SetSettingsOpen(true));
 
+        // Next to the gear: mutes or unmutes the music and the sound effects together.
+        var musicBtn = NewButton(left, "MusicButton", "", 28, CardBg, Color.white, out _, out _);
+        Place((RectTransform)musicBtn.transform, Vector2.one, Vector2.one, new Vector2(-128f, -28f), new Vector2(92f, 92f));
+        musicIcon = NewImage(musicBtn.transform, "Music", ProceduralArt.MusicNote(false), Color.white);
+        Box(musicIcon.rectTransform, Vector2.zero, Vector2.one, new Vector2(14f, 14f), new Vector2(-14f, -14f));
+        hudMusic = (RectTransform)musicBtn.transform;
+        musicBtn.onClick.AddListener(() =>
+        {
+            bool mute = !(sfx.MusicMuted && sfx.SfxMuted);
+            sfx.SetMusicMuted(mute);
+            sfx.SetSfxMuted(mute);
+            if (!mute) sfx.PlayClick();
+            RefreshButtons();
+        });
+
         // Sit / run toggle under the gear: the dog sits until the button is pressed again.
         // A square button that shows the pose it would put the dog in (sitting while he runs, running while he sits).
         var sitBtn = NewButton(left, "SitButton", "", 32, CardBg, Color.white, out _, out sitText);
@@ -534,7 +550,7 @@ public class GameUI
 
         // The title and the close button stay fixed; everything between them scrolls when the panel is short.
         const float SettingsTop = 110f, SettingsBottom = 150f;
-        float contentH = DevMode.Enabled ? 880f : 448f;
+        float contentH = DevMode.Enabled ? 988f : 556f;
         settingsFullH = SettingsTop + contentH + SettingsBottom;
         border.rectTransform.sizeDelta = new Vector2(780f, settingsFullH);
 
@@ -559,12 +575,21 @@ public class GameUI
         Place((RectTransform)muteBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -18f), new Vector2(640f, 96f));
         muteBtn.onClick.AddListener(() =>
         {
-            sfx.SetMuted(!sfx.Muted);
+            sfx.SetMusicMuted(!sfx.MusicMuted);
+            RefreshButtons();
+        });
+
+        var sfxBtn = NewButton(box, "SfxButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out sfxText);
+        Place((RectTransform)sfxBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -126f), new Vector2(640f, 96f));
+        sfxBtn.onClick.AddListener(() =>
+        {
+            sfx.SetSfxMuted(!sfx.SfxMuted);
+            if (!sfx.SfxMuted) sfx.PlayClick();
             RefreshButtons();
         });
 
         var langBtn = NewButton(box, "LanguageButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out langText);
-        Place((RectTransform)langBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -126f), new Vector2(640f, 96f));
+        Place((RectTransform)langBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -234f), new Vector2(640f, 96f));
         langBtn.onClick.AddListener(() =>
         {
             Loc.Set(Loc.IsEnglish ? Lang.Pt : Lang.En);
@@ -572,7 +597,7 @@ public class GameUI
         });
 
         var awakeBtn = NewButton(box, "ScreenAwakeButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out awakeText);
-        Place((RectTransform)awakeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -234f), new Vector2(640f, 96f));
+        Place((RectTransform)awakeBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -342f), new Vector2(640f, 96f));
         awakeBtn.onClick.AddListener(() =>
         {
             awake.Next();
@@ -581,19 +606,19 @@ public class GameUI
         awakeText.text = awake.Label();
 
         var resetBtn = NewButton(box, "ResetButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out resetBg, out resetText);
-        Place((RectTransform)resetBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -342f), new Vector2(640f, 96f));
+        Place((RectTransform)resetBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -450f), new Vector2(640f, 96f));
         resetBtn.onClick.AddListener(OnResetClicked);
 
         if (DevMode.Enabled)
         {
             // Dev only (Editor / local builds): a divider and a heading, then an amount of petiscos to add to the balance.
             var divider = NewImage(box, "DevDivider", ProceduralArt.RoundedRect(), CardBorder, true);
-            Place(divider.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -466f), new Vector2(640f, 4f));
+            Place(divider.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -574f), new Vector2(640f, 4f));
             var devLabel = NewText(box, "DevLabel", "Dev Mode", 34, CardText, TextAlignmentOptions.Center, FontStyles.Bold);
-            Place(devLabel.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -482f), new Vector2(640f, 48f));
+            Place(devLabel.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -590f), new Vector2(640f, 48f));
 
             var nightBtn = NewButton(box, "ForceNightButton", "", 38, ProceduralArt.Hex("#8A5A2B"), Color.white, out _, out forceNightText);
-            Place((RectTransform)nightBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -774f), new Vector2(640f, 96f));
+            Place((RectTransform)nightBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -882f), new Vector2(640f, 96f));
             nightBtn.onClick.AddListener(() =>
             {
                 sky.ForceNight = !sky.ForceNight;
@@ -602,7 +627,7 @@ public class GameUI
             forceNightText.text = "Forçar noite: desligado";
 
             var field = NewImage(box, "DevAmount", ProceduralArt.RoundedRect(), ProceduralArt.Hex("#2B1A0E"), true, true);
-            Place(field.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -558f), new Vector2(640f, 96f));
+            Place(field.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -666f), new Vector2(640f, 96f));
             var viewport = NewRect("Viewport", field.transform);
             Stretch(viewport);
             viewport.offsetMin = new Vector2(20f, 6f);
@@ -621,7 +646,7 @@ public class GameUI
             input.targetGraphic = field;
 
             var addBtn = NewButton(box, "DevAddButton", "Adicionar", 34, TabOn, Ink, out _, out _);
-            Place((RectTransform)addBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -666f), new Vector2(640f, 96f));
+            Place((RectTransform)addBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -774f), new Vector2(640f, 96f));
             addBtn.onClick.AddListener(() =>
             {
                 // Phone keyboards add spaces/zero-width chars and pt-BR users type "1.000.000" or "1,5e9".
@@ -1176,7 +1201,9 @@ public class GameUI
 
     void RefreshButtons()
     {
-        muteText.text = Loc.T(sfx.Muted ? "Som: Mudo" : "Som: Ligado");
+        muteText.text = Loc.T(sfx.MusicMuted ? "Música: Desligada" : "Música: Ligada");
+        musicIcon.sprite = ProceduralArt.MusicNote(sfx.MusicMuted && sfx.SfxMuted);
+        sfxText.text = Loc.T(sfx.SfxMuted ? "Efeitos sonoros: Desligados" : "Efeitos sonoros: Ligados");
         bool confirming = resetConfirmTimer > 0f;
         resetText.text = Loc.T(confirming ? "Confirmar reinício!" : "Reiniciar jogo");
         resetBg.color = confirming ? Bad : ProceduralArt.Hex("#8A5A2B");
@@ -1490,6 +1517,7 @@ public class GameUI
         Box(hudFrag, new Vector2(0.02f, 1f), new Vector2(side, 1f), new Vector2(0f, -188f), new Vector2(0f, -108f));
         Box(hudCoin, new Vector2(mid0, 1f), new Vector2(mid1, 1f), new Vector2(0f, -136f), new Vector2(0f, -26f));
         Place(hudGear, Vector2.one, Vector2.one, new Vector2(-16f, -26f), new Vector2(92f, 92f));
+        Place(hudMusic, Vector2.one, Vector2.one, new Vector2(-116f, -26f), new Vector2(92f, 92f));
         Place(hudSit, new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(-20f, 28f), SitSize * sitK);
         Box(hudCpsShadow, top, Vector2.one, new Vector2(3f, -208f), new Vector2(3f, -138f));
         Box(hudCps, top, Vector2.one, new Vector2(0f, -205f), new Vector2(0f, -135f));

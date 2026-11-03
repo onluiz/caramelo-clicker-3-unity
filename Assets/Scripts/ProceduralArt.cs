@@ -4,7 +4,7 @@ using UnityEngine;
 // All sprites are drawn at startup from signed distance functions, so the game ships with no image files.
 public static class ProceduralArt
 {
-    static Sprite goldenBone, blob, rounded, gradient, gear;
+    static Sprite goldenBone, blob, rounded, gradient, gear, musicOn, musicOff;
     static readonly Sprite[] icons = new Sprite[12];
 
     public static Color Hex(string html)
@@ -157,6 +157,27 @@ public static class ProceduralArt
             return Mathf.Max(d, -Sdf.Circle(p, Vector2.zero, 0.26f));
         }, Hex("#EDE3D3"), Hex("#2B1A10"), 0.06f);
         return gear = P.ToSprite();
+    }
+
+    // Beamed pair of notes, with a red slash across it when the sound is off.
+    public static Sprite MusicNote(bool muted)
+    {
+        if (muted ? musicOff != null : musicOn != null) return muted ? musicOff : musicOn;
+        var P = new Painter(96);
+        P.Shape(p =>
+        {
+            float d = Sdf.Ellipse(p, new Vector2(-0.5f, -0.5f), 0.27f, 0.2f);
+            d = Mathf.Min(d, Sdf.Ellipse(p, new Vector2(0.38f, -0.36f), 0.27f, 0.2f));
+            d = Mathf.Min(d, Sdf.Capsule(p, new Vector2(-0.3f, -0.45f), new Vector2(-0.3f, 0.6f), 0.07f));
+            d = Mathf.Min(d, Sdf.Capsule(p, new Vector2(0.58f, -0.31f), new Vector2(0.58f, 0.74f), 0.07f));
+            d = Mathf.Min(d, Sdf.Capsule(p, new Vector2(-0.3f, 0.62f), new Vector2(0.58f, 0.76f), 0.12f));
+            return d;
+        }, muted ? Hex("#9A8F80") : Hex("#EDE3D3"), Hex("#2B1A10"), 0.06f);
+        if (muted)
+            P.Shape(p => Sdf.Capsule(p, new Vector2(-0.8f, 0.8f), new Vector2(0.8f, -0.8f), 0.09f), Hex("#E24B3B"), Hex("#2B1A10"), 0.05f);
+        var sprite = P.ToSprite();
+        if (muted) musicOff = sprite; else musicOn = sprite;
+        return sprite;
     }
 
     public static Sprite Blob()

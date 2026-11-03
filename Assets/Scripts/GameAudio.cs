@@ -12,19 +12,22 @@ public class GameAudio
     AudioClip normalMusic, lunarMusic;
     bool lunar;
 
-    public bool Muted;
+    public bool MusicMuted, SfxMuted;
 
     public GameAudio(GameObject host)
     {
         source = host.AddComponent<AudioSource>();
         source.playOnAwake = false;
-        Muted = PlayerPrefs.GetInt("caramelo_muted", 0) == 1;
+        // "caramelo_muted" was the single switch before music and effects were split.
+        int legacy = PlayerPrefs.GetInt("caramelo_muted", 0);
+        MusicMuted = PlayerPrefs.GetInt("caramelo_music_muted", legacy) == 1;
+        SfxMuted = PlayerPrefs.GetInt("caramelo_sfx_muted", legacy) == 1;
 
         music = host.AddComponent<AudioSource>();
         music.playOnAwake = false;
         music.loop = true;
         music.volume = MusicVolume;
-        music.mute = Muted;
+        music.mute = MusicMuted;
         music.clip = normalMusic = Resources.Load<AudioClip>("Music/tail_wags_at_twilight");
         if (music.clip == null) Debug.LogWarning("Music not found at Resources/Music/tail_wags_at_twilight");
         StartMusic();
@@ -48,11 +51,17 @@ public class GameAudio
         StartMusic();
     }
 
-    public void SetMuted(bool muted)
+    public void SetMusicMuted(bool muted)
     {
-        Muted = muted;
+        MusicMuted = muted;
         music.mute = muted; // keeps playing silently, so unmuting resumes mid-song
-        PlayerPrefs.SetInt("caramelo_muted", muted ? 1 : 0);
+        PlayerPrefs.SetInt("caramelo_music_muted", muted ? 1 : 0);
+    }
+
+    public void SetSfxMuted(bool muted)
+    {
+        SfxMuted = muted;
+        PlayerPrefs.SetInt("caramelo_sfx_muted", muted ? 1 : 0);
     }
 
     // Safe to call repeatedly. Browsers hold audio back until the first tap, so it is retried on clicks.
@@ -73,7 +82,7 @@ public class GameAudio
 
     void Play(AudioClip clip, float pitch)
     {
-        if (Muted) return;
+        if (SfxMuted) return;
         source.pitch = pitch;
         source.PlayOneShot(clip);
     }
