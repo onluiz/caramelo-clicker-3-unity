@@ -326,6 +326,10 @@ public class TownProps
         slotTotal = slotCount + 2;
         var lf = Frames(LampDef);
         double lampHalf = LampDef.Height * SizeScale * (lf != null ? lf[0].rect.width / lf[0].rect.height : 0.25f) * 0.5;
+        // The slot's reach decides when it is built and destroyed, so it has to cover everything drawn for the lamp:
+        // the glow, and the lunar flower beside it (shifted sideways, so it sticks out past the pole).
+        double flowerReach = (FlowerDef.Offset + FlowerDef.Height * FlowerDef.FrameW / FlowerDef.FrameH * 0.5f) * SizeScale;
+        lampHalf = System.Math.Max(lampHalf, System.Math.Max(GlowSize * 0.5, flowerReach));
 
         // Between neighbouring buildings of the same district.
         for (int k = 1; k < order.Count; k++)
