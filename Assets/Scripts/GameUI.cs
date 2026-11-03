@@ -733,8 +733,22 @@ public class GameUI
         return Sprite.Create(cell.texture, new Rect(r.x + PoseX, r.y + PoseY, PoseSize, PoseSize), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
     }
 
+    // The panel keeps its size relative to the screen while it fits; once the screen is too small it stops
+    // shrinking (so the buttons stay tappable) and the content between the title and Close scrolls instead.
+    void FitSettingsPanel()
+    {
+        const float PanelW = 780f, MinPanelH = 460f, Margin = 0.94f;
+        float canvasW = canvasRect.rect.width, canvasH = canvasRect.rect.height;
+        if (canvasW <= 0f || canvasH <= 0f) return;
+        float k = uiK;
+        k = Mathf.Min(k, canvasW * Margin / PanelW, canvasH * Margin / MinPanelH);
+        settingsPanel.localScale = new Vector3(k, k, 1f);
+        settingsPanel.sizeDelta = new Vector2(PanelW, Mathf.Min(settingsFullH, canvasH * Margin / k));
+    }
+
     void SetSettingsOpen(bool open)
     {
+        if (open) FitSettingsPanel();
         resetConfirmTimer = 0f;
         RefreshButtons();
         settingsRoot.gameObject.SetActive(open);
@@ -1413,8 +1427,7 @@ public class GameUI
         float leftW = big ? 1f - shopFrac : LeftWidth;
         if (big) gameScale = DesktopGameScale;
         uiK = big ? DesktopOverlayScale : 1f;
-        settingsPanel.localScale = new Vector3(uiK, uiK, 1f);
-        settingsPanel.sizeDelta = new Vector2(settingsPanel.sizeDelta.x, Mathf.Min(settingsFullH, canvasRect.rect.height * 0.94f / uiK));
+        FitSettingsPanel();
         goldenRect.sizeDelta = new Vector2(100f, 100f) * uiK;
         float splitX = (safe.xMin + leftW * safe.width) / Screen.width;
         float splitY = (safe.yMin + PortraitShopHeight * safe.height) / Screen.height;
@@ -1555,6 +1568,7 @@ public class GameUI
 
     public void Update(float dt)
     {
+        if (settingsRoot.gameObject.activeSelf) FitSettingsPanel(); // the canvas may resize after ApplyLayout ran
         clock += dt;
         awake.Update(dt);
 
