@@ -1356,6 +1356,7 @@ public class GameUI
             AnchorsScaled(leftPanel, 0f, PortraitShopHeight, 1f, 1f, gameScale);
             Anchors(tapArea, 0f, PortraitShopHeight, 1f, 1f);
             Anchors(rightPanel, 0f, 0f, 1f, PortraitShopHeight);
+            rightPanel.localScale = Vector3.one; // the desktop layout shrinks the shop; a resize into portrait must undo it
             LayoutTabs(0.895f, 0.985f);
             Box(buyBarRt, new Vector2(0f, 0.81f), new Vector2(1f, 0.885f), new Vector2(14f, 0f), new Vector2(-14f, 0f));
         }
