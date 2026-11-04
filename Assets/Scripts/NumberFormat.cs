@@ -9,6 +9,13 @@ public static class NumberFormat
         " undec", " duodec", " tredec", " quatdec", " quindec", " sexdec", " sepdec", " octdec", " novdec", " vig",
     };
 
+    // Spanish uses the long scale: 1e6 is "millón", 1e9 is "mil millones", 1e12 is "billón".
+    static readonly string[] SuffixesEs =
+    {
+        "", " mil", " M", " mil M", " B", " mil B", " T", " mil T", " Cu", " mil Cu", " Qn", " mil Qn",
+        " Sx", " mil Sx", " Sp", " mil Sp", " Oc", " mil Oc", " No", " mil No", " Dc", " mil Dc",
+    };
+
     static readonly string[] SuffixesEn =
     {
         "", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc",
@@ -24,7 +31,7 @@ public static class NumberFormat
         return Loc.IsEnglish ? n : n.Replace('.', ',');
     }
 
-    // Formats using the pt-BR convention (dot for thousands, comma for decimals), or the English one.
+    // Formats using the pt-BR convention (dot for thousands, comma for decimals, shared with Spanish), or the English one.
     // WebGL builds ship with limited culture data, so this is done by hand.
     public static string Format(double v, bool decimals = false)
     {
@@ -56,7 +63,7 @@ public static class NumberFormat
             idx++;
         }
 
-        var suffixes = en ? SuffixesEn : Suffixes;
+        var suffixes = en ? SuffixesEn : Loc.IsSpanish ? SuffixesEs : Suffixes;
         if (idx >= suffixes.Length)
             return v.ToString("0.00e+0", CultureInfo.InvariantCulture);
 

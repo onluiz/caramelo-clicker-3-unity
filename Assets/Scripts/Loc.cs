@@ -1,37 +1,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Lang { Pt, En }
+public enum Lang { Pt, En, Es }
 
-// Localization. Portuguese is the source language of every string in the code; English comes from the
-// tables below. UI strings are looked up by their Portuguese text, game data (buildings, tiers,
-// blessings, basic upgrades) by id. A missing English entry falls back to the Portuguese text.
-public static class Loc
+// Localization. Portuguese is the source language of every string in the code; English and Spanish come from
+// the tables below (Spanish ones are in LocEs.cs). UI strings are looked up by their Portuguese text, game data
+// (buildings, tiers, blessings, basic upgrades) by id. A missing entry falls back to the Portuguese text.
+public static partial class Loc
 {
     const string PrefKey = "caramelo_lang";
 
     public static Lang Current { get; private set; } = Lang.En;
     public static bool IsEnglish => Current == Lang.En;
+    public static bool IsSpanish => Current == Lang.Es;
 
-    // Saved choice first; otherwise Portuguese browsers get Portuguese and everyone else English.
+    // Saved choice first; otherwise Portuguese and Spanish browsers get their language and everyone else English.
     public static void Init()
     {
         int saved = PlayerPrefs.GetInt(PrefKey, -1);
-        if (saved == 0) Current = Lang.Pt;
-        else if (saved == 1) Current = Lang.En;
-        else Current = Application.systemLanguage == SystemLanguage.Portuguese ? Lang.Pt : Lang.En;
+        if (saved >= 0 && saved <= (int)Lang.Es) Current = (Lang)saved;
+        else if (Application.systemLanguage == SystemLanguage.Portuguese) Current = Lang.Pt;
+        else if (Application.systemLanguage == SystemLanguage.Spanish) Current = Lang.Es;
+        else Current = Lang.En;
     }
 
     public static void Set(Lang lang)
     {
         Current = lang;
-        PlayerPrefs.SetInt(PrefKey, lang == Lang.Pt ? 0 : 1);
+        PlayerPrefs.SetInt(PrefKey, (int)lang);
     }
+
+    // The language the settings button switches to: Portuguese, English, Spanish, and around again.
+    public static Lang Next => (Lang)(((int)Current + 1) % 3);
 
     public static string T(string pt)
     {
-        if (!IsEnglish || string.IsNullOrEmpty(pt)) return pt;
-        return Ui.TryGetValue(pt, out var en) ? en : pt;
+        if (Current == Lang.Pt || string.IsNullOrEmpty(pt)) return pt;
+        var table = IsSpanish ? UiEs : Ui;
+        return table.TryGetValue(pt, out var tr) ? tr : pt;
     }
 
     public static string F(string ptFormat, params object[] args)
@@ -41,39 +47,28 @@ public static class Loc
 
     // ---------------------------------------------------------------- game data (by id)
 
-    public static string BuildingName(string key, string pt)
+    static string Pick(Dictionary<string, (string name, string desc)> en, Dictionary<string, (string name, string desc)> es, string key, bool name, string pt)
     {
-        return IsEnglish && Buildings.TryGetValue(key, out var v) ? v.name : pt;
+        if (Current == Lang.Pt) return pt;
+        return (IsSpanish ? es : en).TryGetValue(key, out var v) ? (name ? v.name : v.desc) : pt;
     }
 
-    public static string BuildingDesc(string key, string pt)
-    {
-        return IsEnglish && Buildings.TryGetValue(key, out var v) ? v.desc : pt;
-    }
+    public static string BuildingName(string key, string pt) { return Pick(Buildings, BuildingsEs, key, true, pt); }
 
-    public static string TierName(string building, int tier, string pt)
-    {
-        return IsEnglish && Tiers.TryGetValue(building + ":" + tier, out var v) ? v.name : pt;
-    }
+    public static string BuildingDesc(string key, string pt) { return Pick(Buildings, BuildingsEs, key, false, pt); }
 
-    public static string TierDesc(string building, int tier, string pt)
-    {
-        return IsEnglish && Tiers.TryGetValue(building + ":" + tier, out var v) ? v.desc : pt;
-    }
+    public static string TierName(string building, int tier, string pt) { return Pick(Tiers, TiersEs, building + ":" + tier, true, pt); }
 
-    public static string BlessingName(string id, string pt)
-    {
-        return IsEnglish && Blessings.TryGetValue(id, out var v) ? v.name : pt;
-    }
+    public static string TierDesc(string building, int tier, string pt) { return Pick(Tiers, TiersEs, building + ":" + tier, false, pt); }
 
-    public static string BlessingDesc(string id, string pt)
-    {
-        return IsEnglish && Blessings.TryGetValue(id, out var v) ? v.desc : pt;
-    }
+    public static string BlessingName(string id, string pt) { return Pick(Blessings, BlessingsEs, id, true, pt); }
+
+    public static string BlessingDesc(string id, string pt) { return Pick(Blessings, BlessingsEs, id, false, pt); }
 
     public static string UpgradeName(string id, string pt)
     {
-        return IsEnglish && BasicUpgrades.TryGetValue(id, out var v) ? v : pt;
+        if (Current == Lang.Pt) return pt;
+        return (IsSpanish ? BasicUpgradesEs : BasicUpgrades).TryGetValue(id, out var v) ? v : pt;
     }
 
     // ---------------------------------------------------------------- tables

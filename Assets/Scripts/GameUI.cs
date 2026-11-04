@@ -617,7 +617,7 @@ public class GameUI
         Place((RectTransform)langBtn.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -342f), new Vector2(640f, 96f));
         langBtn.onClick.AddListener(() =>
         {
-            Loc.Set(Loc.IsEnglish ? Lang.Pt : Lang.En);
+            Loc.Set(Loc.Next);
             ApplyLanguage();
         });
 
