@@ -53,6 +53,10 @@ Package `com.cachorrocaramelo.clicker`, **Version** and **Bundle Version Code** 
 
 Signing: the upload keystore is `Keystore/carameloclicker-upload.jks` (alias `carameloclicker`). `Keystore/`, `*.jks` and `*.keystore` are gitignored; never commit them or their passwords. `Assets/Editor/AndroidSigning.cs` fills the passwords from the user environment variables `CARAMELO_KEYSTORE_PASS` and `CARAMELO_KEYSTORE_ALIAS_PASS` when the Editor loads and before each build; an Editor opened before the variables were created does not see them, so reopen Unity. Without them the passwords must be typed in Publishing Settings. See `README.md` for the full flow.
 
+### Platform-only SDKs: nothing for WebGL
+
+The WebGL build gets **none** of the mobile/Google services: no AdMob (Google Mobile Ads, LevelPlay), no Firebase (Analytics, Crashlytics, Remote Config, Auth...), no Play Games Services (login, cloud save), no Google Play Billing/Unity IAP, no Play review/update plugins. Most of those SDKs do not support WebGL at all (Firebase is not officially supported there), and the web version stays a plain offline game saved in `PlayerPrefs`. When any of them is added for Android, keep it Android-only: wrap the code in `#if UNITY_ANDROID && !UNITY_EDITOR` (or behind an interface with a no-op implementation), restrict the plugin's platforms to Android in its importer settings, and check that the WebGL build still compiles and runs without it. Do not add a dependency that breaks the WebGL build, and do not make game logic depend on a service being present.
+
 ## Architecture
 
 Everything lives in `Assets/Scripts`, with **no prefabs and almost nothing in the scene**: the scene only holds a `Game` object with `GameController`, which builds the entire uGUI hierarchy at runtime. Layout changes mean editing code, not the scene.
