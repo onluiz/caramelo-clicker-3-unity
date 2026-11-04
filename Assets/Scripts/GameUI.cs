@@ -190,6 +190,13 @@ public class GameUI
     bool goldenActive;
     float goldenTimer, goldenLife;
 
+    // The money bag drifts down from the sky now and then; tapping it plays a rewarded ad that pays out when watched.
+    const float MoneyFirstDelay = 120f, MoneyMinGap = 180f, MoneyMaxGap = 300f, MoneyFallSeconds = 9f;
+    RectTransform moneyRect;
+    Image moneyImage;
+    bool moneyActive, moneyBusy; // moneyBusy: the ad is on screen, so no new bag meanwhile
+    float moneyTimer = MoneyFirstDelay, moneyAge, moneyX, moneyFromY, moneyToY;
+
     float toastTimer, uiTimer, counterTimer;
 
     public GameUI(GameState state, GameAudio audio)
@@ -207,6 +214,7 @@ public class GameUI
         ApplyLanguage();
 
         goldenTimer = Random.Range(25f, 45f) * (float)s.GoldenInterval;
+        RewardedAds.Begin();
         RefreshAll();
         if (!string.IsNullOrEmpty(s.OfflineMessage)) ShowToast(s.OfflineMessage, 8f);
         if (pendingToast != null)
@@ -1133,6 +1141,17 @@ public class GameUI
         btn.navigation = new Navigation { mode = Navigation.Mode.None };
         btn.onClick.AddListener(OnGoldenClicked);
         goldenImage.gameObject.SetActive(false);
+
+        moneyImage = NewImage(overlayLayer, "MoneyBag", IconLoader.Load("money-bag"), Color.white, false, true);
+        moneyImage.preserveAspect = true;
+        moneyRect = moneyImage.rectTransform;
+        moneyRect.sizeDelta = new Vector2(130f, 130f);
+        var moneyBtn = moneyImage.gameObject.AddComponent<Button>();
+        moneyBtn.targetGraphic = moneyImage;
+        moneyBtn.transition = Selectable.Transition.None;
+        moneyBtn.navigation = new Navigation { mode = Navigation.Mode.None };
+        moneyBtn.onClick.AddListener(OnMoneyBagClicked);
+        moneyImage.gameObject.SetActive(false);
     }
 
     // ---------------------------------------------------------------- interaction
@@ -1175,6 +1194,25 @@ public class GameUI
         // A frenzy already shows up as the buff chip, with its countdown, so only the other rewards need a notification.
         if (s.FrenzyUntil == frenzy && s.ClickFrenzyUntil == clickFrenzy) ShowToast(msg, 6f);
         RefreshAll();
+    }
+
+    void OnMoneyBagClicked()
+    {
+        if (moneyBusy) return;
+        HideMoneyBag();
+        moneyBusy = true;
+        RewardedAds.Show(rewarded =>
+        {
+            moneyBusy = false;
+            if (!rewarded)
+            {
+                ShowToast(Loc.T("Sem recompensa desta vez. Assista ao anúncio até o fim!"), 5f);
+                return;
+            }
+            sfx.PlayGolden();
+            ShowToast(s.ApplyMoneyBag(), 6f);
+            RefreshAll();
+        });
     }
 
     // Running past the daycare: the puppies that were following him and have run a full lap since birth stay there, and he earns a golden-bone style reward.
@@ -1487,6 +1525,7 @@ public class GameUI
         uiK = big ? DesktopOverlayScale : 1f;
         FitSettingsPanel();
         goldenRect.sizeDelta = new Vector2(100f, 100f) * uiK;
+        moneyRect.sizeDelta = new Vector2(130f, 130f) * uiK;
         float splitX = (safe.xMin + leftW * safe.width) / Screen.width;
         float splitY = (safe.yMin + PortraitShopHeight * safe.height) / Screen.height;
         if (portrait)
@@ -1653,6 +1692,7 @@ public class GameUI
         UpdateFloats(dt);
         UpdateFalling(dt);
         UpdateGolden(dt);
+        UpdateMoneyBag(dt);
 
         if (ascendConfirmTimer > 0f)
         {
@@ -2062,5 +2102,52 @@ public class GameUI
         goldenActive = false;
         goldenImage.gameObject.SetActive(false);
         goldenTimer = Random.Range(60f, 150f) * (float)s.GoldenInterval;
+    }
+
+    void UpdateMoneyBag(float dt)
+    {
+        RewardedAds.Tick();
+        if (!moneyActive)
+        {
+            if (moneyBusy || !RewardedAds.Ready) return; // a bag only falls when there is an ad to play for it
+            moneyTimer -= dt;
+            if (moneyTimer <= 0f) SpawnMoneyBag();
+            return;
+        }
+
+        moneyAge += dt;
+        if (moneyAge >= MoneyFallSeconds)
+        {
+            HideMoneyBag();
+            return;
+        }
+
+        float t = moneyAge / MoneyFallSeconds;
+        float sway = Mathf.Sin(clock * 2.2f) * 34f * uiK;
+        moneyRect.anchoredPosition = new Vector2(moneyX + sway, Mathf.Lerp(moneyFromY, moneyToY, t));
+        moneyRect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(clock * 3.5f) * 14f);
+        moneyImage.color = new Color(1f, 1f, 1f, Mathf.Clamp01((MoneyFallSeconds - moneyAge) / 0.6f));
+    }
+
+    void SpawnMoneyBag()
+    {
+        var area = LeftPanelInCanvas();
+        float margin = 90f * uiK;
+        moneyX = area.width > 2f * margin + 60f ? Random.Range(area.xMin + margin, area.xMax - margin) : area.center.x;
+        moneyFromY = area.yMax + 80f * uiK;
+        moneyToY = area.yMin + area.height * 0.25f;
+        moneyAge = 0f;
+        moneyRect.anchorMin = moneyRect.anchorMax = new Vector2(0.5f, 0.5f);
+        moneyRect.anchoredPosition = new Vector2(moneyX, moneyFromY);
+        moneyImage.color = Color.white;
+        moneyImage.gameObject.SetActive(true);
+        moneyActive = true;
+    }
+
+    void HideMoneyBag()
+    {
+        moneyActive = false;
+        moneyImage.gameObject.SetActive(false);
+        moneyTimer = Random.Range(MoneyMinGap, MoneyMaxGap);
     }
 }

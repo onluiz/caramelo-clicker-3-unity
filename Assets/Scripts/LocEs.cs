@@ -83,6 +83,8 @@ public static partial class Loc
         { "Cada clique rende o dobro.", "Cada clic rinde el doble." },
         { "Cada clique rende +1% dos petiscos por segundo.", "Cada clic rinde +1% de las golosinas por segundo." },
         { "Toda a produção aumenta em 25%.", "Toda la producción aumenta un 25%." },
+        { "Sacola de moedas! +{0} petiscos!", "¡Bolsa de monedas! ¡+{0} golosinas!" },
+        { "Sem recompensa desta vez. Assista ao anúncio até o fim!", "Sin recompensa esta vez. ¡Mira el anuncio hasta el final!" },
     };
 
     static readonly Dictionary<string, string> BasicUpgradesEs = new Dictionary<string, string>

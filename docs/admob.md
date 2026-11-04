@@ -1,6 +1,6 @@
-# AdMob (ainda não integrado)
+# AdMob (SDK instalado, sem anúncios ainda)
 
-O jogo antigo (`../caramelo-clicker-3`) usava anúncios recompensados do AdMob. Esta versão Unity **ainda não tem anúncios**; os IDs abaixo ficam guardados para quando forem integrados. IDs do AdMob não são segredos (vão dentro do app publicado), então podem ficar no repositório.
+O jogo antigo (`../caramelo-clicker-3`) usava anúncios recompensados do AdMob. Esta versão Unity já tem o **SDK Google Mobile Ads 11.6.0** (o `.unitypackage` oficial do GitHub `googleads/googleads-mobile-unity`, em `Assets/GoogleMobileAds` e `Assets/Plugins/Android`) e o External Dependency Manager (`com.unity.external-dependency-manager`), mas **nenhum código o chama**: não há inicialização nem anúncios. Os IDs abaixo ficam guardados para quando forem integrados. Para atualizar o SDK, importe o `.unitypackage` de uma versão nova por cima. IDs do AdMob não são segredos (vão dentro do app publicado), então podem ficar no repositório.
 
 Conta/app no AdMob: "Cachorro Caramelo Clicker".
 
@@ -8,7 +8,7 @@ Conta/app no AdMob: "Cachorro Caramelo Clicker".
 
 `ca-app-pub-4380393767380236~6038175130`
 
-No Android ele vai no `AndroidManifest.xml` como `com.google.android.gms.ads.APPLICATION_ID` (o SDK do Google Mobile Ads para Unity pede isso em *Assets > Google Mobile Ads > Settings*).
+Já está configurado em *Assets > Google Mobile Ads > Settings* (`Assets/GoogleMobileAds/Resources/GoogleMobileAdsSettings.asset`), e o SDK o coloca no manifest do Android como `com.google.android.gms.ads.APPLICATION_ID`. O SDK deve trazer também a permissão `AD_ID` para o manifest, o que combina com a declaração do ID de publicidade no Play Console (ainda não conferido num build Android).
 
 ## Unidades de anúncio recompensado
 

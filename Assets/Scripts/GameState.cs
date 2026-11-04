@@ -249,6 +249,15 @@ public class GameState
         return Loc.F("Frenesi! Produção x{0} por 30s!", FrenzyMultiplier);
     }
 
+    // Reward for the money bag, after the player watched its ad: a minute of production or 50 clicks, whichever is more.
+    public string ApplyMoneyBag()
+    {
+        double gain = Math.Max(Cps * 60, ClickValue * 50);
+        Petiscos += gain;
+        TotalEarned += gain;
+        return Loc.F("Sacola de moedas! +{0} petiscos!", NumberFormat.Format(gain));
+    }
+
     // Reward for dropping the puppies off at the daycare: the golden bone's "lucky" payout (15% of the stash, capped
     // at 15 minutes of income, plus a floor), scaled by how full the pack was.
     public string ApplyCreche(double fullness, out double gain)
