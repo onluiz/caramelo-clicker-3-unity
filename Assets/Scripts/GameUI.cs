@@ -512,8 +512,8 @@ public class GameUI
         }
         for (int i = 0; i < hudCount; i++) left.GetChild(0).SetAsLastSibling();
 
-        // Notifications sit at the top, just under the buff chip, on a translucent white plate.
-        var toastPlate = NewImage(left, "ToastPlate", ProceduralArt.RoundedRect(), new Color(1f, 1f, 1f, 0.7f), true);
+        // Notifications sit at the top, just under the buff chip, on an opaque white plate.
+        var toastPlate = NewImage(left, "ToastPlate", ProceduralArt.RoundedRect(), Color.white, true);
         hudToast = toastPlate.rectTransform; // sized and placed in ApplyHud, right under the buff chip, with the same size and font
         toastGroup = toastPlate.gameObject.AddComponent<CanvasGroup>();
         toastText = NewText(toastPlate.transform, "Toast", "", 32, Ink, TextAlignmentOptions.Center, FontStyles.Bold);
